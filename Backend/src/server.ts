@@ -8,6 +8,8 @@ import studentRouter from './Routes/StudentRouter/StudentRouter';
 connectDB();
    
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/student', studentRouter);
 
