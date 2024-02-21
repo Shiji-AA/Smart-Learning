@@ -7,7 +7,7 @@ export interface Student extends Document {
     studentName:string,
     studentRole: string,
     studentEmail:string,
-    phone:number,
+    phone:string,
     password:string,
     photo:string[],
     courses:mongoose.Schema.Types.ObjectId,
@@ -34,13 +34,14 @@ const userSchema = new Schema<Student>({
         unique:true   
     },
     phone: {
-        type: Number, 
+        type: String, 
         unique: false, 
-        max: 999999999999,  
+         
     },
     password:{
         type:String,
-        min:8
+        required: true,
+        minlength:8
     },
     photo:[{
         type:String,
@@ -87,7 +88,7 @@ const userSchema = new Schema<Student>({
 
   })
 
-// const studentModel = mongoose.model('studentCollection',userSchema)
 
 const studentModel:Model<Student> = mongoose.model<Student>('studentModel',userSchema)
+
 export default studentModel

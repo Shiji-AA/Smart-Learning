@@ -10,7 +10,9 @@ import { loginStudent,
 
 router.post('/', loginStudent);
 router.post('/register', registerStudent);
-router.post('/logout', logoutStudent);
+//router.post('/logout', logoutStudent);
+router.post('/logout/:id', logoutStudent);
+
 router.get('/getProfile',  getStudentProfile);
 router.put('/updateProfile',  updateStudentProfile);
 

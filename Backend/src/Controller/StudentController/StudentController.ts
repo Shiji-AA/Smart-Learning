@@ -1,7 +1,9 @@
 
 import { Request, Response } from "express";
-import studentModel from "../../model/userModel";
+//import studentModel from "../../model/userModel";
+import studentModel, { Student } from "../../model/userModel";
 import generateToken from "../../../Utils/generateToken";
+
 
 
 const globalData = {  
@@ -9,54 +11,55 @@ const globalData = {
       studentName: string;
       studentEmail: string;
       phone: string;
-      password: string;
+      
   }, };
   
-
-
-
 // @desc Register A new user
 //route POST /api/users
 //access  Public
 
 
 const registerStudent = async (req: Request, res: Response) => {
-    try {
+  try {
       const { studentName, studentEmail, password, phone } = req.body;
-      console.log(req.body);
-  
+
       if (!studentName || !studentEmail || !password || !phone) {
-        return res.status(400).json({ message: "All Field Required" });
+          return res.status(400).json({ message: "All fields are required" });
       }
-  
+
       const userExist = await studentModel.findOne({ studentEmail });
-      console.log(userExist, "I am exist");
       const userphone = await studentModel.findOne({ phone });
-  
+
       if (userExist) {
-        return res.status(400).json({
-          message: "User Email Already Exist",
-        });
-      } else if (userphone) {
-        return res.status(400).json({
-          message: "Phone Number Already Exist",
-        });
+          return res.status(400).json({ message: "User with this email already exists" });
       }
-  
-      const user = {
-        studentName,
-        studentEmail,
-        phone,
-        password,
-      };
-  
-      globalData.user = user;
- 
-} catch (error) {
- console.error(error);
- return res.status(500).json({ message: "An error occurred" });
-}
-}; 
+
+      if (userphone) {
+          return res.status(400).json({ message: "User with this phone number already exists" });
+      }
+
+      const newUser: Student = new studentModel({
+          studentName,
+          studentEmail,
+          phone,
+          password
+      });
+
+      await newUser.save();
+
+      // Store user information in globalData if registration is successful
+      globalData.user = {
+          studentName,
+          studentEmail,
+          phone,
+        };
+
+      return res.status(201).json({ message: "User registered successfully" });
+  } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "An error occurred" });
+  }
+};
 
 
 
@@ -72,22 +75,21 @@ const registerStudent = async (req: Request, res: Response) => {
 const loginStudent = async (req: Request, res: Response) => {
     try {
       const { studentEmail, password } = req.body;
-      console.log(req.body);
-  
-      const user = await studentModel.findOne({ studentEmail });
+      //console.log(req.body);  
+
+      const user: Student | null = await studentModel.findOne({ studentEmail });
   
       if (!user) {
         return res.status(401).json({ message: "Invalid user " });
       }
-      if (user?.isBlocked === true) {
-        return res.status(401).json({ message: "User is Blocked" });
-      }
+      if (user.isBlocked) {
+        return res.status(401).json({ message: "User is blocked" });
+    }
   
       if (user && (await user.matchPassword(password))) {
         //generate Token
         const token = generateToken(user._id);
-        console.log(token);
-  
+        //console.log(token);  
         return res.json({
           user,
           token
@@ -105,6 +107,7 @@ const loginStudent = async (req: Request, res: Response) => {
 const logoutStudent = async (req: Request, res: Response) => {
     try {
       const userId = req.params.id;
+      console.log(req.params,"userId is")
       const user = await studentModel.findById(userId);
       if (!user) {
         return res.status(400).json({ message: "User Not Found" });
