@@ -5,6 +5,8 @@ import HomePage from "./Pages/User/Home/HomePage";
 import Forgotpassword from "./Components/User/Login/Forgotpassword";
 import Resetpassword from "./Components/User/Login/Resetpassword";
 import UserProfile from "./Pages/User/UserProfile/UserProfile";
+import Landingpage from "./Pages/User/Landingpage/Landingpage";
+
 
 function App() {
   return (
@@ -17,6 +19,7 @@ function App() {
         <Route path="/reset" element={<Resetpassword />} /> 
         <Route path="/register" element={<SignUp />} /> 
         <Route path="/userprofile" element={<UserProfile/>}  />  
+        <Route path="/home" element={<Landingpage/>}  />  
         </Routes>
     </Router>
   
