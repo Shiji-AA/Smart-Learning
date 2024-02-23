@@ -1,12 +1,15 @@
-import Navbar from "../../../Components/User/Navbar/Navbar"
+//import Navbar from "../../../Components/User/Navbar/Navbar"
+import Footer from "../../../Components/User/Footer/Footer";
+import Profile from "../../../Components/User/UserProfile/Profile"
 
 function UserProfile() {
     return (
         <div>
-             <Navbar/>
-            <h1>userProfile</h1>
-            <h1>userProfile</h1>
-            <h1>userProfile</h1>
+            
+             <Profile />
+       
+        <hr/>
+        <Footer />
         </div>
     )
 }

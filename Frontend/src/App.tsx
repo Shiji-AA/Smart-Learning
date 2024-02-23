@@ -6,6 +6,8 @@ import Forgotpassword from "./Components/User/Login/Forgotpassword";
 import Resetpassword from "./Components/User/Login/Resetpassword";
 import UserProfile from "./Pages/User/UserProfile/UserProfile";
 import Landingpage from "./Pages/User/Landingpage/Landingpage";
+import EditProfile from "./Components/User/UserProfile/Editprofile";
+
 
 
 function App() {
@@ -20,6 +22,7 @@ function App() {
         <Route path="/register" element={<SignUp />} /> 
         <Route path="/userprofile" element={<UserProfile/>}  />  
         <Route path="/home" element={<Landingpage/>}  />  
+        <Route path="/editprofile" element={<EditProfile/>}  />  
         </Routes>
     </Router>
   

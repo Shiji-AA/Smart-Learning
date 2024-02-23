@@ -5,12 +5,14 @@ import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import Footer from '../../../Components/User/Footer/Footer';
 import Homemain from '../../../Components/User/Homemain/Homemain';
 import TutorBanner from '../../../Components/User/Banner/TutorBanner';
+import studentlogo from "../../../assets/studentlogo.jpg";
+import logo1 from "../../../assets/logo1.jpg"
 
 const user = {
   name: 'Shiji aa',
   email: 'shiji@example.com',
-  imageUrl:
-    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+  imageUrl:studentlogo
+   ,
 };
 const navigation = [
   { name: 'Dashboard', href: '#', current: true },
@@ -20,9 +22,9 @@ const navigation = [
   { name: 'About us', href: '#', current: false },
 ];
 const userNavigation = [
-  { name: 'Your Profile', href: '#' },
+  { name: 'Your Profile', href: '/userprofile' },
   { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
+  { name: 'Sign out', href: '/logout' },
 ];
 
 
@@ -33,14 +35,7 @@ function classNames(...classes: string[]) {
 function Landingpage() {
   return (
     <>
-      {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-gray-100">
-        <body class="h-full">
-        ```
-      */}
+    
       <div className="min-h-full">
         <Disclosure as="nav" className="bg-gray-800">
           {({ open }) => (
@@ -51,8 +46,8 @@ function Landingpage() {
                     <div className="flex-shrink-0">
                       <img
                         className="h-8 w-8"
-                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                        alt="Your Company"
+                        src={logo1}
+                        alt="Smart Learning"
                       />
                     </div>
                     <div className="hidden md:block">
