@@ -1,34 +1,38 @@
-import { Fragment } from 'react';
-import { Disclosure, Menu, Transition } from '@headlessui/react';
+import { Fragment } from 'react'
+import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import logo1 from '../../../assets/logo1.jpg';
-import studentlogo from '../../../assets/studentlogo.jpg';
-import { Link } from 'react-router-dom';
+import tutorlogo1  from '../../../assets/tutorlogo1.png'
+import logo1 from '../../../assets/logo1.jpg'
 
 const user = {
-  name: 'Shiji aa',
-  email: 'shiji@example.com',
-  imageUrl: studentlogo,
-};
+  name: 'Tom Cook',
+  email: 'tom@example.com',
+  imageUrl:tutorlogo1
+  ,
+}
 const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
-  { name: 'Courses', href: '#', current: false },
-  { name: 'Tutors', href: '#', current: false },
-  { name: 'Profile', href: '/userprofile', current: false },
-  { name: 'About us', href: '#', current: false },
-];
+  { name: 'Tutor Dashboard', href: '#', current: true },
+   { name: 'PROFILE', href: '/tutorprofile', current: false },
+  { name: 'STUDENTS', href: '#', current: false },
+ { name: 'MY COURSES', href: '/tutorcourseslist', current: false },
+ { name: '+ CREATE COURSE', href: '/addcourse', current: false },
+ { name: ' + ADD LESSON', href: '/addlesson', current: false },
+]
 const userNavigation = [
   { name: 'Your Profile', href: '#' },
   { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '/' },
-];
+  { name: 'Sign out', href: '#' },
+]
+
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
-function Navbar() {
+
+
+export default function Example() {
   return (
-    <>
+    <>    
       <div className="min-h-full">
         <Disclosure as="nav" className="bg-gray-800">
           {({ open }) => (
@@ -37,7 +41,11 @@ function Navbar() {
                 <div className="flex h-16 items-center justify-between">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
-                      <img className="h-8 w-8" src={logo1} alt="Your Company" />
+                      <img
+                        className="h-8 w-8"
+                        src={logo1}
+                        alt="Your Company"
+                      />
                     </div>
                     <div className="hidden md:block">
                       <div className="ml-10 flex items-baseline space-x-4">
@@ -59,43 +67,21 @@ function Navbar() {
                       </div>
                     </div>
                   </div>
-                  {/* Spacer */}
-                  <div style={{ flex: '1' }} />
-                  {/* Buttons container */}
-                  <div className="flex">
-                  
-                  <Link to="/tutorlogin">
-                  <button
-                      type="button"
-                      className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                    >
-                      Want to be a Tutor?
-                    </button>
-                  </Link>
-                   
-                    <Link to="/login">
-                      <button
-                        type="button"
-                        className="ml-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                      >
-                        Log in
-                      </button>
-                    </Link>
-                    <Link to="/register">
-                      <button
-                        type="button"
-                        className="ml-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-blue-600 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                      >
-                        Register
-                      </button>
-                    </Link>
-                  </div>
                   <div className="hidden md:block">
                     <div className="ml-4 flex items-center md:ml-6">
+                      <button
+                        type="button"
+                        className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                      >
+                        <span className="absolute -inset-1.5" />
+                        <span className="sr-only">View notifications</span>
+                        <BellIcon className="h-6 w-6" aria-hidden="true" />
+                      </button>
+
                       {/* Profile dropdown */}
                       <Menu as="div" className="relative ml-3">
                         <div>
-                          <Menu.Button className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1 focus:ring-offset-gray-800">
+                          <Menu.Button className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                             <span className="absolute -inset-1.5" />
                             <span className="sr-only">Open user menu</span>
                             <img className="h-8 w-8 rounded-full" src={user.imageUrl} alt="" />
@@ -198,9 +184,17 @@ function Navbar() {
             </>
           )}
         </Disclosure>
+
+        <header className="bg-white shadow">
+          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+            <h4 className="text-3xl font-bold tracking-tight text-gray-900">Hello Tutor </h4>
+          </div>
+        </header>
+       
       </div>
     </>
-  );
+  )
 }
 
-export default Navbar;
+
+

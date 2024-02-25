@@ -1,5 +1,5 @@
+import teacher3 from "../../../assets/teacher3.jpg";
 
-import tutorImages from "../../../assets/teacher-1013720.jpg";
 import { Link } from 'react-router-dom';
 
 function TutorBanner() {
@@ -7,7 +7,7 @@ function TutorBanner() {
     <div className="flex">
       {/* Left side - Image */}
       <div className="w-1/2">
-        <img src={tutorImages} alt="Tutor Banner" className="w-10/12 h-10/12 object-cover" />
+        <img src={teacher3} alt="Tutor Banner" className="w-10/12 h-10/12 object-cover" />
       </div>
 
       {/* Right side - Tutors and View Button */}

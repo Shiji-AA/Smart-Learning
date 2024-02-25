@@ -8,6 +8,22 @@ import UserProfile from "./Pages/User/UserProfile/UserProfile";
 import Landingpage from "./Pages/User/Landingpage/Landingpage";
 import EditProfile from "./Components/User/UserProfile/Editprofile";
 
+//tutor side
+import Tutorlogin from "./Components/Tutor/Login/Tutorlogin";
+import Tutorsignup from "./Components/Tutor/Signup/Tutorsignup";
+import Tutordashboard from "./Pages/Tutor/Tutordashboard/Tutordashboard";
+import Tutorprofile from "./Components/Tutor/Tutorprofile/Tutorprofile";
+import Tutoreditprofile from "./Components/Tutor/Tutorprofile/Tutoreditprofile";
+
+//AdminSide
+import Adminlogin from "./Components/Admin/Adminlogin/Adminlogin"
+import Dashboard from "./Pages/Admin/Dashboard/Dashboard";
+import Categorylist from "./Components/Admin/Category/Categorylist";
+import Createcategory from "./Components/Admin/Category/Createcategory";
+import Courseview from "./Pages/Admin/Courseview/Courseview";
+import Addcourse from "./Components/Tutor/Tutorhome/Addcourse";
+import Addlesson from "./Components/Tutor/Tutorhome/Addlesson";
+import Tutorcourseslist from "./Components/Tutor/Tutorhome/Tutorcourseslist";
 
 
 function App() {
@@ -15,6 +31,8 @@ function App() {
     <Router>
       <Routes>
       <Route path="/" element={<HomePage />} />
+
+        {/* userSide */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<SignUp />} /> 
         <Route path="/forgot" element={<Forgotpassword />} /> 
@@ -22,7 +40,30 @@ function App() {
         <Route path="/register" element={<SignUp />} /> 
         <Route path="/userprofile" element={<UserProfile/>}  />  
         <Route path="/home" element={<Landingpage/>}  />  
-        <Route path="/editprofile" element={<EditProfile/>}  />  
+        <Route path="/editprofile" element={<EditProfile/>}  /> 
+
+          {/* Tutor side */} 
+        <Route path="/tutorLogin" element={<Tutorlogin/>} />
+        <Route path="/tutorregister" element={<Tutorsignup/>} />
+        <Route path="/tutordashboard" element={<Tutordashboard/>} />
+        <Route path="/tutorprofile" element={<Tutorprofile/>} />
+        <Route path="/tutoreditprofile" element={<Tutoreditprofile/>} />
+        <Route path="/addcourse" element={<Addcourse/>} />
+        <Route path="/addlesson" element={<Addlesson/>} />
+        <Route path="/tutorcourseslist" element={<Tutorcourseslist/>} />
+
+           {/* Admin side */}
+           <Route path="/admin" element={<Adminlogin/>} />
+           <Route path="/admindashboard" element={<Dashboard/>} />
+           <Route path="/categorylist" element={<Categorylist/>} />
+           <Route path="/createcategory" element={<Createcategory/>} />
+           <Route path="/courselist" element={<Courseview/>} />
+           
+           
+           
+
+
+          
         </Routes>
     </Router>
   
