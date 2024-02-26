@@ -24,6 +24,7 @@ import Courseview from "./Pages/Admin/Courseview/Courseview";
 import Addcourse from "./Components/Tutor/Tutorhome/Addcourse";
 import Addlesson from "./Components/Tutor/Tutorhome/Addlesson";
 import Tutorcourseslist from "./Components/Tutor/Tutorhome/Tutorcourseslist";
+import SingleCoursePageView from "./Components/Tutor/Tutorhome/Singleview";
 
 
 function App() {
@@ -41,6 +42,8 @@ function App() {
         <Route path="/userprofile" element={<UserProfile/>}  />  
         <Route path="/home" element={<Landingpage/>}  />  
         <Route path="/editprofile" element={<EditProfile/>}  /> 
+        <Route path="/usercourselist" element={<Tutorcourseslist/>}  /> 
+        <Route path="/singleview" element={<SingleCoursePageView/>} />
 
           {/* Tutor side */} 
         <Route path="/tutorLogin" element={<Tutorlogin/>} />
@@ -51,13 +54,14 @@ function App() {
         <Route path="/addcourse" element={<Addcourse/>} />
         <Route path="/addlesson" element={<Addlesson/>} />
         <Route path="/tutorcourseslist" element={<Tutorcourseslist/>} />
+        <Route path="/singleview" element={<SingleCoursePageView/>} />
 
            {/* Admin side */}
            <Route path="/admin" element={<Adminlogin/>} />
            <Route path="/admindashboard" element={<Dashboard/>} />
            <Route path="/categorylist" element={<Categorylist/>} />
            <Route path="/createcategory" element={<Createcategory/>} />
-           <Route path="/courselist" element={<Courseview/>} />
+           <Route path="/admincourselist" element={<Courseview/>} />
            
            
            

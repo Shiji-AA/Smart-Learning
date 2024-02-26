@@ -12,7 +12,7 @@ const user = {
 };
 const navigation = [
   { name: 'Dashboard', href: '#', current: true },
-  { name: 'Courses', href: '#', current: false },
+  { name: 'Courses', href: '/usercourselist', current: false },
   { name: 'Tutors', href: '#', current: false },
   { name: 'Profile', href: '/userprofile', current: false },
   { name: 'About us', href: '#', current: false },

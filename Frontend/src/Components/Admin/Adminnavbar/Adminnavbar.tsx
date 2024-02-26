@@ -15,7 +15,7 @@ const navigation = [
    { name: 'STUDENTS', href: '#', current: false },
   { name: 'INSTRUCTORS', href: '#', current: false },
   { name: 'CATEGORY', href: '/categorylist', current: false },
- { name: 'COURSES', href: '/courselist', current: false },
+ { name: 'COURSES', href: '/admincourselist', current: false },
 ]
 const userNavigation = [
   { name: 'Your Profile', href: '#' },
