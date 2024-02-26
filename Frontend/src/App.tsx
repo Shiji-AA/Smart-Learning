@@ -25,11 +25,14 @@ import Addcourse from "./Components/Tutor/Tutorhome/Addcourse";
 import Addlesson from "./Components/Tutor/Tutorhome/Addlesson";
 import Tutorcourseslist from "./Components/Tutor/Tutorhome/Tutorcourseslist";
 import SingleCoursePageView from "./Components/Tutor/Tutorhome/Singleview";
+import { Toaster } from "react-hot-toast";
+import Privatepages from "./Components/Privatepages/Privatepages";
 
 
 function App() {
   return (
     <Router>
+      <Toaster position ='top-right'/>
       <Routes>
       <Route path="/" element={<HomePage />} />
 
@@ -39,11 +42,14 @@ function App() {
         <Route path="/forgot" element={<Forgotpassword />} /> 
         <Route path="/reset" element={<Resetpassword />} /> 
         <Route path="/register" element={<SignUp />} /> 
+
+        <Route element={<Privatepages/>}>
         <Route path="/userprofile" element={<UserProfile/>}  />  
         <Route path="/home" element={<Landingpage/>}  />  
         <Route path="/editprofile" element={<EditProfile/>}  /> 
         <Route path="/usercourselist" element={<Tutorcourseslist/>}  /> 
         <Route path="/singleview" element={<SingleCoursePageView/>} />
+        </Route>
 
           {/* Tutor side */} 
         <Route path="/tutorLogin" element={<Tutorlogin/>} />

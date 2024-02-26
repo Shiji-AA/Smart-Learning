@@ -41,7 +41,7 @@ const userSchema = new Schema<Student>({
     password:{
         type:String,
         required: true,
-        minlength:8
+        
     },
     photo:[{
         type:String,

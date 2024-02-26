@@ -1,13 +1,16 @@
 import express from "express";
 import * as dotenv from 'dotenv';
+import cors from 'cors'
+const app = express();
 
 import connectDB from "./config/db";
 dotenv.config(); // This will read your .env file and apply the configurations
 const port = process.env.PORT || 3000;
+
+app.use (cors());
 import studentRouter from './Routes/StudentRouter/StudentRouter';
 connectDB();
    
-const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

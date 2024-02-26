@@ -8,7 +8,7 @@ import { loginStudent,
          updateStudentProfile }
          from '../../Controller/StudentController/StudentController';
 
-router.post('/', loginStudent);
+router.post('/login', loginStudent);
 router.post('/register', registerStudent);
 //router.post('/logout', logoutStudent);
 router.post('/logout/:id', logoutStudent);

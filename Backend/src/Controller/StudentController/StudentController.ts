@@ -12,7 +12,7 @@ const globalData = {
       studentEmail: string;
       phone: string;
       
-  }, };
+  }, }; 
   
 // @desc Register A new user
 //route POST /api/users
@@ -21,26 +21,23 @@ const globalData = {
 
 const registerStudent = async (req: Request, res: Response) => {
   try {
-      const { studentName, studentEmail, password, phone } = req.body;
+      const { name, email, password, phone } = req.body;    
+      //console.log("body data",req.body)
 
-      if (!studentName || !studentEmail || !password || !phone) {
-          return res.status(400).json({ message: "All fields are required" });
-      }
-
-      const userExist = await studentModel.findOne({ studentEmail });
+      const userExist = await studentModel.findOne({ email });
       const userphone = await studentModel.findOne({ phone });
 
       if (userExist) {
-          return res.status(400).json({ message: "User with this email already exists" });
+          return res.status(400).json({ error: "User with this email already exists" });
       }
 
       if (userphone) {
-          return res.status(400).json({ message: "User with this phone number already exists" });
+          return res.status(400).json({ error: "User with this phone number already exists" });
       }
 
       const newUser: Student = new studentModel({
-          studentName,
-          studentEmail,
+          studentName:name,
+          studentEmail:email,
           phone,
           password
       });
@@ -49,15 +46,15 @@ const registerStudent = async (req: Request, res: Response) => {
 
       // Store user information in globalData if registration is successful
       globalData.user = {
-          studentName,
-          studentEmail,
+          studentName:name,
+          studentEmail:email,
           phone,
         };
 
       return res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: "An error occurred" });
+      return res.status(500).json({ error: "An error occurred" });
   }
 };
 
@@ -74,28 +71,37 @@ const registerStudent = async (req: Request, res: Response) => {
 
 const loginStudent = async (req: Request, res: Response) => {
     try {
-      const { studentEmail, password } = req.body;
-      //console.log(req.body);  
+      const { email, password } = req.body;
+      console.log(req.body);
 
-      const user: Student | null = await studentModel.findOne({ studentEmail });
+      const user: Student | null = await studentModel.findOne({ studentEmail:email });
   
       if (!user) {
-        return res.status(401).json({ message: "Invalid user " });
+        return res.status(401).json({ error: "Invalid user " });
       }
       if (user.isBlocked) {
-        return res.status(401).json({ message: "User is blocked" });
+        return res.status(401).json({ error: "User is blocked" });
     }
   
       if (user && (await user.matchPassword(password))) {
+
+        const userData = {
+          name : user.studentName,
+          email : user.studentEmail,
+          id : user._id,
+          phone : user.phone
+        }
+
         //generate Token
         const token = generateToken(user._id);
         //console.log(token);  
         return res.json({
-          user,
-          token
+          userData,
+          token,
+          message:"success"
         });
       } else {
-        return res.status(401).json({ message: "Invalid Email and Password" });
+        return res.status(401).json({ error: "Invalid Email and Password" });
       }
     } catch (error) {
       res.status(500).json({ message: "server Error " });
