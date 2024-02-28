@@ -9,12 +9,16 @@ const port = process.env.PORT || 3000;
 
 app.use (cors());
 import studentRouter from './Routes/StudentRouter/StudentRouter';
+import adminRouter from "./Routes/AdminRouter/AdminRouter";
+import tutorRouter from "./Routes/TutorRouter/TutorRouter";
 connectDB();
    
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/student', studentRouter);
+app.use('/api/admin', adminRouter);
+app.use('/api/tutor',tutorRouter)
 
 
 app.get('/', (req, res) => res.send("Hello Server is running"));

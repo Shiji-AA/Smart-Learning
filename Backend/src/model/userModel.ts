@@ -9,7 +9,7 @@ export interface Student extends Document {
     studentEmail:string,
     phone:string,
     password:string,
-    photo:string[],
+    photo:string,
     courses:mongoose.Schema.Types.ObjectId,
     chats: mongoose.Schema.Types.ObjectId[]
     createAt:Date,
@@ -43,10 +43,10 @@ const userSchema = new Schema<Student>({
         required: true,
         
     },
-    photo:[{
+    photo:{
         type:String,
-        default:"https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/a9adeb42419075.57cc3f77ecae2.png",
-    }],
+        default:"https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTAxL3JtNjA5LXNvbGlkaWNvbi13LTAwMi1wLnBuZw.png",
+    },
     courses:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"courseModel"
