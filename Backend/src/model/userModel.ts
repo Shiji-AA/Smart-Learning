@@ -11,7 +11,7 @@ export interface Student extends Document {
     password:string,
     photo:string,
     courses:mongoose.Schema.Types.ObjectId,
-    chats: mongoose.Schema.Types.ObjectId[]
+  
     createAt:Date,
     updatedAt:Date,
     isBlocked:boolean,
@@ -51,12 +51,7 @@ const userSchema = new Schema<Student>({
         type:mongoose.Schema.Types.ObjectId,
         ref:"courseModel"
     },
-    chats: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "ChatModel"
-        }
-    ],
+   
     isBlocked:{
         type:Boolean,
         required:true,

@@ -1,13 +1,44 @@
-import studentlogo from "../../../assets/studentlogo.jpg";
+//import { useEffect, useState } from "react";
+//import studentlogo from "../../../assets/studentlogo.jpg";
+//import {Link} from "react-router-dom"
+import { useSelector } from "react-redux";
+import TutorrootState from "../../../Redux/Rootstate/Tutorstate";
+// import { axiosInstanceTutor } from "../../../api/axiosinstance";
 
-import {Link} from "react-router-dom"
 
 
 function Tutorprofile() {
+  const tutorData = useSelector((state:TutorrootState)=>state.tutor.tutordata)
+  console.log(tutorData)
+  // const[profileData,setProfileData] = useState <any | null>(null)
+
+  // useEffect(()=>{
+  //   const tutorId = tutorData?.id;
+  //   if(tutorId){
+  //     axiosInstanceTutor.get(`/tutorprofile/${tutorId}`)     
+  //     .then((response)=>{
+  //       console.log(response , 'ivivde va')
+  //       if(response.data){
+  //         console.log("API Response:", response.data); 
+  //        setProfileData(response.data.tutorData)
+  //        console.log("Profile Data:", profileData);
+  //       }
+  //     })
+  //     .catch((error)=>{
+        
+  //       console.error("Error fetching user profile:", error);
+  //     })
+  //   }
+
+  // },[tutorData])
+
+
+
+
   return (
     <div className="bg-blue-100 min-h-screen">
       {/* Heading */}
-      <div className="text-2xl font-semibold mb-4 text-center">Tutor Profile</div>
+      <div className="text-2xl font-semibold mb-4 text-center">Tutor Profile</div> 
 
       {/* Content */}
       <div className="flex justify-center items-center pb-8">
@@ -18,14 +49,14 @@ function Tutorprofile() {
               <div className="flex flex-col items-center p-6">
                 <img
                   className="w-24 h-24 mb-3 rounded-full shadow-lg"
-                  src={studentlogo}
+                  src={tutorData?.image}
                   alt=""
                 />
                 <span className="text-lg font-semibold text-gray-800 dark:text-gray-300">
-                  Alice Smith
+                {tutorData?.tutorName}
                 </span>
                 <span className="text-sm text-gray-500 dark:text-gray-400">
-                  alice@example.com
+                {tutorData?.tutorEmail}
                 </span>
                 <div className="mt-4">
                   <label className="flex items-center mt-2">
@@ -45,54 +76,31 @@ function Tutorprofile() {
                   <label className="block w-1/3 text-sm font-medium text-gray-900 dark:text-white">
                     Username
                   </label>
-                  <input
-                    type="text"
-                    id="username"
-                    className="w-2/3 rounded-lg bg-gray-100 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 text-sm p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    value="Alice Smith"
-                  />
+                  <p>{tutorData?.tutorName}</p>
                 </div>
 
                 <div className="flex items-center">
                   <label className="block w-1/3 text-sm font-medium text-gray-900 dark:text-white">
                     Email
                   </label>
-                  <input
-                    type="text"
-                    id="email"
-                    className="w-2/3 rounded-lg bg-gray-100 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 text-sm p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    value="alice@example.com"
-                  />
+                  <p>{tutorData?.tutorEmail}</p>
+                 
                 </div>
 
                 <div className="flex items-center">
                   <label className="block w-1/3 text-sm font-medium text-gray-900 dark:text-white">
                     Phone
                   </label>
-                  <input
-                    type="text"
-                    id="phone"
-                    className="w-2/3 rounded-lg bg-gray-100 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 text-sm p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    value="1234567890"
-                  />
+                  <p>{tutorData?.phone}</p>
+                 
                 </div>
 
-                <div className="flex items-center">
-                  <label className="block w-1/3 text-sm font-medium text-gray-900 dark:text-white">
-                    Address
-                  </label>
-                  <input
-                    type="text"
-                    id="address"
-                    className="w-2/3 rounded-lg bg-gray-100 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 text-sm p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    value="123 Main St, City, Country"
-                  />
-                </div>
-                <Link to="/tutoreditprofile">
+             
+                {/* <Link to="/tutoreditprofile">
                 <button className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                   Edit Profile
                 </button>
-                </Link>
+                </Link> */}
                 
               </div>
             </div>

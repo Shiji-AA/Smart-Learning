@@ -1,12 +1,15 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from './Components/User/Login/Login';
+
 import SignUp from './Components/User/SignUp/SignUp';
 import HomePage from "./Pages/User/Home/HomePage";
-import Forgotpassword from "./Components/User/Login/Forgotpassword";
+import Forgotpassword from "./Components/User/Login/SentOtp";
 import Resetpassword from "./Components/User/Login/Resetpassword";
 import UserProfile from "./Pages/User/UserProfile/UserProfile";
 import Landingpage from "./Pages/User/Landingpage/Landingpage";
 import EditProfile from "./Components/User/UserProfile/Editprofile";
+import VerifyOTPpage from "./Components/User/Login/VerifyOTPpage";
+
 
 //tutor side
 import Tutorlogin from "./Components/Tutor/Login/Tutorlogin";
@@ -30,7 +33,8 @@ import Privatepages from "./Components/Privatepages/Privatepages";
 
 
 function App() {
-  return (
+   return (
+  
     <Router>
       <Toaster position ='top-right'/>
       <Routes>
@@ -40,37 +44,42 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<SignUp />} /> 
         <Route path="/forgot" element={<Forgotpassword />} /> 
-        <Route path="/reset" element={<Resetpassword />} /> 
+        <Route path="/resetPassword" element={<Resetpassword />} /> 
         <Route path="/register" element={<SignUp />} /> 
+        <Route path="/verify-otp" element={<VerifyOTPpage />} /> 
 
-        <Route element={<Privatepages/>}>
+        <Route element={<Privatepages isStudent={true}/>}>
         <Route path="/userprofile" element={<UserProfile/>}  />  
         <Route path="/home" element={<Landingpage/>}  />  
         <Route path="/editprofile" element={<EditProfile/>}  /> 
         <Route path="/usercourselist" element={<Tutorcourseslist/>}  /> 
-        <Route path="/singleview" element={<SingleCoursePageView/>} />
+        <Route path="/singleviewUser" element={<SingleCoursePageView/>} />
         </Route>
 
           {/* Tutor side */} 
         <Route path="/tutorLogin" element={<Tutorlogin/>} />
         <Route path="/tutorregister" element={<Tutorsignup/>} />
+
+        <Route element={<Privatepages isStudent={false}/>}>
         <Route path="/tutordashboard" element={<Tutordashboard/>} />
         <Route path="/tutorprofile" element={<Tutorprofile/>} />
         <Route path="/tutoreditprofile" element={<Tutoreditprofile/>} />
         <Route path="/addcourse" element={<Addcourse/>} />
         <Route path="/addlesson" element={<Addlesson/>} />
-        <Route path="/tutorcourseslist" element={<Tutorcourseslist/>} />
-        <Route path="/singleview" element={<SingleCoursePageView/>} />
+        <Route path="/getallcourse" element={<Tutorcourseslist/>} />
+        <Route path="/singleview/:id" element={<SingleCoursePageView/>} />       
+        </Route>
+        
 
            {/* Admin side */}
            <Route path="/admin" element={<Adminlogin/>} />
            <Route path="/admindashboard" element={<Dashboard/>} />
-           <Route path="/categorylist" element={<Categorylist/>} />
-           <Route path="/createcategory" element={<Createcategory/>} />
+           <Route path="/getallcategory" element={<Categorylist/>} />
+           <Route path="/addcategory" element={<Createcategory/>} />
            <Route path="/admincourselist" element={<Courseview/>} />
            
            
-           
+          
 
 
           

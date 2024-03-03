@@ -1,9 +1,30 @@
-import studentlogo from "../../../assets/studentlogo.jpg";
-
-import {Link} from "react-router-dom"
+import { useSelector } from "react-redux";
+import AuthrootState from "../../../Redux/Rootstate/Authstate";
+// import { useEffect, useState } from "react";
+// import { axiosInstance } from "../../../api/axiosinstance";
 
 
 function Profile() {
+  const userData = useSelector((state: AuthrootState) => state.auth.userdata);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // const [profileData, setProfileData] = useState<any |null>(null);
+
+  // useEffect(() => {
+  //   const userId = userData?.id;
+  //   if (userId) {
+  //     axiosInstance.get(`/userprofile/${userId}`)
+  //     .then((response) => {
+  //     if (response.data) {
+  //     setProfileData(response.data.userData);
+  //     }
+  //       })
+  //       .catch((error) => {
+  //         // Handle error
+  //         console.error("Error fetching user profile:", error);
+  //       });
+  //   }
+  // }, [userData]); 
+
   return (
     <div className="bg-blue-100 min-h-screen">
       {/* Heading */}
@@ -18,14 +39,14 @@ function Profile() {
               <div className="flex flex-col items-center p-6">
                 <img
                   className="w-24 h-24 mb-3 rounded-full shadow-lg"
-                  src={studentlogo}
+                  src={userData?.image}
                   alt=""
                 />
                 <span className="text-lg font-semibold text-gray-800 dark:text-gray-300">
-                  Alice Smith
+                  {userData?.name}
                 </span>
                 <span className="text-sm text-gray-500 dark:text-gray-400">
-                  alice@example.com
+                  {userData?.email}
                 </span>
                 <div className="mt-4">
                   <label className="flex items-center mt-2">
@@ -45,55 +66,22 @@ function Profile() {
                   <label className="block w-1/3 text-sm font-medium text-gray-900 dark:text-white">
                     Username
                   </label>
-                  <input
-                    type="text"
-                    id="username"
-                    className="w-2/3 rounded-lg bg-gray-100 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 text-sm p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    value="Alice Smith"
-                  />
+                  <p>{userData?.name}</p>
                 </div>
 
                 <div className="flex items-center">
                   <label className="block w-1/3 text-sm font-medium text-gray-900 dark:text-white">
                     Email
                   </label>
-                  <input
-                    type="text"
-                    id="email"
-                    className="w-2/3 rounded-lg bg-gray-100 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 text-sm p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    value="alice@example.com"
-                  />
+                  <p>{userData?.email}</p>
                 </div>
 
                 <div className="flex items-center">
                   <label className="block w-1/3 text-sm font-medium text-gray-900 dark:text-white">
                     Phone
                   </label>
-                  <input
-                    type="text"
-                    id="phone"
-                    className="w-2/3 rounded-lg bg-gray-100 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 text-sm p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    value="1234567890"
-                  />
+                  <p>{userData?.phone}</p>
                 </div>
-
-                <div className="flex items-center">
-                  <label className="block w-1/3 text-sm font-medium text-gray-900 dark:text-white">
-                    Address
-                  </label>
-                  <input
-                    type="text"
-                    id="address"
-                    className="w-2/3 rounded-lg bg-gray-100 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 text-sm p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    value="123 Main St, City, Country"
-                  />
-                </div>
-                <Link to="/editprofile">
-                <button className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                  Edit Profile
-                </button>
-                </Link>
-                
               </div>
             </div>
           </div>

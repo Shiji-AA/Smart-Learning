@@ -1,29 +1,18 @@
 import mongoose from "mongoose";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
+
 dotenv.config();
 
-// Extend NodeJS ProcessEnv interface to include MONGO_URI
-declare global {
-  namespace NodeJS {
-    interface ProcessEnv {
-      MONGO_URI: string;
-    }
-  }
-}
+const mongo_uri: string | undefined = process.env.MONGO_URI;
 
-// Ensure process.env.MONGO_URI is recognized as a string
-const connectDB = async () => {
+export const connectDB = async (): Promise<void> => {
     try {
-        const mongoURI = process.env.MONGO_URI; // Ensure process.env.MONGO_URI is recognized as a string
-        if (!mongoURI) {
-            throw new Error("MongoURI is not defined in environment variables.");
+        if (!mongo_uri) {
+            throw new Error("MONGO_URI is not defined in environment variables.");
         }
-        const conn = await mongoose.connect(mongoURI); // connecting to MongoDB database using Mongoose
-        console.log(`MongoDB Connected : ${conn.connection.host}`);
+        await mongoose.connect(mongo_uri);
+        console.log("Database connected successfully");
     } catch (error) {
-        console.error(error);
-        process.exit(1);
+        console.error("Failed to connect to the database:", error);
     }
 };
-
-export default connectDB;

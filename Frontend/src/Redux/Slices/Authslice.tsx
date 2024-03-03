@@ -1,11 +1,13 @@
 import {createSlice} from '@reduxjs/toolkit';
 
-//structure of the data
+//represents the structure of user data
 export interface UserData{
     name:string,
     email:string,
     phone:string,
-    id : string
+    id : string,
+    image : string,
+    role : string
 }
 
 export interface UserState{

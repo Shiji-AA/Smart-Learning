@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-//import studentModel from "../../model/userModel";
 import studentModel, { Student } from "../../model/userModel";
 import generateToken from "../../../Utils/generateToken";
 import jwt from "jsonwebtoken";
@@ -69,6 +68,8 @@ const registerStudent = async (req: Request, res: Response) => {
   }
 };
 
+//googleREGISTER
+
 const googleRegister = async (req: Request, res: Response) => {
   try {
     console.log("This is credential in body: ", req.body.credential);
@@ -95,12 +96,13 @@ const googleRegister = async (req: Request, res: Response) => {
       password: jti,
     });
     await newUser.save();
-    res.status(200).json({ message: "user saved succesfully" });
+    res.status(200).json({ message: "user saved successfully" });
   } catch (error) {
     res.status(400).json({ error: "An error occurred" });
   }
 };
 
+//googleLogin
 const googleLogin = async (req: Request, res: Response) => {
   try {
     const decodedData = jwt.decode(req.body.credential) as DecodedData | null;
@@ -120,6 +122,8 @@ const googleLogin = async (req: Request, res: Response) => {
         email: user.studentEmail,
         id: user._id,
         phone: user.phone,
+        photo : user.photo,
+        role : user.studentRole
       };
 
       return res.json({
@@ -139,11 +143,6 @@ const googleLogin = async (req: Request, res: Response) => {
 // @desc LOGIN student/setToken
 // route POST /api/student/login
 // access Public
-//
-// const loginStudent = (req: Request, res: Response) => {
-//     res.status(200).json({ message: "loginStudent" });
-// };
-//
 
 const loginStudent = async (req: Request, res: Response) => {
   try {
@@ -167,6 +166,8 @@ const loginStudent = async (req: Request, res: Response) => {
         email: user.studentEmail,
         id: user._id,
         phone: user.phone,
+        image : user.photo
+
       };
 
       //generate Token
@@ -238,6 +239,7 @@ const verifyOTP = async (req: Request, res: Response) => {
     res.status(500).json({error:"Oops! Something went wrong!"});
   }
 };
+
 //reset password
 
 const resetPassword = async (req: Request, res: Response) => { 
@@ -268,6 +270,8 @@ const resetPassword = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "Failed to reset password" });
   }
 }
+
+//to get student profile
 
 const getStudentProfile = async (req: Request, res: Response) => {
   try {

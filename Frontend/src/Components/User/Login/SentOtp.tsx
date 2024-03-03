@@ -1,7 +1,26 @@
-import { Link } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 import logo1 from '../../../assets/logo1.jpg';
+import { axiosInstance } from "../../../api/axiosinstance";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function Example() {
+  const[email,setEmail] = useState<string>('');
+  const navigate= useNavigate()
+
+  const EmailSubmit =(e :React.FormEvent<HTMLFormElement>)=>{
+    e.preventDefault()
+    axiosInstance.post('/send-otp',{email})
+    .then((response)=>{
+      if(response.data.message){
+        toast.success(response.data.message)
+        navigate('/verify-otp', {state : {email : email}})
+      }
+    })
+
+
+    
+  }
   return (
     <div className="flex min-h-screen justify-center items-center bg-blue-100">
       <div className="sm:max-w-md w-full bg-white p-6 rounded-lg shadow-md">
@@ -14,7 +33,7 @@ export default function Example() {
           Forgot Password
         </h2>
 
-        <form className="mt-8 space-y-6" action="#" method="POST">
+        <form onSubmit={EmailSubmit} className="mt-8 space-y-6" action="#" method="POST">
           <div className="rounded-md shadow-sm">
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Email Address
@@ -24,6 +43,8 @@ export default function Example() {
                 id="email"
                 name="email"
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email address"
                 autoComplete="email"
                 required
@@ -31,15 +52,14 @@ export default function Example() {
               />
             </div>
           </div>
-
-          <div>
-            <button
-              type="submit"
-              className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              <Link to="/reset">RESET PASSWORD</Link>
-            </button>
-          </div>
+        
+        <button
+            type="submit"
+            className="w-full mt-4 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Send OTP
+          </button>
+          
         </form>
       </div>
     </div>

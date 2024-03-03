@@ -2,6 +2,7 @@
 
 import { Request, Response } from "express";
 import generateToken from "../../../Utils/generateToken";
+import categoryModel from "../../model/categoryModel";
 
 
 const adminLogin = async (req: Request, res: Response) => {  
@@ -27,7 +28,35 @@ const adminLogin = async (req: Request, res: Response) => {
 };
 
 
+
+//get All Catagories
+
+const getAllCategory = async (req: Request, res: Response) => {
+    try {
+      const categoryDetails = await categoryModel.find().exec();
+      if (categoryDetails) {
+        //console.log(categoryDetails,"Get all Category")
+
+        res.status(200).json({
+          categoryDetails,
+          message:"categoryDetails"
+        });
+      } else {
+        return res.status(400).json({
+          message: "no users in this table",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+     
+    }
+  };
+
+
+
+
 export{
     adminLogin,
+    getAllCategory,
 
 }

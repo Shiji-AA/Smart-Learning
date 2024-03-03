@@ -8,10 +8,10 @@ function Dashboard() {
         <div>
 
             <Adminnavbar />            
-         
-            <Adminstatistics />
-            {/* <Sidebar /> */}
-            <Admingraph/>
+       
+            <Adminstatistics /> 
+             {/* <Sidebar />  */}
+             <Admingraph/> 
             <br/>
             <hr/>
             <Adminfooter />

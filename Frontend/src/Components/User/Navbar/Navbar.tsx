@@ -1,7 +1,7 @@
 
 import logo1 from '../../../assets/logo1.jpg';
 import { Link } from 'react-router-dom';
-import studentlogo from '../../../assets/studentlogo.jpg';
+//import studentlogo from '../../../assets/studentlogo.jpg';
 import { useDispatch, useSelector } from 'react-redux';
 import AuthrootState from '../../../Redux/Rootstate/Authstate';
 import { logout } from '../../../Redux/Slices/Authslice';
@@ -25,8 +25,8 @@ function Navbar() {
         {/* Navigation Links */}
         <div className="flex space-x-10 items-center">
           <Link to="#" className="text-white text-xl font-semibold border-b-2 border-transparent hover:border-white md:border-b-0 md:hover:border-white md:pb-2">Home</Link>
-          <Link to="/usercourselist" className="text-white text-xl font-semibold border-b-2 border-transparent hover:border-white md:border-b-0 md:hover:border-white md:pb-2">Courses</Link>
-          <Link to="#" className="text-white text-xl font-semibold border-b-2 border-transparent hover:border-white md:border-b-0 md:hover:border-white md:pb-2">Tutors</Link>
+          <Link to="/usercourselist" className="text-white text-xl font-semibold border-b-2 border-transparent hover:border-white md:border-b-0 md:hover:border-white md:pb-2">My Courses</Link>
+          <Link to="#" className="text-white text-xl font-semibold border-b-2 border-transparent hover:border-white md:border-b-0 md:hover:border-white md:pb-2">Students</Link>
           <Link to="/userprofile" className="text-white text-xl font-semibold border-b-2 border-transparent hover:border-white md:border-b-0 md:hover:border-white md:pb-2">Profile</Link>
         </div>
 
@@ -49,8 +49,8 @@ function Navbar() {
           )}
          
           <div className="rounded-full overflow-hidden">
-            <Link to = "/">
-            <img src={studentlogo} alt="Student Logo" className="h-10 w-10" />
+            <Link to = "">
+            {/* <img src={studentlogo} alt="Student Logo" className="h-10 w-10" /> */}
             </Link>
           
           </div>
