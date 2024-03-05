@@ -20,9 +20,10 @@ function Tutorcourseslist() {
   axiosInstanceTutor.get('/getallcourse')
   .then((response)=>{
   if(response.data.courseDetails){
-  console.log("i am course+;LLESSON details",courseDetails)
+  console.log("i am course details",courseDetails)
   setCourseDetails(response.data.courseDetails)
-}
+}8
+
 })
 .catch((error)=>{
   console.error("Error fetching data:", error);

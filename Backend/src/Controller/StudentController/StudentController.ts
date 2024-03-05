@@ -98,7 +98,7 @@ const googleRegister = async (req: Request, res: Response) => {
     await newUser.save();
     res.status(200).json({ message: "user saved successfully" });
   } catch (error) {
-    res.status(400).json({ error: "An error occurred" });
+    res.status(400).json({ error: "User already exists" });
   }
 };
 
@@ -122,7 +122,8 @@ const googleLogin = async (req: Request, res: Response) => {
         email: user.studentEmail,
         id: user._id,
         phone: user.phone,
-        photo : user.photo,
+        image:user.photo,
+        //photo : user.photo,
         role : user.studentRole
       };
 

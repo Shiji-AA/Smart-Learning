@@ -8,7 +8,7 @@ import categoryModel from "../../model/categoryModel";
 const adminLogin = async (req: Request, res: Response) => {  
     try {
         const adminEmail = "admin@gmail.com";
-        const adminPassword = "admin123";
+        const adminPassword = "Admin@123";
         const id = "ObjectId(65deabd77bad0a47e7fc0f68)";
         const { email, password } = req.body;     
         

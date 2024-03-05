@@ -105,13 +105,7 @@ function Addcourse() {
       }
 
     axiosInstanceTutor
-      .post("/addcourse", {
-        courseName,
-        courseDuration,
-        courseFee,
-        courseDescription,
-        selectcategory,
-        image: cloudanaryURL
+      .post("/addcourse", {courseName,courseDuration,courseFee,courseDescription,selectcategory,image: cloudanaryURL
       })
       .then((response) => {
         if (response.data.message) {
