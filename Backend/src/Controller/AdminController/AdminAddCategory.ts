@@ -1,7 +1,10 @@
 import { Request,Response } from "express";
 import categoryModel,{Category} from "../../model/categoryModel";
 
-const addCategory = async(req :Request,res :Response)=>{
+
+
+//addcategory
+const addCategory= async(req :Request,res :Response)=>{
     try{
         const {title,description} = req.body;
           // Check if a category with the same title exists 
@@ -35,7 +38,6 @@ const addCategory = async(req :Request,res :Response)=>{
         res.status(400).json({error:"Invalid category"})
     }}
 
-
-
-export default addCategory ;
-
+    
+export default
+ addCategory;

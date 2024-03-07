@@ -30,16 +30,16 @@ import Tutorcourseslist from "./Components/Tutor/Tutorhome/Tutorcourseslist";
 import SingleCoursePageView from "./Components/Tutor/Tutorhome/Singleview";
 import { Toaster } from "react-hot-toast";
 import Privatepages from "./Components/Privatepages/Privatepages";
-
+import EditCategory from "./Components/Admin/Category/Editcategory ";
+import Tutortable from "./Components/Admin/TutorsList/Tutortable";
+import Studenttable from "./Components/Admin/StudentsList/Studenttable";
 
 function App() {
-   return (
-  
+   return (  
     <Router>
       <Toaster position ='top-right'/>
       <Routes>
       <Route path="/" element={<HomePage />} />
-
         {/* userSide */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<SignUp />} /> 
@@ -68,20 +68,17 @@ function App() {
         <Route path="/addlesson" element={<Addlesson/>} />
         <Route path="/getallcourse" element={<Tutorcourseslist/>} />
         <Route path="/singleview/:id" element={<SingleCoursePageView/>} />       
-        </Route>
-        
+        </Route>        
 
            {/* Admin side */}
            <Route path="/admin" element={<Adminlogin/>} />
            <Route path="/admindashboard" element={<Dashboard/>} />
-           <Route path="/getallcategory" element={<Categorylist/>} />
+           <Route path="/getallcategory" element={<Categorylist/>} />          
            <Route path="/addcategory" element={<Createcategory/>} />
+           <Route path="/editcategory/:id" element={<EditCategory/>} />
            <Route path="/admincourselist" element={<Courseview/>} />
-           
-           
-          
-
-
+           <Route path="/getalltutors" element={<Tutortable/>} />
+           <Route path="/adminstudentlist" element={<Studenttable/>} />
           
         </Routes>
     </Router>

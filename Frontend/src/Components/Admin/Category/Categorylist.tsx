@@ -28,6 +28,20 @@ const CategoryList = () => {
       });
   }, []);
 
+  const handleDelete =(id:string)=>{
+    
+    axiosInstanceAdmin.delete(`/deletecategory/${id}`)
+    .then(()=>{
+      setCategoryDetails(categoryDetails.filter(category=>category._id !== id));
+      toast.success("Category deleted successfully")
+    })
+    .catch((error)=>{
+      console.error("Error deleting category",error);
+      toast.error("Error in deleting category")
+    })
+
+  }
+
   return (
     <div className="px-3 mt-10"> 
       <div className="max-w-3xl mx-auto bg-pink-100 rounded-lg overflow-hidden shadow-md">
@@ -45,14 +59,25 @@ const CategoryList = () => {
               <th scope="col" className="px-6 py-3 text-start text-xs font-medium uppercase">Sl no</th>
               <th scope="col" className="px-6 py-3 text-start text-xs font-medium uppercase">Category</th>
               <th scope="col" className="px-6 py-3 text-start text-xs font-medium uppercase">Description</th>
+              <th scope="col" className="px-6 py-3 text-start text-xs font-medium uppercase">Action</th>
             </tr>
-          </thead>
+          </thead><br/>
           <tbody className="divide-y divide-gray-200">
             {categoryDetails.map((category, index) => (
               <tr key={category._id} className="hover:bg-gray-100">
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">{index + 1}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{category.title}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{category.description}</td>
+                <Link to={`/editcategory/${category._id}`}>
+                <button className="px-4 py-2 mr-2 text-sm font-medium text-white bg-orange-500 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                 Edit
+                </button>
+                </Link>
+            
+                <button onClick={() => handleDelete(category._id)}  className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">
+                Delete
+                </button>
+                
               </tr>
             ))}
           </tbody>

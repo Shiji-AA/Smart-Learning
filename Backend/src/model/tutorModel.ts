@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import mongoose, { Schema, Document, model, Model } from 'mongoose';
+import mongoose, { Schema, Document, model, Model, trusted } from 'mongoose';
 
 
 export interface TUTOR extends Document {
@@ -9,6 +9,7 @@ export interface TUTOR extends Document {
     phone: string;
     password: string;
     photo: string;
+    isBlocked: boolean;
     courses: mongoose.Schema.Types.ObjectId;  
     createdAt: Date;
     updatedAt: Date;
@@ -28,7 +29,7 @@ const TutorSchema = new Schema<TUTOR>({
     tutorEmail: {
         type: String,
         required: true,
-        unique: true, // Add unique constraint
+        unique: true, 
     },
     phone: {
         type: String,
@@ -57,6 +58,10 @@ const TutorSchema = new Schema<TUTOR>({
         type: Date,
         required: true,
         default: Date.now,
+    },
+    isBlocked: {
+        type: Boolean,
+        default: false,
     },
   
 }, { timestamps: true });

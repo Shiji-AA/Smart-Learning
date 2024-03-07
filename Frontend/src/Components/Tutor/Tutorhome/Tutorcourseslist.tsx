@@ -22,7 +22,7 @@ function Tutorcourseslist() {
   if(response.data.courseDetails){
   console.log("i am course details",courseDetails)
   setCourseDetails(response.data.courseDetails)
-}8
+}
 
 })
 .catch((error)=>{

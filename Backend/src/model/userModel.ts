@@ -10,8 +10,7 @@ export interface Student extends Document {
     phone:string,
     password:string,
     photo:string,
-    courses:mongoose.Schema.Types.ObjectId,
-  
+    courses:mongoose.Schema.Types.ObjectId,  
     createAt:Date,
     updatedAt:Date,
     isBlocked:boolean,
@@ -53,10 +52,8 @@ const userSchema = new Schema<Student>({
     },
    
     isBlocked:{
-        type:Boolean,
-        required:true,
+        type:Boolean,        
         default:false
-
     },
     createAt:{
         type:Date,

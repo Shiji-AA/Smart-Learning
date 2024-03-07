@@ -29,8 +29,8 @@ function Navbar() {
         {/* Navigation Links */}
         <div className="flex space-x-10 items-center">
           <Link to="/admindashboard" className="text-white text-xl font-semibold border-b-2 border-transparent hover:border-white md:border-b-0 md:hover:border-white md:pb-2">Home</Link>
-          <Link to="#" className="text-white text-xl font-semibold border-b-2 border-transparent hover:border-white md:border-b-0 md:hover:border-white md:pb-2">Students</Link>
-          <Link to="#" className="text-white text-xl font-semibold border-b-2 border-transparent hover:border-white md:border-b-0 md:hover:border-white md:pb-2">Instructors</Link>
+          <Link to="/adminstudentlist" className="text-white text-xl font-semibold border-b-2 border-transparent hover:border-white md:border-b-0 md:hover:border-white md:pb-2">Students</Link>
+          <Link to="/getalltutors" className="text-white text-xl font-semibold border-b-2 border-transparent hover:border-white md:border-b-0 md:hover:border-white md:pb-2">Instructors</Link>
           <Link to="/getallcategory" className="text-white text-xl font-semibold border-b-2 border-transparent hover:border-white md:border-b-0 md:hover:border-white md:pb-2">Category</Link>
           <Link to="/admincourselist" className="text-white text-xl font-semibold border-b-2 border-transparent hover:border-white md:border-b-0 md:hover:border-white md:pb-2">Courses </Link>
         </div>

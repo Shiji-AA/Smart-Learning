@@ -6,6 +6,7 @@ export interface Course extends Document {
     courseDescription :string,
     category:mongoose.Schema.Types.ObjectId,   
     photo:string,
+    isApproved:boolean,
     courseFee:number,  
     createdAt:Date,
     updatedAt:Date

@@ -18,8 +18,7 @@ const handleSubmit =(e :React.FormEvent<HTMLFormElement>)=>{
     }
   })
   
-}
- 
+} 
 
   return (
     <div className="max-w-md mx-auto mt-8 bg-pink-100 rounded-lg shadow-md">
