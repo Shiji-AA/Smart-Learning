@@ -9,6 +9,8 @@ export interface TUTOR extends Document {
     phone: string;
     password: string;
     photo: string;
+    education:string;
+    experience:string;
     isBlocked: boolean;
     courses: mongoose.Schema.Types.ObjectId;  
     createdAt: Date;
@@ -33,7 +35,16 @@ const TutorSchema = new Schema<TUTOR>({
     },
     phone: {
         type: String,
-        required: true,
+        required: true, 
+    },
+    education: {
+        type: String,
+        default:"Master of Education",
+
+    },
+    experience: {
+        type: String,
+        default:"5 Years in  Teaching",
     },
     password: {
         type: String,

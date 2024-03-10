@@ -51,7 +51,7 @@ function App() {
         <Route element={<Privatepages isStudent={true}/>}>
         <Route path="/userprofile" element={<UserProfile/>}  />  
         <Route path="/home" element={<Landingpage/>}  />  
-        <Route path="/editprofile" element={<EditProfile/>}  /> 
+        <Route path="/editprofile/:id" element={<EditProfile/>}  /> 
         <Route path="/usercourselist" element={<Tutorcourseslist/>}  /> 
         <Route path="/singleviewUser" element={<SingleCoursePageView/>} />
         </Route>
@@ -63,11 +63,11 @@ function App() {
         <Route element={<Privatepages isStudent={false}/>}>
         <Route path="/tutordashboard" element={<Tutordashboard/>} />
         <Route path="/tutorprofile" element={<Tutorprofile/>} />
-        <Route path="/tutoreditprofile" element={<Tutoreditprofile/>} />
+        <Route path="/tutoreditprofile/:tutorId" element={<Tutoreditprofile/>} />
         <Route path="/addcourse" element={<Addcourse/>} />
         <Route path="/addlesson" element={<Addlesson/>} />
         <Route path="/getallcourse" element={<Tutorcourseslist/>} />
-        <Route path="/singleview/:id" element={<SingleCoursePageView/>} />       
+        <Route path="/singleview/:id" element={<SingleCoursePageView/>} />      
         </Route>        
 
            {/* Admin side */}

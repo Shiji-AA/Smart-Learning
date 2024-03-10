@@ -24,6 +24,7 @@ const adminSlice =createSlice({
         },
        
         logout:(state)=>{
+            localStorage.removeItem("adminToken")
             state.admindata=null;
             
         }

@@ -31,12 +31,13 @@ export default function Example() {
 
     axiosInstance.post("/login",{email,password})
     .then((response)=>{
-      if(response.data.message){
+      if(response.data.message){    
         console.log(response,"responseee")
+        localStorage.setItem("studentToken",response.data.token)//for setting token in local storage
         dispatch(setUserInfo(response.data.userData))
         toast.success(response.data.message)
         navigate("/home")
-    }
+    }     
     })
     .catch((error) => {
       console.log('here', error)
@@ -139,7 +140,7 @@ if(error.response.data.error){
           axiosInstance.post('/google/login' , response).then((res) => {
             console.log(res , 'google @')
             if(res.data.message) {
-
+              localStorage.setItem("studentToken",res.data.token)//for setting token in local storage
               dispatch(setUserInfo(res.data.userData));
               toast.success(res.data.message);
               navigate('/home');

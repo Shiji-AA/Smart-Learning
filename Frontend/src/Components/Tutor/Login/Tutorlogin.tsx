@@ -24,7 +24,8 @@ export default function Example() {
 
     axiosInstanceTutor.post("/tutorLogin",{tutorEmail,password})
     .then((response)=>{
-      if(response.data.message){       
+      if(response.data.message){  
+        localStorage.setItem("tutorToken",response.data.token)    // for setting token in local storage 
         dispatch(setTutorInfo(response.data.tutorData))
         toast.success(response.data.message)
         navigate("/tutordashboard")

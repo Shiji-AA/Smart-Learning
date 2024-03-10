@@ -46,8 +46,6 @@ import lessonModel from "../../model/lessonModel";
         })        
     }
 }
-  
-
 
 const tutorLogin =async(req:Request,res:Response)=>{
     const {tutorEmail,password}=req.body  
@@ -86,12 +84,12 @@ const tutorLogin =async(req:Request,res:Response)=>{
 const getTutorProfile = async (req: Request, res: Response) => {
   try {
     const { tutorId } = req.params;
-    console.log(req.body , 'here')
-    const tutorData = await TutorModel.findOne({ _id: tutorId });    
+    const tutorData = await TutorModel.findOne({ _id: tutorId }); 
+    console.log(tutorData,"tutordattaa")   
     if (!tutorData) {
       return res.status(404).json({ error: "Tutor not found" });
-    }
-    res.status(200).json({ tutorData });
+    }    
+    return res.status(200).json({ tutorData });
   } catch (error) {
     console.error("Error fetching tutor profile:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -229,6 +227,66 @@ const addLesson = async (req: Request, res: Response) => {
   }
 };
 
+//to get data in the editprofile page
+const getProfileById =async (req:Request,res:Response)=>{
+  const tutorId=req.params.tutorId;
+  try{  
+    const tutorDetails = await TutorModel.findById(tutorId).exec();
+    if (tutorDetails) {
+      res.status(200).json({
+        tutorDetails,
+        message: "Tutor found successfully",
+      });
+    } else {
+      return res.status(404).json({
+        message: "Tutor not found",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+  }
+
+  const updateProfile = async (req: Request, res: Response) => {
+    try {
+      const { tutorId } = req.params;    
+      const { tutorName, tutorEmail, phone } = req.body;
+
+      const tutor = await TutorModel.findById(tutorId);
+       
+      if (!tutor) {
+        return res.status(404).json({ error: "Invalid category" });
+      }
+  
+      tutor.tutorName = tutorName || tutor.tutorName;
+      tutor.tutorEmail = tutorEmail || tutor.tutorEmail;
+      tutor.phone = phone || tutor.phone;
+  
+      const updateTutorData = await tutor.save();
+
+      //this is  sending along with response so that update the store
+      const  tutorData = {
+        tutorName : updateTutorData.tutorName,
+        tutorEmail : updateTutorData.tutorEmail,
+        phone : updateTutorData.phone,
+        image:updateTutorData.photo,
+        tutorId :updateTutorData._id,      
+      }
+     
+      if (updateTutorData) {
+        return res.status(200).json({tutorData,message: "Tutor updated successfully" });
+      } else {
+        return res.status(404).json({ error: "Failed to update tutor" });
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  }
+
 
 export{
     tutorLogin,
@@ -238,7 +296,8 @@ export{
     getAllCourse,
     addLesson,
     singleView,
-
+    getProfileById,
+    updateProfile,
 
 
 }

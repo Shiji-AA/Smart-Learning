@@ -234,7 +234,7 @@ const verifyOTP = async (req: Request, res: Response) => {
       verified = true;
       res.status(200).json({message:"Success"});
     } else {
-      return false;
+      res.status(404).json({error:"Invalid OTP"});
     }
   } catch (error) {
     res.status(500).json({error:"Oops! Something went wrong!"});
@@ -288,43 +288,80 @@ const getStudentProfile = async (req: Request, res: Response) => {
   }
 };
 
-
-
-
-
-const logoutStudent = async (req: Request, res: Response) => {
-  try {
-    const userId = req.params.id;
-    console.log(req.params, "userId is");
-    const user = await studentModel.findById(userId);
-    if (!user) {
-      return res.status(400).json({ message: "User Not Found" });
+//to get data in the editprofile page
+const getProfileById =async (req:Request,res:Response)=>{
+  const studentId=req.params.id;
+  try{
+  
+    const studentDetails = await studentModel.findById(studentId).exec();
+    if (studentDetails) {
+      res.status(200).json({
+        studentDetails,
+        message: "Student found successfully",
+      });
     } else {
-      await user.save();
-      res.status(200).json({ message: "user Logout Successfully" });
+      return res.status(404).json({
+        message: "Student not found",
+      });
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({
+      message: "Internal server error",
+    });
   }
-};
 
-//
+  }
 
 
-//
-const updateStudentProfile = (req: Request, res: Response) => {
-  res.status(200).json({ message: "updateStudentProfile" });
-};
+  const updateProfile = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;       
+      const { studentName, studentEmail, phone } = req.body;
+  
+      const student = await studentModel.findById(id);
+       
+      if (!student) {
+        return res.status(404).json({ error: "Invalid category" });
+      }
+  
+      student.studentName = studentName || student.studentName;
+      student.studentEmail = studentEmail || student.studentEmail;
+      student.phone = phone || student.phone;
+  
+      const updateStudentData = await student.save();
+      //updating store 
+      const userData = {
+        name: updateStudentData.studentName,
+        email: updateStudentData.studentEmail,
+        id: updateStudentData._id,
+        phone: updateStudentData.phone,
+        image:updateStudentData.photo,
+        //photo : updateStudentData.photo,
+        role : updateStudentData.studentRole
+      };
+      console.log(updateStudentData)
+  
+      if (updateStudentData) {
+        return res.status(200).json({  userData,message: "Student updated successfully" });
+      } else {
+        return res.status(404).json({ error: "Failed to update student" });
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  }
+  
 export {
   loginStudent,
   registerStudent,
-  logoutStudent,
-  getStudentProfile,
-  updateStudentProfile,
+  getStudentProfile, 
   googleRegister,
   googleLogin,
   sendOTP,
   verifyOTP,
   resetPassword,
+  getProfileById,
+  updateProfile,
 };

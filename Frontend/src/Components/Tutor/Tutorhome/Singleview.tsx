@@ -57,7 +57,7 @@ function SingleCoursePageView() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-4">Course Details </h1>
+      <h1 className="text-3xl font-bold mb-4">+ Add new lessons </h1>
       <div className="bg-white shadow-md rounded-lg p-6">
         <h2 className="text-2xl font-bold mb-4">{courseDetails?.courseName}</h2>
         <img

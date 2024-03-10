@@ -26,11 +26,17 @@ const initialState :UserState ={
         state.userdata = action.payload;
     },
     logout:(state)=>{
+        localStorage.removeItem("studentToken")
         state.userdata = null;
+    },
+    updateProfile: (state,action)=>{
+        if(state.userdata !==null){
+            state.userdata=action.payload;
+        }
     }
 
     }
 })
 
-export const  {setUserInfo,logout} = authSlice.actions;
+export const  {setUserInfo,logout,updateProfile} = authSlice.actions;
 export default authSlice.reducer;

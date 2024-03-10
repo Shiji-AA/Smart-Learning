@@ -18,14 +18,14 @@ const adminUser = useSelector((state : AdminrootState) => state.admin.admindata)
   const navigate = useNavigate();
   const dispatch= useDispatch()
 
-  console.log(adminUser , 'adddd')
-
+console.log(adminUser)
 const handleSubmit=(e :React.FormEvent<HTMLFormElement>)=> {
   e.preventDefault();
   axiosInstanceAdmin.post('/admin',{email,password})
   .then((response)=>{
-    console.log(response , '$$$$')
+    console.log(response)
     if(response.data.message){
+      localStorage.setItem("adminToken",response.data.token) // for setting token in local storage
       dispatch(setAdminInfo(response.data))
       toast.success(response.data.message);   
       navigate('/admindashboard')
