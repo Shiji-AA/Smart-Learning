@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { axiosInstanceTutor } from "../../../api/axiosinstance";
 import axios from "axios";
+import Tuturnavbar from '../../../Components/Tutor/Tutordashboard/Tutornavbar'
 
 interface Category {
   _id: string;
@@ -37,7 +38,7 @@ function Addcourse() {
       });
   }, []);
 
-
+//while selecting image
   const handleSubmitChange = (e: React.FormEvent<HTMLInputElement>) => {
       try {
       const inputElement = e.target as HTMLInputElement; 
@@ -121,9 +122,13 @@ function Addcourse() {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen mt-10">
-      <div className="mt-8  shadow-md p-8 w-full max-w-md rounded-lg border border-gray-400">
-        <form onSubmit={handleSubmit} className="bg-white rounded p-4 sm:p-8">
+    <>
+    <Tuturnavbar />
+    <div className="bg-gradient-to-b from-blue-200 to-white p-4 rounded-lg">
+    <div className=" min-h-screen flex items-center justify-center">
+      <div className="mt-8 shadow-md p-8 w-full max-w-md rounded-lg border border-gray-400 bg-white">
+      <div className="mt-8 shadow-md p-8 w-full max-w-md rounded-lg border border-blue-400 bg-white">
+        <form onSubmit={handleSubmit} className="bg-white rounded p-4 sm:p-8 h-full">
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">
               Course Name
@@ -227,6 +232,11 @@ function Addcourse() {
         </form>
       </div>
     </div>
+    </div>
+    </div>
+     
+    </>
+   
   );
 }
 export default Addcourse;

@@ -5,20 +5,21 @@ import toast from 'react-hot-toast'
 export const axiosInstance = axios.create({
     baseURL:'http://localhost:3000/api/student'
 })
-//axiosInterceptor
+
+//axiosInterceptor for student
 axiosInstance.interceptors.request.use((config) => {
-    const studentToken = localStorage.getItem('studentToken');
-    if (studentToken !== null) {
-        config.headers.authorization = `Bearer ${studentToken}`;
-    }
-    return config;
+const studentToken = localStorage.getItem('studentToken');
+if (studentToken !== null) {
+config.headers.authorization = `Bearer ${studentToken}`;
+}
+return config;
 })
 
-axiosInstance.interceptors.response.use(
+axiosInstance.interceptors.response.use(     
     (response) => response,
     (error) => {
         if (error.response && error.response.data) {
-            console.log(error.response, "errorrrrrrrrr")
+            console.log(error.response, "error")
             const errorMessage = error.response.data.error || 'An error occurred';
             // Show error toast with errorMessage
             toast.error(errorMessage, { duration: 2000, style: { color: '#fff', background: 'black' } });
@@ -28,15 +29,18 @@ axiosInstance.interceptors.response.use(
         return Promise.reject(error);
     }
 )
-
+////////////////////////
 export const axiosInstanceAdmin = axios.create({
     baseURL:'http://localhost:3000/api/admin'
 })
+////////////////////////
 
 export const axiosInstanceTutor = axios.create({
     baseURL:'http://localhost:3000/api/tutor'
 })
-//axiosInterceptor
+
+//axiosInterceptor for Tutor
+
 axiosInstanceTutor.interceptors.request.use((config) => {
     const tutorToken = localStorage.getItem('tutorToken');
 
@@ -49,8 +53,7 @@ axiosInstanceTutor.interceptors.request.use((config) => {
 axiosInstanceTutor.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (error.response && error.response.data) {
-            // console.log(error.response, "errorrrrrrrrr")
+        if (error.response && error.response.data) {          
             const errorMessage = error.response.data.error || 'An error occurred';
             // Show error toast with errorMessage
             toast.error(errorMessage, { duration: 2000, style: { color: '#fff', background: 'black' } });

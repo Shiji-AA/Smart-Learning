@@ -21,15 +21,15 @@ import { isLogin } from '../../../middleware/studentAuth';
 tutorRouter.post('/tutorLogin',tutorLogin)
 tutorRouter.post('/tutorregister',registerTutor)
 tutorRouter.get('/tutorprofile/:tutorId',isLogin,getTutorProfile)
-tutorRouter.post('/addcourse',addCourse);
-tutorRouter.get('/getallcourse',getAllCourse);
-tutorRouter.get('/categories' , getAllCategory);
-tutorRouter.post('/addlesson',addLesson);
-tutorRouter.get('/singleview' , singleView);
-tutorRouter.get('/getallcourse/:id',singleView);
+tutorRouter.post('/addcourse',isLogin,addCourse);
+tutorRouter.get('/getallcourse',isLogin,getAllCourse);
+tutorRouter.get('/categories' ,isLogin, getAllCategory);
+tutorRouter.post('/addlesson',isLogin,addLesson);
+tutorRouter.get('/singleview' ,isLogin, singleView);
+tutorRouter.get('/getallcourse/:id',isLogin,singleView);
 //TutorEditProfile
-tutorRouter.get('/tutoreditprofile/:tutorId', getProfileById);
-tutorRouter.put('/tutorupdateprofile/:tutorId',updateProfile)
+tutorRouter.get('/tutoreditprofile/:tutorId', isLogin,getProfileById);
+tutorRouter.put('/tutorupdateprofile/:tutorId',isLogin,updateProfile)
 
 
 export default tutorRouter;

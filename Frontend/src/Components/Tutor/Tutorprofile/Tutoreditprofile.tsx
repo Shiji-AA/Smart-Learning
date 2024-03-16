@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { axiosInstanceTutor } from "../../../api/axiosinstance";
 import { updateTutorProfile } from "../../../Redux/Slices/Tutorslice";
+import Tutornavbar from '../../../Components/Tutor/Tutordashboard/Tutornavbar'
 
 
 function Tutoreditprofile() {
@@ -40,7 +41,7 @@ function Tutoreditprofile() {
     if(response){
       console.log(response)
       setTutorDetails(response.data.tutorDetails);
-      dispatch(updateTutorProfile(response.data.tutorData));    
+      dispatch(updateTutorProfile(response.data.tutorData));//updating store    
       navigate('/tutorprofile');
     }
    })  
@@ -48,7 +49,12 @@ function Tutoreditprofile() {
 
 
   return (
-    <div className="bg-blue-100 min-h-screen">
+    <>
+<Tutornavbar/>
+
+<div className="bg-gradient-to-b from-blue-200 to-white p-4 rounded-lg">
+<div className="min-h-screen">
+  <br/>
   <div className="text-2xl font-semibold mb-4 text-center">Edit Tutor Profile</div>
   <div className="flex justify-center items-center pb-8">
     <div className="max-w-4xl w-full mx-4">
@@ -101,7 +107,11 @@ function Tutoreditprofile() {
     </div>
   </div>
 </div>
+</div>
 
+
+    </>
+   
   );
 }
 

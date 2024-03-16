@@ -6,13 +6,16 @@ import TutorBanner from '../../../Components/User/Banner/TutorBanner';
 import Navbar from '../../../Components/User/Navbar/Navbar';
 
 
+
 function Landingpage (){
   return (
     <div>
       <Navbar/> 
       <div className="mt- lg:px-0">       
         <Homemain/> 
-        <TutorBanner/>       
+        <TutorBanner/>   
+    
+          
       </div>
 
       <main>

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import logo1 from '../../../assets/logo1.jpg';
+import tutor6 from '../../../assets/tutor6.jpg'
 import { useState } from "react";
 import { axiosInstanceTutor } from "../../../api/axiosinstance";
 import toast from "react-hot-toast";
@@ -52,7 +53,7 @@ export default function Example() {
 
   return (
     <>
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-blue-100">
+      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-blue-100"style={{ backgroundImage: `url(${tutor6})`, backgroundSize: 'cover', backgroundPosition: 'center', height: '120vh', width: '100vw' }}>
         <div className="sm:mx-auto sm:w-full sm:max-w-sm bg-white p-6 rounded-lg shadow-md">
           <img
             className="mx-auto h-10 w-auto"

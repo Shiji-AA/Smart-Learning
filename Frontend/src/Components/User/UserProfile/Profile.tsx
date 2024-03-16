@@ -3,6 +3,7 @@ import AuthrootState from "../../../Redux/Rootstate/Authstate";
 import {Link} from 'react-router-dom';
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../../../api/axiosinstance";
+import Navbar from '../../../Components/User/Navbar/Navbar'
 
 
 function Profile() {
@@ -25,8 +26,11 @@ function Profile() {
   }, [userData]); 
 
   return (
-    <div className="bg-blue-100 min-h-screen">
-      {/* Heading */}
+    <>
+    <Navbar />
+
+<div className="bg-blue-100 min-h-screen">
+    <br/>
       <div className="text-2xl font-semibold mb-4 text-center">Profile</div>
 
       {/* Content */}
@@ -95,6 +99,9 @@ function Profile() {
         </div>
       </div>
     </div>
+    
+    </>
+    
   );
 }
 

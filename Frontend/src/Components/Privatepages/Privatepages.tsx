@@ -5,7 +5,7 @@ import AuthrootState from '../../Redux/Rootstate/Authstate';
 import TutorrootState from '../../Redux/Rootstate/Tutorstate';
 
 interface PrivatePageProps {
-    isStudent : boolean;
+    isStudent : boolean;          //received as props from App.jsx
 }
 
 const Privatepages : React.FC<PrivatePageProps> = ({isStudent}) => {

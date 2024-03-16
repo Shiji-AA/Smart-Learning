@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo1 from '../../../assets/logo1.jpg';
 import toast from "react-hot-toast";
+import office from '../../../assets/office.jpg'
 import { axiosInstance } from "../../../api/axiosinstance";
 import { GoogleOAuthProvider , GoogleLogin } from "@react-oauth/google";
 
@@ -59,7 +60,7 @@ export default function Example() {
     <>
     <GoogleOAuthProvider clientId={client_id}>
       
-        <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-blue-100">
+        <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-blue-100" style={{ backgroundImage: `url(${office})`, backgroundSize: 'cover', backgroundPosition: 'center', height: '130vh', width: '100vw' }}>
           <div className="sm:mx-auto sm:w-full sm:max-w-sm bg-white p-6 rounded-lg shadow-md">
             <img
               className="mx-auto h-10 w-auto"

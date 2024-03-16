@@ -2,6 +2,7 @@
 import { axiosInstanceAdmin } from '../../../api/axiosinstance';
 import { useNavigate } from 'react-router-dom';
 import logo1 from '../../../assets/logo1.jpg';
+import admin1 from '../../../assets/admin1.jpg'
 import { useState } from "react";
 import toast from "react-hot-toast";
 import {  useDispatch,useSelector} from 'react-redux'
@@ -37,7 +38,7 @@ const handleSubmit=(e :React.FormEvent<HTMLFormElement>)=> {
 
 }
   return (
-    <div className="flex min-h-screen justify-center items-center bg-blue-50">
+    <div className="flex min-h-screen justify-center items-center bg-blue-50"style={{ backgroundImage: `url(${admin1})`, backgroundSize: 'cover', backgroundPosition: 'center', height: '100vh', width: '100vw' }}>
       <div className="bg-white rounded-lg border border-gray-300 shadow-md overflow-hidden sm:max-w-sm sm:w-full">
         <div className="px-6 py-8">
           <img

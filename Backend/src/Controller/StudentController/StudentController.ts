@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import studentModel, { Student } from "../../model/userModel";
+import courseModel,{Course} from "../../model/courseModel";
 import generateToken from "../../../Utils/generateToken";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
@@ -122,8 +123,7 @@ const googleLogin = async (req: Request, res: Response) => {
         email: user.studentEmail,
         id: user._id,
         phone: user.phone,
-        image:user.photo,
-        //photo : user.photo,
+        image:user.photo,     
         role : user.studentRole
       };
 
@@ -352,6 +352,22 @@ const getProfileById =async (req:Request,res:Response)=>{
       return res.status(500).json({ error: "Internal server error" });
     }
   }
+  const userCourseList = async(req:Request,res:Response)=>{
+    try{
+      const courseDetails= await courseModel.find({isApproved:true}).exec();
+      console.log(courseDetails,"iam COURSEDETAILS")
+      if(courseDetails && courseDetails.length >0){
+        res.status(200).json({courseDetails,message:"Course Details"})
+      }
+      else{
+        return res.status(400).json({error:"no course available"})
+      }
+
+    }
+    catch(error){
+console.log(error)
+    }
+  }
   
 export {
   loginStudent,
@@ -364,4 +380,5 @@ export {
   resetPassword,
   getProfileById,
   updateProfile,
+  userCourseList,
 };

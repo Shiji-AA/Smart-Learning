@@ -33,6 +33,9 @@ import Privatepages from "./Components/Privatepages/Privatepages";
 import EditCategory from "./Components/Admin/Category/Editcategory ";
 import Tutortable from "./Components/Admin/TutorsList/Tutortable";
 import Studenttable from "./Components/Admin/StudentsList/Studenttable";
+import Checkoutpage from "./Components/User/CheckOutPage/Checkoutpage"
+import CourseDetailPage from './Pages/User/CourseDetailPage/CourseDetailPage';
+import Usercourseslist from "./Components/User/CourseDetail/Usercourseslist";
 
 function App() {
    return (  
@@ -52,8 +55,10 @@ function App() {
         <Route path="/userprofile" element={<UserProfile/>}  />  
         <Route path="/home" element={<Landingpage/>}  />  
         <Route path="/editprofile/:id" element={<EditProfile/>}  /> 
-        <Route path="/usercourselist" element={<Tutorcourseslist/>}  /> 
+        <Route path="/usercourselist" element={<Usercourseslist/>} /> 
         <Route path="/singleviewUser" element={<SingleCoursePageView/>} />
+        <Route path="/coursedetail" element={<CourseDetailPage />} />
+        <Route path="/checkout" element={<Checkoutpage />} />
         </Route>
 
           {/* Tutor side */} 

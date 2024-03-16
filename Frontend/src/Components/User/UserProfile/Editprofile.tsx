@@ -4,6 +4,7 @@ import { axiosInstance } from "../../../api/axiosinstance";
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { updateProfile } from '../../../Redux/Slices/Authslice';
+import Navbar from '../../../Components/User/Navbar/Navbar'
 
 function EditProfile() {
   const navigate = useNavigate();
@@ -44,7 +45,11 @@ useEffect(()=>{
   };
 
   return (
-    <div className="bg-blue-100 min-h-screen">   
+<>
+<Navbar/>
+<div className="bg-blue-100 min-h-screen flex items-center justify-center">
+<div className=" min-h-screen"> 
+<br/>  
       <div className="text-2xl font-semibold mb-4 text-center">Edit Profile</div>
      <div className="flex justify-center items-center pb-8">
         <div className="max-w-4xl w-full mx-4">
@@ -94,6 +99,11 @@ useEffect(()=>{
         </div>
       </div>
     </div>
+</div>
+
+</>
+
+    
   );
 }
 

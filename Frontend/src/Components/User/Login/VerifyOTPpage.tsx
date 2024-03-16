@@ -11,7 +11,7 @@ function VerifyOTPpage() {
   const [email , setEmail] = useState<string>('');
   //State variables to manage minutes and seconds
   const [minutes,setMinutes]= useState(1) ;
-  const[seconds,setSeconds] = useState(15);
+  const[seconds,setSeconds] = useState(1);
 
 
 //verify OTP Button functioning

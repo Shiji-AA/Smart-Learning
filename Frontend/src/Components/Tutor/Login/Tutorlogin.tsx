@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import logo1 from '../../../assets/logo1.jpg';
+import tutor1 from '../../../assets/tutor1.jpg'
 import {useEffect, useState} from 'react';
 import { useNavigate } from "react-router-dom";
 import toast from 'react-hot-toast';
@@ -46,7 +47,7 @@ useEffect(() => {
 }, [])
 
   return (
-    <div className="flex min-h-screen justify-center items-center bg-blue-50">
+    <div className="flex min-h-screen justify-center items-center bg-blue-50"style={{ backgroundImage: `url(${tutor1})`, backgroundSize: 'cover', backgroundPosition: 'center', height: '70vh', width: '100vw' }}>
       <div className="bg-white rounded-lg border border-gray-300 shadow-md overflow-hidden sm:max-w-sm sm:w-full">
         <div className="px-6 py-8">
           <img

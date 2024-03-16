@@ -54,6 +54,9 @@ const tutorLogin =async(req:Request,res:Response)=>{
        if(!tutor){            
             return res.status(400).json({error:"No Tutor Found"})
         }
+        if (tutor.isBlocked) {
+          return res.status(401).json({ error: "User is blocked" });
+        }    
         if(tutor && (await tutor.matchPassword(password))){            
             //generate a jwt
 

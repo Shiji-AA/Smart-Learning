@@ -18,7 +18,7 @@ const persistConfigTutor = {
     storage,
     key:"tutor"
 }
-const persistedAuthreducer = persistReducer(persistConfig,authReducer)
+const persistedAuthreducer = persistReducer(persistConfig,authReducer)//persisted version is storing
 const persistedAdiminreducer = persistReducer(persistConfigAdmin,adminReducer)
 const persistedTutorreducer = persistReducer(persistConfigTutor,tutorReducer)
 
@@ -30,4 +30,4 @@ const persistedTutorreducer = persistReducer(persistConfigTutor,tutorReducer)
     }
     
 })
-export const persistor=persistStore(store)
+export const persistor=persistStore(store) //for persisting store

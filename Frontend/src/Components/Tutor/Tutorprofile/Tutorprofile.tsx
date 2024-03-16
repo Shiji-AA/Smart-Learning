@@ -3,6 +3,7 @@ import {Link} from "react-router-dom"
 import { useSelector } from "react-redux";
 import TutorrootState from "../../../Redux/Rootstate/Tutorstate";
 import { axiosInstanceTutor } from "../../../api/axiosinstance";
+import Tutornavbar from '../../../Components/Tutor/Tutordashboard/Tutornavbar'
 
 function Tutorprofile() {  
 const tutorData = useSelector((state: TutorrootState) => state.tutor.tutordata); 
@@ -29,7 +30,13 @@ const [tutorProfileData, settutorProfileData] = useState<any | null>(null);
   }, [tutorData]);
 
   return (
-    <div className="bg-blue-100 min-h-screen">    
+    <>
+    <Tutornavbar />
+    
+<div className="bg-gradient-to-b from-blue-200 to-white p-4 rounded-lg"
+>
+<div className=" min-h-screen"> 
+    <br/>   
       <div className="text-2xl font-semibold mb-4 text-center">Tutor Profile</div>   
       <div className="flex justify-center items-center pb-8">
         <div className="max-w-4xl w-full mx-4">
@@ -113,6 +120,12 @@ const [tutorProfileData, settutorProfileData] = useState<any | null>(null);
         </div>
       </div>
     </div>
+</div>
+
+
+
+    </>
+  
   );
 }
 
