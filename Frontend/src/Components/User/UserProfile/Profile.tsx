@@ -13,7 +13,7 @@ function Profile() {
   useEffect(() => {
     const userId = userData?.id;
     if (userId) {
-      axiosInstance.get(`/userprofile/${userId}`)
+      axiosInstance.get(`/userprofile`)
       .then((response) => {
       if (response.data) {
       setProfileData(response.data.userData);
@@ -29,7 +29,7 @@ function Profile() {
     <>
     <Navbar />
 
-<div className="bg-blue-100 min-h-screen">
+<div className="bg-gradient-to-b from-blue-200 to-white p-4 rounded-lg">
     <br/>
       <div className="text-2xl font-semibold mb-4 text-center">Profile</div>
 
@@ -43,7 +43,7 @@ function Profile() {
                 <img
                   className="w-24 h-24 mb-3 rounded-full shadow-lg"
                   src={userData?.image}
-                  alt=""
+                  alt="photo"
                 />
                 <span className="text-lg font-semibold text-gray-800 dark:text-gray-300">
                   {profileData?.studentName}

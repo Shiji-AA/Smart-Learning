@@ -27,6 +27,7 @@ interface Course {
 
 function Addlesson() {
   //const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [categoryDetails, setCategoryDetails] = useState<Lesson[]>([]);
@@ -84,7 +85,9 @@ function Addlesson() {
 
   const submitVideo = async () => {
     try {
-      if (video) {
+      if (!video) {
+        throw new Error("No video selected")
+       }
         const data = new FormData();
         data.append("file", video);
         data.append("upload_preset", "smartlearning");
@@ -94,50 +97,54 @@ function Addlesson() {
           "https://api.cloudinary.com/v1_1/shijiaa/video/upload",
           data
         );
-        console.log(response, "ivide vaada");
-        if (response.data && response.data.url) {
+       if (response.data && response.data.url) {
           console.log("Video uploaded successfully. URL:", response.data.url);
-          setCloudanaryURL(response.data.url);
-          console.log(response.data.url, "url ivide anutto");
+          setCloudanaryURL(response.data.url);//return the url if successful
+          return response.data.url;
         } else {
           console.error("Invalid response from Cloudinary", response.data);
-          toast.error(
-            "Error uploading image: Invalid response from Cloudinary"
-          );
+          throw new Error("Invalid response from Cloudinary");            
+          
         }
-      } else {
-        toast.error("No video selected");
-      }
     } catch (error) {
       console.error("Error while Uploading Video:", error);
       toast.error("Error uploading video: Please try again later");
+      throw error;
     }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await submitVideo();
 
-    axiosInstanceTutor
-      .post("/addlesson", {
-        title,
-        description,
-        selectcategory,
-        selectcourse,
-        video: cloudanaryURL,
-      })
-      .then((response) => {
-        if (response.data.message) {
-          toast.success(response.data.message);
-          //navigate(`/singleview/${course?._id}`);
+    setLoading(true);
+    try {
+        const videoUrl = await submitVideo();
+        
+        if (videoUrl) {
+            const response = await axiosInstanceTutor.post("/addlesson", {
+                title,
+                description,
+                selectcategory,
+                selectcourse,
+                video: videoUrl, 
+            });            
+            if (response.data.message) {
+                toast.success(response.data.message);
+                // navigate(`/singleview/${course?._id}`);
+            }
         }
-      })
-      .catch((error) => {
-        if (error.response.data.error) {
-          toast.error(error.response.data.error);
+    } catch (error:any) {
+        console.error("Error while adding lesson:", error);
+        if (error.response && error.response.data && error.response.data.error) {
+            toast.error(error.response.data.error);
+        } else {
+            toast.error("An error occurred while adding the lesson. Please try again later.");
         }
-      });
-  };
+    } finally {
+        setLoading(false);
+    }
+};
+
 
   return (
     <>
@@ -236,7 +243,7 @@ function Addlesson() {
                     className="w-full py-2 px-3 text-white font-bold bg-blue-500 rounded-full focus:outline-none focus:shadow-outline hover:bg-blue-700"
                     type="submit"
                   >
-                    Add Lesson
+                   {loading ? "Uploading" :"Create Lesson"  }
                   </button>
                 </div>
               </form>

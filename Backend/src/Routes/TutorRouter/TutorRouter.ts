@@ -20,7 +20,7 @@ import { isLogin } from '../../../middleware/studentAuth';
 
 tutorRouter.post('/tutorLogin',tutorLogin)
 tutorRouter.post('/tutorregister',registerTutor)
-tutorRouter.get('/tutorprofile/:tutorId',isLogin,getTutorProfile)
+tutorRouter.get('/tutorprofile',isLogin,getTutorProfile)
 tutorRouter.post('/addcourse',isLogin,addCourse);
 tutorRouter.get('/getallcourse',isLogin,getAllCourse);
 tutorRouter.get('/categories' ,isLogin, getAllCategory);
@@ -28,8 +28,8 @@ tutorRouter.post('/addlesson',isLogin,addLesson);
 tutorRouter.get('/singleview' ,isLogin, singleView);
 tutorRouter.get('/getallcourse/:id',isLogin,singleView);
 //TutorEditProfile
-tutorRouter.get('/tutoreditprofile/:tutorId', isLogin,getProfileById);
-tutorRouter.put('/tutorupdateprofile/:tutorId',isLogin,updateProfile)
+tutorRouter.get('/tutoreditprofile', isLogin,getProfileById);
+tutorRouter.put('/tutorupdateprofile',isLogin,updateProfile)
 
 
 export default tutorRouter;

@@ -15,7 +15,7 @@ const [tutorProfileData, settutorProfileData] = useState<any | null>(null);
     const tutorId = tutorData?.tutorId;
     console.log(tutorId)
     if (tutorId) {   
-      axiosInstanceTutor.get(`/tutorprofile/${tutorId}`)    
+      axiosInstanceTutor.get(`/tutorprofile`)    
       .then((response) => {
         console.log(response)
         if (response.data && response.data.tutorData) {

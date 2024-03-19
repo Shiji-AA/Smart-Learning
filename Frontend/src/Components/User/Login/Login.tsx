@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setUserInfo } from '../../../Redux/Slices/Authslice';
 import AuthrootState from '../../../Redux/Rootstate/Authstate';
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
+//import logo2 from '../../../assets/logo2.jpeg'
 
 export default function Example() {
   const [email, setEmail] = useState<string>('');

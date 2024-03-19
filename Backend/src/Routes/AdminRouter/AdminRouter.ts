@@ -24,22 +24,24 @@ import {
   unlistStudent,
 } from "../../Controller/AdminController/Adminstudentcontroller";
 
+import { isLogin } from "../../../middleware/studentAuth";
+
 adminRouter.post("/admin", adminLogin);
-adminRouter.post("/addcategory", addCategory);
-adminRouter.get("/getallcategory", getAllCategory);
-adminRouter.get("/getallcategory1/:id", getCategoryById);
-adminRouter.put("/editcategory/:id", editCategory);
+adminRouter.post("/addcategory",isLogin, addCategory);
+adminRouter.get("/getallcategory", isLogin,getAllCategory);
+adminRouter.get("/getallcategory1/:id",isLogin, getCategoryById);
+adminRouter.put("/editcategory/:id",isLogin, editCategory);
 adminRouter.delete("/deletecategory/:id", deleteCategory);
 //Tutors listing
-adminRouter.get("/getalltutors", getAlltutors);
+adminRouter.get("/getalltutors",isLogin, getAlltutors);
 adminRouter.get("/searchtutor", searchTutor);
 adminRouter.post("/unlisttutor/:id", unlistTutor);
 adminRouter.post("/relisttutor/:id", relistTutor);
 
-adminRouter.get("/admincourselist", getAdminCourseList);
-adminRouter.post("/toggleCourseStatus/:id", toggleCourseStatus);
+adminRouter.get("/admincourselist", isLogin,getAdminCourseList);
+adminRouter.post("/toggleCourseStatus/:id", isLogin,toggleCourseStatus);
 //Students listing
-adminRouter.get("/getallstudents", getAllstudents);
+adminRouter.get("/getallstudents",isLogin,getAllstudents);
 adminRouter.get("/searchstudent", searchStudent);
 adminRouter.post("/unliststudent/:id", unlistStudent);
 adminRouter.post("/reliststudent/:id", relistStudent);

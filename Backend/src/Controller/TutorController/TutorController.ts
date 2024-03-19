@@ -86,8 +86,8 @@ const tutorLogin =async(req:Request,res:Response)=>{
 
 const getTutorProfile = async (req: Request, res: Response) => {
   try {
-    const { tutorId } = req.params;
-    const tutorData = await TutorModel.findOne({ _id: tutorId }); 
+    const tutor=(req as any).user;  
+    const tutorData = await TutorModel.findOne({ _id: tutor._id }); 
     console.log(tutorData,"tutordattaa")   
     if (!tutorData) {
       return res.status(404).json({ error: "Tutor not found" });
@@ -232,9 +232,9 @@ const addLesson = async (req: Request, res: Response) => {
 
 //to get data in the editprofile page
 const getProfileById =async (req:Request,res:Response)=>{
-  const tutorId=req.params.tutorId;
+  const tutor=(req as any).user;  
   try{  
-    const tutorDetails = await TutorModel.findById(tutorId).exec();
+    const tutorDetails = await TutorModel.findById(tutor._id).exec();
     if (tutorDetails) {
       res.status(200).json({
         tutorDetails,
@@ -255,10 +255,10 @@ const getProfileById =async (req:Request,res:Response)=>{
 
   const updateProfile = async (req: Request, res: Response) => {
     try {
-      const { tutorId } = req.params;    
+      const tutor1=(req as any).user;     
       const { tutorName, tutorEmail, phone } = req.body;
 
-      const tutor = await TutorModel.findById(tutorId);
+      const tutor = await TutorModel.findById(tutor1._id);
        
       if (!tutor) {
         return res.status(404).json({ error: "Invalid category" });

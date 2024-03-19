@@ -14,8 +14,11 @@ interface Course {
   createdAt: string;
   updatedAt: string;
 }
+interface Props {
+  heading: string;
+}
 
-function CourseSlider() {
+function CourseSlider({heading}:Props) {
   const settings = {
     dots: true,
     infinite: true,
@@ -37,7 +40,7 @@ function CourseSlider() {
 
   return (
     <>
-      <h1 className="text-3xl font-bold mb-4">Featured Courses</h1>
+      <h1 className="text-3xl font-bold mb-4">{heading}</h1>
       <Slider {...settings}>
         {courseDetails.map((course) => (
           <div key={course._id} className="px-2">

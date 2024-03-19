@@ -71,7 +71,19 @@ function Navbar() {
               My Courses
             </a>
           </div>
-        </div>
+
+        {/* searchBar */}          
+          <div className="rounded-full bg-white shadow flex w-1/2 ">         
+            <input
+              type="text"
+              placeholder="Search here"
+              className="w-full rounded-tl-full rounded-bl-full py-2 px-4"
+            />
+            <button className="bg-blue-300 rounded-tr-full rounded-br-full hover:bg-orange-200 py-2 px-4">
+              <p className="font-semibold text-base uppercase">Search</p>
+            </button>
+          </div>          
+          </div>
 
         {studentUser ? (
           <>

@@ -19,7 +19,7 @@ function Tutoreditprofile() {
 
   
   useEffect(()=>{
-    axiosInstanceTutor.get(`/tutoreditProfile/${tutorId}`)
+    axiosInstanceTutor.get(`/tutoreditProfile`)
     .then((response)=>{
       if(response.data){       
         setTutorDetails(response.data?.tutorDetails);
@@ -36,7 +36,7 @@ function Tutoreditprofile() {
   
   const handleSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    axiosInstanceTutor.put(`/tutorupdateprofile/${tutorId}`,{tutorName,tutorEmail,phone})
+    axiosInstanceTutor.put(`/tutorupdateprofile`,{tutorName,tutorEmail,phone})
    .then((response)=>{
     if(response){
       console.log(response)

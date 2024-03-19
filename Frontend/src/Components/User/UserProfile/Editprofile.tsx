@@ -16,7 +16,7 @@ function EditProfile() {
   const [studentDetails, setStudentDetails] = useState<any>(null);
 
 useEffect(()=>{
-  axiosInstance.get(`/editProfile/${id}`)
+  axiosInstance.get(`/editProfile`)
   .then((response)=>{
     if(response.data){
       setStudentDetails(response.data?.studentDetails);
@@ -33,7 +33,7 @@ useEffect(()=>{
 
   const handleSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    axiosInstance.put(`/updateprofile/${id}`,{studentName,studentEmail,phone})
+    axiosInstance.put(`/updateprofile`,{studentName,studentEmail,phone})
     .then((response)=>{
       if(response){
         console.log(response)
@@ -47,59 +47,63 @@ useEffect(()=>{
   return (
 <>
 <Navbar/>
-<div className="bg-blue-100 min-h-screen flex items-center justify-center">
-<div className=" min-h-screen"> 
-<br/>  
-      <div className="text-2xl font-semibold mb-4 text-center">Edit Profile</div>
-     <div className="flex justify-center items-center pb-8">
-        <div className="max-w-4xl w-full mx-4">
-          <div className="bg-white border border-gray-200 rounded-lg shadow-md w-4/5 mx-auto">         
-            <form onSubmit={handleSubmit} className="p-4 space-y-4">    
-              <div className="flex items-center">
-                <label htmlFor="username" className="block w-1/3 text-sm font-medium text-gray-900 dark:text-white">Username</label>
-                <input
-                  type="text"
-                  id="username"
-                  value={studentName}
-                  onChange={(e) => setstudentName(e.target.value)}
-                  className="w-2/3 rounded-lg bg-gray-100 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 text-sm p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                />
-              </div>
-          
-              <div className="flex items-center">
-                <label htmlFor="email" className="block w-1/3 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                <input
-                  type="text"
-                  id="email"
-                  value={studentEmail}
-                  onChange={(e) => setstudentEmail(e.target.value)}
-                  className="w-2/3 rounded-lg bg-gray-100 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 text-sm p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                />
-              </div>
-          
-              <div className="flex items-center">
-                <label htmlFor="phone" className="block w-1/3 text-sm font-medium text-gray-900 dark:text-white">Phone</label>
-                <input
-                  type="text"
-                  id="phone"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="w-2/3 rounded-lg bg-gray-100 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 text-sm p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                />
-              </div>
-           
-              <button
-                type="submit"
-                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                Update
-              </button>
-            </form>
+<div className="bg-gradient-to-b from-blue-200 to-white p-4 rounded-lg">
+<div className="min-h-screen">
+  <br/>
+  <div className="text-2xl font-semibold mb-4 text-center">Edit Student Profile</div>
+  <div className="flex justify-center items-center pb-8">
+    <div className="max-w-4xl w-full mx-4">
+      <div className="bg-white border border-gray-200 rounded-lg shadow-md w-4/5 mx-auto">
+        <form onSubmit={handleSubmit} className="p-4 space-y-4">     
+          <div className="flex items-center">
+            <label className="block w-1/3 text-sm font-medium text-gray-900 dark:text-white">
+              Name
+            </label>
+            <input
+              type="text"
+              id="username"
+              className="w-2/3 rounded-lg bg-gray-100 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 text-sm p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              value={studentName}
+              onChange={(e) => setstudentName(e.target.value)}
+            />
           </div>
-        </div>
+          <div className="flex items-center">
+            <label className="block w-1/3 text-sm font-medium text-gray-900 dark:text-white">
+              Email
+            </label>
+            <input
+              type="text"
+              id="email"
+              className="w-2/3 rounded-lg bg-gray-100 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 text-sm p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              value={studentEmail}
+              onChange={(e) => setstudentEmail(e.target.value)}
+            />
+          </div>
+          <div className="flex items-center">
+            <label className="block w-1/3 text-sm font-medium text-gray-900 dark:text-white">
+              Phone
+            </label>
+            <input
+              type="text"
+              id="phone"
+              className="w-2/3 rounded-lg bg-gray-100 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 text-sm p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
+          </div>       
+          <button
+            type="submit"
+            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            Update
+          </button>         
+        </form>
       </div>
     </div>
+  </div>
 </div>
+</div>
+
 
 </>
 

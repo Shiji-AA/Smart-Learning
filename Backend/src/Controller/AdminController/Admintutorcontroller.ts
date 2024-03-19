@@ -63,8 +63,7 @@ const getAlltutors = async (req: Request, res: Response) => {
  
 const unlistTutor = async (req: Request, res: Response) => {
   try {
-      const { id } = req.params;
-   
+      const { id } = req.params;   
       const tutor = await TutorModel.findById(id);
 
       if (!tutor) {

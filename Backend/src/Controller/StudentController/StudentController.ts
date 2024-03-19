@@ -276,8 +276,11 @@ const resetPassword = async (req: Request, res: Response) => {
 
 const getStudentProfile = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
-    const userData = await studentModel.findOne({ _id: id });    
+    const user =   (req as any).user   //from middleware
+     //console.log(req,"oooo")
+     //console.log(user,"userr")
+    // console.log(user._id,"iddd")  
+    const userData = await studentModel.findOne({ _id: user._id});    
     if (!userData) {
       return res.status(404).json({ message: "Student not found" });
     }
@@ -290,10 +293,10 @@ const getStudentProfile = async (req: Request, res: Response) => {
 
 //to get data in the editprofile page
 const getProfileById =async (req:Request,res:Response)=>{
-  const studentId=req.params.id;
-  try{
-  
-    const studentDetails = await studentModel.findById(studentId).exec();
+  const user =   (req as any).user 
+
+  try{  
+    const studentDetails = await studentModel.findById(user._id).exec();
     if (studentDetails) {
       res.status(200).json({
         studentDetails,
@@ -316,10 +319,11 @@ const getProfileById =async (req:Request,res:Response)=>{
 
   const updateProfile = async (req: Request, res: Response) => {
     try {
-      const { id } = req.params;       
+      const user =   (req as any).user  //from middleware
+        
       const { studentName, studentEmail, phone } = req.body;
   
-      const student = await studentModel.findById(id);
+      const student = await studentModel.findById(user._id);
        
       if (!student) {
         return res.status(404).json({ error: "Invalid category" });
@@ -355,7 +359,7 @@ const getProfileById =async (req:Request,res:Response)=>{
   const userCourseList = async(req:Request,res:Response)=>{
     try{
       const courseDetails= await courseModel.find({isApproved:true}).exec();
-      console.log(courseDetails,"iam COURSEDETAILS")
+      //console.log(courseDetails,"iam COURSEDETAILS")
       if(courseDetails && courseDetails.length >0){
         res.status(200).json({courseDetails,message:"Course Details"})
       }
@@ -365,9 +369,22 @@ const getProfileById =async (req:Request,res:Response)=>{
 
     }
     catch(error){
-console.log(error)
-    }
-  }
+    console.log(error)
+    }}
+//getCourseDetails by Id
+const getCourseDetails = async(req:Request,res:Response)=>{
+try{
+const courseId = req.params.id;
+const courseDetails= await courseModel.findById(courseId);
+if(courseDetails){
+  res.status(200).json({courseDetails,message:"course details retrieved"})
+}else{
+  return res.status(404).json({error:"No course found"})
+}
+}
+catch(error){
+  console.log(error);
+}}  
   
 export {
   loginStudent,
@@ -381,4 +398,5 @@ export {
   getProfileById,
   updateProfile,
   userCourseList,
+  getCourseDetails,
 };

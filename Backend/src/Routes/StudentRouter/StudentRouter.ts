@@ -12,6 +12,7 @@ import {
   getProfileById,
   updateProfile,
   userCourseList,
+  getCourseDetails,
 } from "../../Controller/StudentController/StudentController";
 
 import { isLogin } from "../../../middleware/studentAuth";
@@ -25,10 +26,13 @@ router.post("/send-otp", sendOTP);
 router.post("/verify-otp", verifyOTP);
 //Forget password & reset password;
 router.post("/resetPassword", resetPassword);
-router.get("/userprofile/:id", isLogin, getStudentProfile); //////////////////
+router.get("/userprofile", isLogin, getStudentProfile); //////////////////
 //StudentEditProfile
-router.get("/editprofile/:id", isLogin, getProfileById);
-router.put("/updateprofile/:id", isLogin, updateProfile);
+router.get("/editprofile", isLogin, getProfileById);
+router.put("/updateprofile", isLogin, updateProfile);
 router.get("/usercourselist",isLogin,userCourseList);
+//StudentCoursePurchase
+router.get("/coursedetail/:id",isLogin,getCourseDetails);
+router.get("/checkout/:id",isLogin,getCourseDetails);
 
 export default router;

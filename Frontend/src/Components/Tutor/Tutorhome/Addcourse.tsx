@@ -14,6 +14,7 @@ interface Category {
 }
 function Addcourse() {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [courseName, setCoursename] = useState<string>("");
   const [courseDuration, setCourseduration] = useState<string>("");
   const [courseFee, setCoursefee] = useState<number | string>(0);
@@ -56,70 +57,73 @@ function Addcourse() {
   };
 
   //As per the video//cloudinary Setup//For getting the cloudinary URL from the cloudinary.com
-
   const submitImage = async () => {
     try {
-      if (image) {
+        if (!image) {
+            throw new Error("No image selected");
+        }
         const data = new FormData();
         data.append("file", image);
-        data.append("upload_preset","smartlearning");
-        data.append("cloud_name","shijiaa");
-
-        console.log(image,"image")
+        data.append("upload_preset", "smartlearning");
+        data.append("cloud_name", "shijiaa");
 
         const response = await axios.post(
-          "https://api.cloudinary.com/v1_1/shijiaa/image/upload",
-          data
+            "https://api.cloudinary.com/v1_1/shijiaa/image/upload",
+            data
         );
 
-        //console.log("response",response)
         if (response.data && response.data.url) {
-          console.log("Image uploaded successfully. URL:", response.data.url);
-          setCloudanaryURL(response.data.url);
-          console.log(response.data.url,"url")
+            console.log("Image uploaded successfully. URL:", response.data.url);
+            setCloudanaryURL(response.data.url);
+            return response.data.url; // Return the URL if successful
         } else {
-          console.error("Invalid response from Cloudinary", response.data);
-          toast.error(
-            "Error uploading image: Invalid response from Cloudinary"
-          );
+            console.error("Invalid response from Cloudinary", response.data);
+            throw new Error("Invalid response from Cloudinary");
         }
-      } else {
-        toast.error("No image selected");
-      }
     } catch (error) {
-      console.error("Error while Uploading Image:", error);
-      toast.error("Error uploading image: Please try again later");
+        console.error("Error while Uploading Image:", error);
+        toast.error("Error uploading image: Please try again later");
+        throw error; // Rethrow the error to propagate it to the caller
     }
-  };
+};
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    await submitImage()
-
-    if (!cloudanaryURL) {
-      toast.error("Error while Uploading Image");
-      return;
-    }
-    if (!courseName.trim() || !courseDuration.trim() || !courseFee || !courseDescription.trim() || !selectcategory) {
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  if (!courseName.trim() || !courseDuration.trim() || !courseFee || !courseDescription.trim() || !selectcategory || !image) {
       return toast.error("All fields are required");
+  }
+  setLoading(true);
+  try {
+      // Upload image
+      const imgUrl = await submitImage();   
+      if (imgUrl) {
+          // Perform the API call to add the course
+          const response = await axiosInstanceTutor.post("/addcourse", {
+              courseName,
+              courseDuration,
+              courseFee,
+              courseDescription,
+              selectcategory,
+              image: imgUrl 
+          });
+          // Handle response
+          if (response.data.message) {
+              toast.success(response.data.message);
+              navigate("/getallcourse");
+          }
       }
-
-    axiosInstanceTutor
-      .post("/addcourse", {courseName,courseDuration,courseFee,courseDescription,selectcategory,image: cloudanaryURL
-      })
-      .then((response) => {
-        if (response.data.message) {
-          toast.success(response.data.message);
-          navigate("/getallcourse");
-        }
-      })
-      .catch((error) => {
-        if (error.response.data.error) {
+  } catch (error:any) {
+      // Handle errors
+      if (error.response && error.response.data.error) {
           toast.error(error.response.data.error);
-        }
-      });
-  };
+      } else {
+          toast.error("An unexpected error occurred. Please try again later.");
+      }
+  } finally {
+      // Reset loading state regardless of success or failure
+      setLoading(false);
+  }
+};
 
   return (
     <>
@@ -226,7 +230,8 @@ function Addcourse() {
               className="w-full py-2 px-4 text-white font-bold bg-blue-500 rounded-full focus:outline-none focus:shadow-outline hover:bg-blue-700"
               type="submit"
             >
-              Create Course
+                {loading ? "Uploading" :"Create Course"  }
+              {/* Create Course */}
             </button>
           </div>
         </form>

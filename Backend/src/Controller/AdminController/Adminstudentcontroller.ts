@@ -15,8 +15,7 @@ interface Student{
 
 const getAllstudents = async (req: Request, res: Response) => {
     try {
-      const studentDetails = await studentModel.find().exec();
-    
+      const studentDetails = await studentModel.find({__v: { $ne: 1 }}).exec();      
       if (studentDetails.length > 0) {     
         res.status(200).json({
             studentDetails,
@@ -35,8 +34,6 @@ const getAllstudents = async (req: Request, res: Response) => {
     }
   };
 
-
-
   const searchStudent= async (req: Request, res: Response) => {
       try {          
           const searchCriteria = req.query.searchCriteria;       
@@ -50,10 +47,7 @@ const getAllstudents = async (req: Request, res: Response) => {
                   {studentName: { $regex: `^${searchCriteria}`, $options: 'i' } }, // Starts with 'a' search
                   {studentName: { $not: { $eq: 'Admin' } } } // Exclude records where name is 'admin' (case-insensitive)
               ]
-          });
-
-          console.log(studentDetails,"ithanu studentDtails")
-  
+          });  
           res.status(200).json(studentDetails); 
       } catch (error:any) {
           console.log(error.message);

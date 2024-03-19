@@ -34,7 +34,7 @@ function Usercourseslist() {
              {/* Card starts here */}
             {courseDetails.map((course) => (
               <div key={course._id} className="bg-white border border-gray-200 shadow-sm rounded-md overflow-hidden">
-                <Link to="/coursedetail">
+                <Link to={`/coursedetail/${course?._id}`}>
                   <img className="w-full h-48 object-cover" src={course?.photo} alt="Course Thumbnail" />
                 </Link>
                 <div className="p-4">

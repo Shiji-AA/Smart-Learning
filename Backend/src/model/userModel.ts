@@ -34,13 +34,11 @@ const userSchema = new Schema<Student>({
     },
     phone: {
         type: String, 
-        unique: false, 
-         
+        unique: false,          
     },
     password:{
         type:String,
-        required: true,
-        
+        required: true,        
     },
     photo:{
         type:String,
@@ -65,22 +63,17 @@ const userSchema = new Schema<Student>({
     }
 },{timestamps:true})
 
-
   userSchema.methods.matchPassword = async function (enteredPassword:string){
     return await bcrypt.compare(enteredPassword,this.password)
   }
-
   userSchema.pre<Student>('save',async function(next){
     if(!this.isModified('password')){
         return next();
     }
     const salt =await bcrypt.genSalt(10)
     this.password =await bcrypt.hash(this.password,salt);
-    next()
-
+    next();
   })
-
-
 const studentModel:Model<Student> = mongoose.model<Student>('studentModel',userSchema)
 
 export default studentModel

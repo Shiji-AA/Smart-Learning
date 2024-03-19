@@ -3,15 +3,15 @@ import { Request, Response } from "express";
 import generateToken from "../../../Utils/generateToken";
 import categoryModel from "../../model/categoryModel";
 import courseModel from '../../model/courseModel';
+import mongoose from 'mongoose';
 
 
 const adminLogin = async (req: Request, res: Response) => {  
     try {
         const adminEmail = "admin@gmail.com";
         const adminPassword = "Admin@123";
-        const id = "ObjectId(65deabd77bad0a47e7fc0f68)";
-        const { email, password } = req.body;     
-        
+        const id = new mongoose.Types.ObjectId("65e6adc6193904154dc390e8")
+        const { email, password } = req.body;            
         if (adminEmail === email && adminPassword === password) {
             const token = generateToken(id);
             return res.status(200).json({
@@ -120,7 +120,7 @@ const getCategoryById =async (req:Request,res:Response)=>{
   const getAdminCourseList = async(req:Request,res:Response)=>{
     try{
       const courseDetails= await courseModel.find().exec();
-      console.log(courseDetails,"ivideyundu")
+      //console.log(courseDetails,"i am")
       if(courseDetails){
           res.status(200).json({
           courseDetails,message:"CourseDetails"
