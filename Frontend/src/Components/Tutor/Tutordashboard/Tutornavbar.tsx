@@ -60,7 +60,7 @@ function Navbar() {
               Profile
             </a>
             <a
-              href=""
+              href="/studentlisttutor"
               className="block md:inline-block text-white hover:text-blue-500 px-3 py-3 border-b-2 border-white-900 md:border-none"
             >
               Students
@@ -77,25 +77,18 @@ function Navbar() {
             >
               {" "}
               + Create Course
-            </a>
-            <a
-              href="/addlesson"
-              className="block md:inline-block text-white hover:text-blue-500 px-3 py-3 border-b-2 border-white-900 md:border-none"
-            >
-              {" "}
-              + Add Lesson
-            </a>
+            </a>           
           </div>
         </div>
 
         {tutorUser ? (
           <>
-            <button className="text-white text-xl font-semibold rounded-full px-4 py-1 flex justify-center items-center md:border-2 md:border-blue-600 md:hover:bg-blue-700 md:hover:text-white">
+            <button className="text-white text-lg font-semibold rounded-full px-4 py-0.5 flex justify-center items-center md:border-2 md:border-blue-600 md:hover:bg-blue-700 md:hover:text-white">
               {tutorUser?.tutorName}
             </button>
             <button
               onClick={handleLogout}
-              className="text-white text-xl font-semibold bg-blue-600 rounded-full px-4 py-1 flex justify-center items-center md:border-2 md:border-blue-600 md:hover:bg-blue-700 md:hover:text-white"
+              className="text-white text-lg font-semibold bg-blue-600 rounded-full px-4 py-0.5 flex justify-center items-center md:border-2 md:border-blue-600 md:hover:bg-blue-700 md:hover:text-white"
             >
               Logout
             </button>

@@ -8,6 +8,7 @@ interface DecodedToken {
 }
 export const isLogin = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        //console.log(req.headers,"headers")
         const authorizationHeader = req.headers.authorization;
 
         if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {

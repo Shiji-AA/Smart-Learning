@@ -1,6 +1,10 @@
 import axios from 'axios';
 import toast from 'react-hot-toast'
 
+
+export const axiosInstancePayment = axios.create({
+    baseURL:'http://localhost:3000/api/payment'
+})
 ///////////////////////////////////////////////////////
 export const axiosInstance = axios.create({
     baseURL:'http://localhost:3000/api/student'

@@ -1,10 +1,13 @@
 import { Request, Response } from "express";
 import studentModel, { Student } from "../../model/userModel";
+import lessonModel from "../../model/lessonModel";
 import courseModel,{Course} from "../../model/courseModel";
 import generateToken from "../../../Utils/generateToken";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import bcrypt from 'bcrypt';
+import orderModel from "../../model/orderModel";
+import TutorModel from "../../model/tutorModel";
 
 
 interface DecodedData {
@@ -276,10 +279,7 @@ const resetPassword = async (req: Request, res: Response) => {
 
 const getStudentProfile = async (req: Request, res: Response) => {
   try {
-    const user =   (req as any).user   //from middleware
-     //console.log(req,"oooo")
-     //console.log(user,"userr")
-    // console.log(user._id,"iddd")  
+    const user =   (req as any).user   //from middleware   
     const userData = await studentModel.findOne({ _id: user._id});    
     if (!userData) {
       return res.status(404).json({ message: "Student not found" });
@@ -319,7 +319,8 @@ const getProfileById =async (req:Request,res:Response)=>{
 
   const updateProfile = async (req: Request, res: Response) => {
     try {
-      const user =   (req as any).user  //from middleware
+      const user =   (req as any).user 
+      console.log(user,"user") //from middleware
         
       const { studentName, studentEmail, phone } = req.body;
   
@@ -386,6 +387,115 @@ catch(error){
   console.log(error);
 }}  
   
+const enrolledcourses = async(req:Request,res:Response)=>{  
+  try{   
+    const enrolledCourses = await courseModel.find({ isEnrolled:true })  
+    //console.log(enrolledCourses, "enrolled courses");
+    res.status(200).json({enrolledCourses, message:"enrolledCourses"});
+  }
+  catch(error){
+    console.log("error While Fetching EnrolledCourses", error);
+    res.status(500).json({ error: "internal Server Error" });
+  }
+};
+
+//for EnrolledSinglePageView
+const enrolledcourseSingleview = async (req: Request, res: Response) => {
+  try {
+    const courseId = req.params.courseId;
+    const singleViewDetails = await courseModel.findOne({ _id:courseId }) 
+    console.log(singleViewDetails,"singleViewDetails")
+    if (!singleViewDetails) {
+      return res.status(404).json({ error: "No orders found for the course" });
+    }
+    res.status(200).json({singleViewDetails,message:"SingleCourseDetails"});
+  } catch (error) {
+    console.error("Internal Server Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+//for EnrolledSinglePageView
+const getAllLessons = async (req: Request, res: Response) => {
+  try {
+    const courseId = req.params.courseId; 
+    const lessonDetails = await courseModel.findById(courseId).populate({      
+       path: 'lessons' 
+    });   
+    if (!lessonDetails) {     
+      return res.status(404).json({ error: "Lesson not found" });
+    }
+    console.log(lessonDetails, "Lesson Details");
+    res.status(200).json({ lessonDetails, message: "Lesson details fetched successfully" });
+  } catch (error) {
+    console.log("Internal server error", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
+//for searching course from Home page
+const searchCourse = async(req:Request,res:Response)=>{
+  try {          
+    const searchCriteria = req.query.searchCriteria;    
+    if (!searchCriteria || typeof searchCriteria !== 'string') {
+        return res.status(400).send('Invalid search criteria');
+    }  
+    const courseDetails = await courseModel.find({
+        $and: [
+            {courseName: { $regex: `^${searchCriteria}`, $options: 'i' } }, // Starts with 'a' search
+               ]
+    });  
+    //console.log(courseDetails,"courseDetails");
+    res.status(200).json(courseDetails); 
+} catch (error:any) {
+    console.log(error.message);
+    res.status(500).send('Internal Server Error');
+}
+}
+
+const tutorsList = async (req: Request, res: Response) => {
+  try {
+    const tutorDetails = await TutorModel.find().exec();
+//console.log(tutorDetails,"tutordetails")
+    if (tutorDetails.length > 0) {
+      //console.log("Get all tutor details:", tutorDetails);
+      res.status(200).json({
+        tutorDetails,
+        message: "Tutors found",
+      });
+    } else {
+      return res.status(404).json({
+        message: "No tutors found",
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching tutors:", error);
+    res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+
+const searchTutorStudent = async (req: Request, res: Response) => {
+  try {
+    const searchCriteria = req.query.searchCriteria;  
+    if (!searchCriteria || typeof searchCriteria !== "string") {
+      return res.status(400).send("Invalid search criteria");
+    }
+    const tutorDetails = await TutorModel.find({
+      $and: [
+        { tutorName: { $regex: `^${searchCriteria}`, $options: "i" } }, // Starts with 'a' search
+        { tutorName: { $not: { $eq: "Admin" } } }, // Exclude records where name is 'admin' (case-insensitive)
+      ],
+    });
+    res.status(200).json(tutorDetails); // Send the found tutors as a JSON response
+  } catch (error:any) {
+    console.log(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
 export {
   loginStudent,
   registerStudent,
@@ -399,4 +509,10 @@ export {
   updateProfile,
   userCourseList,
   getCourseDetails,
+  enrolledcourses,
+  enrolledcourseSingleview,
+  getAllLessons,
+  searchCourse,
+  tutorsList,
+  searchTutorStudent,
 };

@@ -17,7 +17,7 @@ function TutorBanner() {
         <p className='text-1xl font-bold text-black dark:text-white'>
         Dedicated Educators, Exceptional Results
         </p>
-        <Link to="/TutorView">
+        <Link to="/tutorslist">
         <button className="bg-black hover:bg-gray-700 text-white dark:text-white font-bold py-2 px-1 mt-4 rounded">
           View Tutors
         </button>

@@ -10,6 +10,7 @@ interface Course {
   courseDescription: string;
   courseDuration: string;
   courseFee: number;
+  isEnrolled:boolean;
   photo: string;
   createdAt: string;
   updatedAt: string;
@@ -70,6 +71,7 @@ function BuyNow1() {
           </p>{" "}
           {/* Added text-white class */}
         </div>
+
         <div className="max-w-md mr-20 cursor-pointer rounded-lg bg-white p-4 shadow duration-150 hover:scale-105 hover:shadow-md h-full bg-white">
           {" "}
           {/* Added bg-white class */}
@@ -85,14 +87,29 @@ function BuyNow1() {
           <h5 className="mb-4 ml-4 text-xl font-semibold text-gray-800">
             ₹ {courseDetails?.courseFee}
           </h5>
-          <Link to ={`/checkout/${courseDetails?._id}`}>
-          <button className="text-white bg-blue-500 hover:bg-blue-700 py-2 px-4 rounded-md">
-            Start Subscription
-          </button>
-          </Link>
-         
+
+
+{courseDetails?.isEnrolled ===false ? (
+   <Link to ={`/checkout/${courseDetails?._id}`}>
+   <button className="text-white bg-blue-500 hover:bg-blue-700 py-2 px-4 rounded-md">
+     Start Subscription
+   </button>
+   </Link> 
+
+):(
+ 
+  <Link to ={`/enrolled/${courseDetails?._id}`}>
+  <button className="text-white bg-blue-500 hover:bg-blue-700 py-2 px-4 rounded-md">
+  Enrolled
+  </button>
+  </Link> 
+
+)
+ } 
+
           <br />
         </div>
+        
       </div>
     </>
   );

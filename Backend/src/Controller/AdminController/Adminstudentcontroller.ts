@@ -38,7 +38,7 @@ const getAllstudents = async (req: Request, res: Response) => {
       try {          
           const searchCriteria = req.query.searchCriteria;       
             
-          // Validate searchCriteria
+        
           if (!searchCriteria || typeof searchCriteria !== 'string') {
               return res.status(400).send('Invalid search criteria');
           }  

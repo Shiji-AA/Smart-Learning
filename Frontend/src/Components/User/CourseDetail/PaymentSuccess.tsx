@@ -11,8 +11,8 @@ function PaymentSuccess() {
         <h1 className="mt-4 text-2xl font-bold text-gray-800 text-center">Payment Successful</h1>
         <p className="mt-2 text-sm text-gray-700 text-center">Congratulations! Your payment has been successfully completed.</p>
         <div className="flex justify-center mt-6">
-  <Link to ='/usercourselist'>
-  <button className="mr-4 inline-block px-6 py-2 text-sm font-semibold text-white bg-green-500 rounded-md shadow-md hover:bg-green-600 focus:outline-none focus:bg-green-600 transition duration-300">Browse More Courses</button>
+  <Link to ={'/enrolledcourses'}>
+  <button className="mr-4 inline-block px-6 py-2 text-sm font-semibold text-white bg-green-500 rounded-md shadow-md hover:bg-green-600 focus:outline-none focus:bg-green-600 transition duration-300">Enrollment History</button>
   </Link>
 
   <Link to ='/courseintroduction'>

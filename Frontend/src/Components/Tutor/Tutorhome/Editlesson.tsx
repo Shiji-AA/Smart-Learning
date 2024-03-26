@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { axiosInstanceTutor } from "../../../api/axiosinstance";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Tutornavbar from "../../../Components/Tutor/Tutordashboard/Tutornavbar";
+import { useParams } from "react-router-dom";
 
 interface Lesson {
   _id: string;
@@ -24,8 +25,9 @@ interface Course {
   createdAt: Date;
   updatedAt: Date;
 }
-
-function Addlesson() {
+function Editlesson() {
+  const { id } = useParams();
+  //console.log(id, "id");
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState<string>("");
@@ -36,6 +38,7 @@ function Addlesson() {
   const [selectcourse, setSelectcourse] = useState("");
   const [video, setVideo] = useState<File | null>(null);
   const [cloudanaryURL, setCloudanaryURL] = useState("");
+  const [lessonDetails, setLessonDetails] = useState<Lesson[]>([]);
 
   useEffect(() => {
     axiosInstanceTutor
@@ -67,6 +70,24 @@ function Addlesson() {
       });
   }, []);
 
+  useEffect(() => {
+    axiosInstanceTutor
+      .get(`/editlesson/${id}`)
+      .then((response) => {
+        if (response) {
+          setLessonDetails(response.data.lessonDetails);
+          setTitle(response.data.lessonDetails?.title);
+          setDescription(response.data.lessonDetails?.description);
+          setSelectcategory(response.data.lessonDetails?.categoryId);
+          setSelectcourse(response.data.lessonDetails?.courseId);
+          //setVideo(response.data.lessonDetails?.video);
+        }
+      })
+      .catch((error) => {
+        console.error("Error in fetching Data", error);
+      });
+  }, []);
+
   const handleSubmitChange = (e: React.FormEvent<HTMLInputElement>) => {
     try {
       const inputElement = e.target as HTMLInputElement;
@@ -86,26 +107,25 @@ function Addlesson() {
   const submitVideo = async () => {
     try {
       if (!video) {
-        throw new Error("No video selected")
-       }
-        const data = new FormData();
-        data.append("file", video);
-        data.append("upload_preset", "smartlearning");
-        data.append("cloud_name", "shijiaa");
-        console.log(video, "video UNDO?");
-        const response = await axios.post(
-          "https://api.cloudinary.com/v1_1/shijiaa/video/upload",
-          data
-        );
-       if (response.data && response.data.url) {
-          console.log("Video uploaded successfully. URL:", response.data.url);
-          setCloudanaryURL(response.data.url);//return the url if successful
-          return response.data.url;
-        } else {
-          console.error("Invalid response from Cloudinary", response.data);
-          throw new Error("Invalid response from Cloudinary");            
-          
-        }
+        throw new Error("No video selected");
+      }
+      const data = new FormData();
+      data.append("file", video);
+      data.append("upload_preset", "smartlearning");
+      data.append("cloud_name", "shijiaa");
+      console.log(video, "video UNDO?");
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/shijiaa/video/upload",
+        data
+      );
+      if (response.data && response.data.url) {
+        console.log("Video uploaded successfully. URL:", response.data.url);
+        setCloudanaryURL(response.data.url); //return the url if successful
+        return response.data.url;
+      } else {
+        console.error("Invalid response from Cloudinary", response.data);
+        throw new Error("Invalid response from Cloudinary");
+      }
     } catch (error) {
       console.error("Error while Uploading Video:", error);
       toast.error("Error uploading video: Please try again later");
@@ -113,38 +133,39 @@ function Addlesson() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleUpdateSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     setLoading(true);
     try {
-        const videoUrl = await submitVideo();
-        
-        if (videoUrl) {
-            const response = await axiosInstanceTutor.post("/addlesson", {
-                title,
-                description,
-                selectcategory,
-                selectcourse,
-                video: videoUrl, 
-            });            
-            if (response.data.message) {
-                toast.success(response.data.message);
-                 navigate('/getallcourse');
-            }
+      //upload the video and get the url
+      const videoUrl = await submitVideo();
+      console.log(videoUrl,"video url")
+      if (videoUrl) {
+        const response = await axiosInstanceTutor.put(`/updatelesson/${id}`,{
+          title,
+          description,
+          selectcategory,
+          selectcourse,
+          video:videoUrl,
+        });
+        if (response.data.message) {
+          toast.success(response.data.message);
+          navigate("/getallcourse");
         }
+      }
     } catch (error:any) {
-        console.error("Error while adding lesson:", error);
-        if (error.response && error.response.data && error.response.data.error) {
-            toast.error(error.response.data.error);
-        } else {
-            toast.error("An error occurred while adding the lesson. Please try again later.");
-        }
+      console.error("Error while adding lesson:", error);
+      if (error.response && error.response.data && error.response.data.error) {
+        toast.error(error.response.data.error);
+      } else {
+        toast.error(
+          "An error occurred while adding the lesson. Please try again later."
+        );
+      }
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
-
+  };
 
   return (
     <>
@@ -153,7 +174,7 @@ function Addlesson() {
         <div className="min-h-screen flex items-center justify-center">
           <div className="mt-8 shadow-md p-8 w-full max-w-md rounded-lg border border-gray-400 bg-white">
             <form
-              onSubmit={handleSubmit}
+              onSubmit={handleUpdateSubmit}
               className="bg-gray-300 rounded p-4 sm:p-8"
             >
               <div className="mb-4">
@@ -249,7 +270,8 @@ function Addlesson() {
           </div>
         </div>
       </div>
-    </>  );
+    </>
+  );
 }
 
-export default Addlesson;
+export default Editlesson;

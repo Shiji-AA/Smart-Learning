@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../../../Components/User/Navbar/Navbar';
 import { axiosInstance } from '../../../api/axiosinstance';
+import { useLocation } from 'react-router-dom';
 
 interface Course {
   _id: string;
@@ -15,23 +16,31 @@ interface Course {
 }
 
 function Usercourseslist() {
+  const location = useLocation();
+  const searchedCourse = location.state?.searchedCourse;
   const [courseDetails, setCourseDetails] = useState<Course[]>([]);
 
   useEffect(() => {
-    axiosInstance.get('/usercourselist')
-      .then((response) => {
-        setCourseDetails(response.data.courseDetails);
-      });
-  }, []);
+    if (searchedCourse) {     
+      setCourseDetails([searchedCourse]);
+    } else {   
+      axiosInstance.get('/usercourselist')
+        .then((response) => {
+          setCourseDetails(response.data.courseDetails);
+        })
+        .catch((error) => {
+          console.error('Error fetching course details:', error);
+        });
+    }
+  }, [searchedCourse]);
 
   return (
     <>
       <Navbar />
-      <div className="bg-gradient-to-b from-blue-10 to-white p-4 rounded-lg">
-        <div className="min-h-screen">
-          <h2 className="text-3xl font-bold mb-4">What to learn next</h2>         
+      <div className="bg-gray-100 bg-gradient-to-b from-blue-10 to-white p-4 rounded-lg">
+        <div className="min-h-screen">       
+          <h2 className="text-3xl font-bold mb-4">What to learn next</h2>       
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4" style={{ maxWidth: '1200px', margin: '0 auto' }}>
-             {/* Card starts here */}
             {courseDetails.map((course) => (
               <div key={course._id} className="bg-white border border-gray-200 shadow-sm rounded-md overflow-hidden">
                 <Link to={`/coursedetail/${course?._id}`}>
@@ -45,7 +54,7 @@ function Usercourseslist() {
                     {course.courseDescription}
                   </p>
                   <p className="mt-1 text-gray-800">
-                    ₹{course.courseFee} 
+                    ₹{course.courseFee}
                   </p>
                 </div>
               </div>

@@ -13,7 +13,7 @@ const [tutorProfileData, settutorProfileData] = useState<any | null>(null);
 
   useEffect(() => {
     const tutorId = tutorData?.tutorId;
-    console.log(tutorId)
+    console.log(tutorId,"tutorId")
     if (tutorId) {   
       axiosInstanceTutor.get(`/tutorprofile`)    
       .then((response) => {

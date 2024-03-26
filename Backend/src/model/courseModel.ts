@@ -6,7 +6,11 @@ export interface Course extends Document {
     courseDescription :string,
     category:mongoose.Schema.Types.ObjectId,   
     photo:string,
+    tutor: mongoose.Schema.Types.ObjectId,  
+    students: mongoose.Schema.Types.ObjectId[],
+    lessons: mongoose.Schema.Types.ObjectId[], 
     isApproved:boolean,
+    isEnrolled:boolean,
     courseFee:number,  
     createdAt:Date,
     updatedAt:Date
@@ -23,14 +27,7 @@ const coursemodel =new mongoose.Schema({
     courseDescription:{
         type: String,
         required:true
-    },
-    category:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref: "categoryModel", 
-        required: true       
-
-    },
-    
+    },     
     courseFee:{
         type:Number,
         required:true
@@ -39,12 +36,32 @@ const coursemodel =new mongoose.Schema({
         type:Boolean,
         default:false
     },
+    isEnrolled:{
+        type:Boolean,
+        default:false,
+    },
     photo:[{
         type:String
     }],
-   
-  
-    createdAt:{
+    category:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref: "categoryModel", 
+        required: true   
+    },
+    tutor:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"tutorModel",
+        required:true
+    },
+    students: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'studentModel',
+      }],
+    lessons: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'lessonModel',
+      }],     
+        createdAt:{
         type:Date,
         default:Date.now
     },

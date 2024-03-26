@@ -1,138 +1,98 @@
-import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import axios from 'axios'
-import { selectUser } from '../../../features/userSlice/userSlice'
-import { Course } from '../../../features/tutorSlice/courseSlice'
-import { UserBaseUrl } from '../../../Api'
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Typography,
-  Button,
-  IconButton,
-} from "@material-tailwind/react";
-import { Link } from "react-router-dom";
-import { RingLoader } from 'react-spinners';
+import { useState, useEffect } from 'react';
+//import { useNavigate } from 'react-router-dom';
+import Navbar from '../../User/Navbar/Navbar';
+import { axiosInstance } from '../../../api/axiosinstance';
+import {Link} from 'react-router-dom'
 
 
-
-function EnrolledCourses() {
-  const user = useSelector(selectUser);
-  const id = user?.user?._id;
-  const [entrolledCourses, setEntrolledCourses] = useState<Course[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (id) {
-     
+interface EnrolledCourse {
+    _id: string;   
+    courseName: string;
+    courseDescription: string;
+    courseDuration: string;
+    courseFee: number;
+    photo: string;
   
-      axios
-        .get(`${UserBaseUrl}/entrolled-courses/${id}`)
-        .then((response) => {
-          console.log(response.data,"response annu")
-          setEntrolledCourses(response.data);
-          setLoading(false); // Data is now available
-        })
-        .catch((error) => {
-          console.error('Error fetching enrolled courses:', error);
-          setLoading(false); // Handle the error and set loading to false
-        });
-    }
-  }, [id]);
-
-  
-  if (loading) {
-    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-    <RingLoader loading={true} color="#000000" speedMultiplier={1} size={150} />
-  </div>
   }
 
-  return (
-    <div className="mt-5 ml-12 flex flex-col gap-8 dark:bg-black  ">
-  <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Enrolled Courses</h1>
-  {entrolledCourses && entrolledCourses.length > 0 ? (
-   <div className="flex flex-wrap gap-4">
-   {entrolledCourses.map((course) => (
-     <div key={course?._id} className="w-full md:w-1/2 lg:w-1/3 xl:w-1/4">
-            <Card className="w-full max-w-[18rem] shadow-lg dark:bg-black dark:text-white">
-            <CardHeader floated={false} color="blue-gray">
-              <div style={{ width: "100%", height: "130px", overflow: "hidden" }}>
-                <img
-                  src={course?.courseId?.photo}
-                  alt="Course Thumbnail"
-                  style={{ width: "100%", height: "auto" }}
-                />
-              </div>
-              <div className="to-bg-black-10 absolute inset-0 h-full w-full bg-gradient-to-tr from-transparent via-transparent to-black/60 " />
-              <IconButton
-                size="sm"
-                color="red"
-                variant="text"
-                className="!absolute top-4 right-4 rounded-full"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="h-6 w-6"
-                >
-                  {/* Your SVG path here */}
-                </svg>
-              </IconButton>
-            </CardHeader>
-            <CardBody>
-              <div className="mb-1 flex items-center justify-between dark:bg-black dark:text-white">
-                <Typography
-                  variant="h5"
-                  color="blue-gray"
-                  className="font-medium dark-bg-black dark-text-white"
-                >
-                  {course?.courseId?.courseName}
-                </Typography>
-                <Typography
-                  color="blue-gray"
-                  className="flex items-center gap-1.5 font-normal -mt-4"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    className="-mt-0.5 h-5 w-5 text-yellow-700"
-                  >
-                    {/* Your SVG path here */}
-                  </svg>
-                  {course.courseId.rating}
-                </Typography>
-              </div>
-              <Typography className="dark:bg-black dark:text-white">
-                {course?.courseId?.coursedescription}
-              </Typography>
-              <Typography className="dark:bg-black dark-text-white text-lg font-semibold text-red-500">
-                Rs: {course?.courseId?.courseFee} /-
-              </Typography>
-            </CardBody>
-            <CardFooter className="pt-1">
-              <Link to={`/entrolled_singlePage/${course._id}`} state={{ courseDetails: course }}>
-                <Button
-                  size="lg"
-                  fullWidth={true}
-                  style={{ cursor: "pointer" }}
-                >
-                  View Course
-                </Button>
-              </Link>
-            </CardFooter>
-          </Card>
-          </div>
-      ))}
-    </div>
-      ) : (
-        <p>No enrolled courses found.</p>
-      )}
-    </div>
-  );
-}
+function EnrolledCourses() {
+  //const navigate = useNavigate();
+  const [enrolledCourses, setEnrolledCourses] = useState<EnrolledCourse[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
-export default EnrolledCourses
+  useEffect(() => {  
+      axiosInstance.get(`/enrolledcourses`)
+        .then((response) => {
+          if (response && response.data) {
+          console.log(response.data.enrolledCourses,"enrolledCourses")
+            setEnrolledCourses(response.data.enrolledCourses);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching enrolled courses:", error);
+        });    
+  }, []);
+
+  const filteredCourses = enrolledCourses.filter(course =>
+    course?.courseName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // const handleCourseClick = (courseId: string) => {
+  //   navigate({`/enrolledcourseSingleview/${course._id}`});
+  // };
+  return (
+    <>
+      <Navbar />
+      <div className="bg-gray-100 min-h-screen">
+        <div className="container mx-auto py-8">
+          <h1 className="text-3xl font-bold mb-8 text-center">Enrolled Courses</h1>
+          <div className="flex justify-center mb-4">
+            <input
+              type="text"
+              className="px-4 py-2 w-full max-w-md border border-gray-500 rounded-md focus:outline-none"
+              placeholder="Search for a course..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {filteredCourses.map((course) => (
+              <div
+                key={course._id}
+                className="bg-white border border-gray-200 shadow-md rounded-md overflow-hidden cursor-pointer"
+                // onClick={() => handleCourseClick(course._id)}
+              >
+                <img
+                  className="w-full h-48 object-cover"
+                  src={course?.photo}
+                  alt="Course Thumbnail"
+                />
+                <div className="p-6">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                    {course?.courseName}
+                  </h4>
+                  <p className="text-gray-700 mb-4">
+                    {course?.courseDescription}
+                  </p>
+                  <div className="flex justify-between items-center">
+                    <p className="text-gray-800">Price: ₹{course?.courseFee}</p>
+
+
+                    <Link to ={`/enrolledcourseSingleview/${course?._id}`}>
+                    <button className="px-4 py-2 bg-blue-500 text-white rounded-md">
+                      View Details
+                    </button>
+                    </Link>
+                   
+
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+            }  
+export default EnrolledCourses;

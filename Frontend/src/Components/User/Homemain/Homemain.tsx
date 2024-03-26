@@ -1,4 +1,4 @@
-
+import {Link} from 'react-router-dom'
 import HomeVideo from '../../../assets/HomeVideo.mp4';
 
 function Homemain() {
@@ -22,10 +22,13 @@ function Homemain() {
         <p className="text-2xl text-center">Start your learning journey with us.</p> 
       
         <div className="mt-6 text-center">
+          <Link to = {'/usercourselist'}>
           <button className="relative  hover:bg-blue-100 text-black font-medium py-2 px-4 rounded transition duration-300 overflow-hidden">
             Explore Our Courses
             <div className="reflection absolute inset-0 bg-gray-300 opacity-20"></div>
           </button>
+          </Link>
+         
         </div>
       </div>
     </div>

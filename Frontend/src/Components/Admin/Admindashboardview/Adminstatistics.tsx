@@ -19,7 +19,7 @@ function Adminstatistics() {
       </div>
       <div>
         <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-          Total clients
+          Total Users
         </p>
         <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
           6389
@@ -44,7 +44,7 @@ function Adminstatistics() {
       </div>
       <div>
         <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-          Account balance
+          Total Revenue
         </p>
         <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
           $ 46,760.89
@@ -67,7 +67,7 @@ function Adminstatistics() {
       </div>
       <div>
         <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-          New sales
+          Total Tutors
         </p>
         <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
           376
@@ -92,9 +92,9 @@ function Adminstatistics() {
       </div>
       <div>
         <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-          Pending contacts
+          Total Enrollments
         </p>
-        <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">35</p>
+        <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">3514</p>
       </div>
     </div>
   </div>

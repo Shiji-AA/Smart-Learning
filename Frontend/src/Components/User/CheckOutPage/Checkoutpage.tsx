@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import Navbar from '../../../Components/User/Navbar/Navbar';
-import { Link } from 'react-router-dom';
-import { axiosInstance } from "../../../api/axiosinstance";
+import AuthrootState from "../../../Redux/Rootstate/Authstate";
+import { axiosInstance, axiosInstancePayment } from "../../../api/axiosinstance";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 
@@ -11,12 +12,16 @@ interface Course {
   courseDescription: string;
   courseDuration: string;
   courseFee: number;
+  isEnrolled:boolean;
   photo: string;
   createdAt: string;
   updatedAt: string;
 }
 
 const CheckoutPage = () => {
+  const userData = useSelector((state: AuthrootState) => state.auth.userdata); 
+  const studentId = userData?.id; //to payment controller to create order
+  
   const { id } = useParams();
   const [courseDetails, setCourseDetails] = useState<Course | null>(null);
 
@@ -24,8 +29,9 @@ const CheckoutPage = () => {
     axiosInstance
       .get(`/checkout/${id}`)
       .then((response) => {
-        if (response.data.courseDetails) {
+        if (response.data) {         
           setCourseDetails(response.data.courseDetails);
+        
         }
       })
       .catch((error) => {
@@ -33,6 +39,26 @@ const CheckoutPage = () => {
         toast("Error fetching data. Please try again later.");
       });
   }, []);
+
+  const handleSubmit = (courseDetails: Course | null) => (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();    
+    if (!courseDetails) {
+      console.error("No course details available.");
+      toast.error("No course details available.");
+      return;
+    }  
+    axiosInstancePayment.post('/create-checkout-session', { courseDetails,studentId })
+      .then((response)=>{       
+        const url = response.data.url;
+        window.location.href = url;
+
+      })
+      .catch((error) => {
+        console.error("Error creating checkout session:", error);
+        toast.error("Error creating checkout session. Please try again later.");
+      });
+  }
+  
 
   return (
     <>
@@ -68,17 +94,18 @@ const CheckoutPage = () => {
                 ₹ {courseDetails?.courseFee}
               </h5>  
               <h2 className="text-xl font-semibold text-blue-600">
-                Pay with Razorpay
+                Pay with Stripe
               </h2>
               <p className="text-gray-600 mt-2">
-                Secure and convenient payments with Razorpay.
+                Secure and convenient payments with Stripe.
               </p>
-              {/* <Link to="/razorpay-payment"> */}
-              <Link to="/paymentSuccess">
-                <button className="mt-4 px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-700">
-                  Proceed with Razorpay
-                </button>
-              </Link>
+      <form onSubmit={handleSubmit(courseDetails)} method="POST">
+      <button type="submit" className="mt-4 px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-700">
+      Checkout
+      </button>
+      </form>
+
+
             </div>
           </div>
         </div>

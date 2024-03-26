@@ -4,8 +4,7 @@ import generateToken from "../../../Utils/generateToken";
 import courseModel,{Course} from "../../model/courseModel";
 import categoryModel from "../../model/categoryModel";
 import lessonModel from "../../model/lessonModel";
-
-
+import orderModel from "../../model/orderModel";
 
   const registerTutor = async(req:Request,res:Response)=>{
     try {
@@ -102,7 +101,7 @@ const getTutorProfile = async (req: Request, res: Response) => {
 
 const addCourse = async (req: Request, res: Response) => {
   try {
-    const { courseName, courseDuration, courseDescription, courseFee, selectcategory ,image} = req.body;
+    const { courseName, courseDuration, courseDescription, courseFee, selectcategory ,selecttutor,image} = req.body;
   
     const categoryExist = await categoryModel.findById(selectcategory);
     if (!categoryExist) {
@@ -122,6 +121,7 @@ const addCourse = async (req: Request, res: Response) => {
       courseDescription,
       courseFee,
       category: selectcategory,
+      tutor:selecttutor,
       photo:image
     });
 
@@ -132,6 +132,7 @@ const addCourse = async (req: Request, res: Response) => {
         courseFee,
         courseDuration,
         selectcategory,
+        selecttutor,
         image,
         message: "Course added successfully",
       });
@@ -147,6 +148,50 @@ const addCourse = async (req: Request, res: Response) => {
     });
   }
 };
+
+//to get data in the edit course page
+const editCourse = async(req:Request,res:Response)=>{
+  try{
+    const courseId = req.params.id;
+    const courseDetails= await courseModel.findById(courseId).exec();
+    if(courseDetails){
+      res.status(200).json({
+      courseDetails,
+        message: "courseDetails found successfully",
+      });
+    } else {
+      return res.status(404).json({
+        message: "Course not found",
+      });
+    }}
+  catch(error){
+    return res.status(500).json({error:"Internal Server Error"});
+    }
+  }
+
+  const updateCourse = async (req: Request, res: Response) => {
+    try {
+      const courseId = req.params.id;
+      const updatedCourseData = req.body;  
+      //console.log(updatedCourseData, "updated data");  
+      const course = await courseModel.findByIdAndUpdate(
+        courseId,
+        { $set: updatedCourseData },
+        { new: true }
+      );  
+      if (course) {
+        res.status(200).json({
+          course,
+          message: "Course Updated Successfully"
+        });
+      } else {
+        res.status(404).json({ message: "Course not found" });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }; 
 
 const getAllCourse = async (req:Request,res:Response)=>{
   try{
@@ -205,9 +250,13 @@ const addLesson = async (req: Request, res: Response) => {
       description,
       categoryId: selectcategory,
       courseId:selectcourse,
-      video
+      video,
     });
 
+    await courseModel.findByIdAndUpdate(selectcourse, {
+      $push: { lessons: newLesson._id }, 
+    });
+    
     if (newLesson) {
       return res.status(201).json({
         title,
@@ -289,7 +338,88 @@ const getProfileById =async (req:Request,res:Response)=>{
       return res.status(500).json({ error: "Internal server error" });
     }
   }
+  const tutorAllLessons = async (req: Request, res: Response) => {
+    try {
+      const courseId = req.params.id;
+      
+      // Fetch course details
+      const courseDetails = await courseModel.findById(courseId);
+      
+      if (!courseDetails) {
+        return res.status(404).json({ error: "Course not found" });
+      }
+      
+      // Fetch lesson details associated with the course
+      const lessonIds = courseDetails.lessons;
+      const lessonDetails = await lessonModel.find({ _id: { $in: lessonIds } });
+      
+      //console.log(lessonDetails, "Lesson Details");
+      
+      // Send response with lesson details
+      res.status(200).json({ lessonDetails,message:"lessonDetails" });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  }
+  //to fetch the data to editLessonPage
+const editLesson = async(req:Request,res:Response)=>{
+  try{
+    const lessonId= req.params.id;  
+    const lessonDetails = await lessonModel.findById(lessonId);  
+    if(lessonDetails){
+      return res.status(200).send({lessonDetails,message:"lessonDetails are found"})
+    }else {
+      return res.status(404).json({
+        message: "Tutor not found",
+      });
+    }
+  }
+  catch(error){
+    return res.status(500).json({error:"Unable to Edit the course"});
+    }
+  }
 
+  //To update the lesson
+
+  const updateLesson = async(req:Request,res:Response)=>{
+    try{
+      const lessonId= req.params.id;
+      const updatedLessonData =req.body;
+      //console.log(lessonId,"lessonId");
+      const newLessonData=await lessonModel.findByIdAndUpdate(
+        lessonId,
+        {$set:updatedLessonData},
+        {new:true}
+        );
+        if(newLessonData){
+          res.status(200).json({newLessonData,message:"Lesson updated successfully"})
+        }else{
+          res.status(404).json({error:"Lesson not found"})
+        }
+  
+    }
+    catch(error){
+      console.log(error)
+      return res.status(500).json({error:"Unable to Edit the course"});
+      }
+    }
+//for getting enrolled student Details
+    const enrolledStudentData = async (req: Request, res: Response) => {
+      try {
+        const tutorId = req.params.tutorId;
+        console.log(tutorId);   
+        const enrolledStudentDetails = await orderModel.find({ tutorId: tutorId }).populate('studentId').populate('courseId').exec();
+        console.log(enrolledStudentDetails, "enrolledStudentDetails");   
+      
+        res.status(200).json({enrolledStudentDetails,message:"enrolledStudentDetails"});
+      } catch (error: any) {
+        console.log(error);
+        res.status(500).json({ error: "Unable to fetch data" });
+      }
+    };
+    
+  
 
 export{
     tutorLogin,
@@ -301,6 +431,12 @@ export{
     singleView,
     getProfileById,
     updateProfile,
+    editCourse,
+    updateCourse,
+    editLesson,
+    updateLesson,
+    tutorAllLessons,
+    enrolledStudentData,
 
 
 }

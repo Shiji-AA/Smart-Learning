@@ -13,6 +13,10 @@ import EditProfile from "./Components/User/UserProfile/Editprofile";
 import Checkoutpage from "./Components/User/CheckOutPage/Checkoutpage";
 import CourseDetailPage from "./Pages/User/CourseDetailPage/CourseDetailPage";
 import Usercourseslist from "./Components/User/CourseDetail/Usercourseslist";
+import PaymentSuccess from "./Components/User/CourseDetail/PaymentSuccess";
+import CourseIntro from "./Components/User/CourseDetail/CourseIntro";
+import EnrolledCourses from "./Components/User/EnrolledCourses/EnrolledCourses";
+import EnrolledSingleView from "./Components/User/EnrolledCourses/EnrolledSingleView";
 
 //tutor side
 import Tutorlogin from "./Components/Tutor/Login/Tutorlogin";
@@ -24,6 +28,8 @@ import Addcourse from "./Components/Tutor/Tutorhome/Addcourse";
 import Addlesson from "./Components/Tutor/Tutorhome/Addlesson";
 import Tutorcourseslist from "./Components/Tutor/Tutorhome/Tutorcourseslist";
 import SingleCoursePageView from "./Components/Tutor/Tutorhome/Singleview";
+import Editcourse from "./Components/Tutor/Tutorhome/Editcourse";
+
 
 //AdminSide
 import Adminlogin from "./Components/Admin/Adminlogin/Adminlogin";
@@ -36,8 +42,11 @@ import Privatepages from "./Components/Privatepages/Privatepages";
 import EditCategory from "./Components/Admin/Category/Editcategory ";
 import Tutortable from "./Components/Admin/TutorsList/Tutortable";
 import Studenttable from "./Components/Admin/StudentsList/Studenttable";
-import PaymentSuccess from "./Components/User/CourseDetail/PaymentSuccess";
-import CourseIntro from "./Components/User/CourseDetail/CourseIntro";
+import Pagenotfound from "./Components/Common/Pagenotfound";
+import Editlesson from "./Components/Tutor/Tutorhome/Editlesson";
+import StudentListTutor from "./Components/Tutor/StudentListTutorSide/StudentListTutor";
+import TutorsList from "./Components/User/TutorsList/TutorsList";
+
 
 function App() {
   return (
@@ -63,24 +72,32 @@ function App() {
           <Route path="/checkout/:id" element={<Checkoutpage />} />
           <Route path="/paymentsuccess" element={<PaymentSuccess/>} />
           <Route path="/courseintroduction" element={<CourseIntro/>} />
-         
+          <Route path="*" element={<Pagenotfound/>} />
+          <Route path="/enrolledcourses" element={<EnrolledCourses/>}/>
+          <Route path="/enrolledcourseSingleview/:courseId" element={<EnrolledSingleView/>}/>
+          <Route path="/getalllessons/:courseId" element={<EnrolledSingleView/>}/>
+          <Route path="/postenrollmentcourseview/:orderId" element={<EnrolledSingleView/>}/>
+          <Route path="/tutorslist" element={<TutorsList/>}/>
+             
+          
         </Route>
 
         {/* Tutor side */}
-        <Route path="/tutorLogin" element={<Tutorlogin />} />
-        <Route path="/tutorregister" element={<Tutorsignup />} />
+          <Route path="/tutorLogin" element={<Tutorlogin />} />
+          <Route path="/tutorregister" element={<Tutorsignup />} />
 
-        <Route element={<Privatepages isStudent={false} />}>
+          <Route element={<Privatepages isStudent={false} />} >
           <Route path="/tutordashboard" element={<Tutordashboard />} />
           <Route path="/tutorprofile" element={<Tutorprofile />} />
-          <Route
-            path="/tutoreditprofile/:tutorId"
-            element={<Tutoreditprofile />}
-          />
+          <Route path="/tutoreditprofile/:tutorId" element={<Tutoreditprofile />}/>          
           <Route path="/addcourse" element={<Addcourse />} />
+          <Route path="/editcourse/:id" element={<Editcourse />} />
           <Route path="/addlesson" element={<Addlesson />} />
+          <Route path="/editlesson/:id" element={<Editlesson />} />
           <Route path="/getallcourse" element={<Tutorcourseslist />} />
           <Route path="/singleview/:id" element={<SingleCoursePageView />} />
+          <Route path="/tutoralllessons/:id" element={<SingleCoursePageView />} />
+          <Route path='/studentlisttutor' element={<StudentListTutor/>}/>
         </Route>
 
         {/* Admin side */}
