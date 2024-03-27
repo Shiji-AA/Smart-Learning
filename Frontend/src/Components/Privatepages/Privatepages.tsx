@@ -11,6 +11,7 @@ interface PrivatePageProps {
 const Privatepages : React.FC<PrivatePageProps> = ({isStudent}) => {
     const studentUser = useSelector((state: AuthrootState) => state.auth.userdata);
     const tutorUser = useSelector((state: TutorrootState) => state.tutor.tutordata);
+    
 
     if(isStudent) {
         if(studentUser) {

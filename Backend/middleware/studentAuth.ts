@@ -7,10 +7,8 @@ interface DecodedToken {
     user_id: string;
 }
 export const isLogin = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        //console.log(req.headers,"headers")
+    try {     
         const authorizationHeader = req.headers.authorization;
-
         if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
             return res.status(401).json({ error: 'Unauthorized - No token found' });
         }
@@ -27,7 +25,7 @@ export const isLogin = async (req: Request, res: Response, next: NextFunction) =
             return res.status(401).json({ error: 'Unauthorized - Account is blocked' });
         }
         (req as any).user = user;  //to verify if a user is logged in and attach user information to the request object if the user is authenticated.
-        //console.log(user,"userrrr")
+        //console.log(user,"user")
         next();
     } catch (error) {
         console.error('Error in isLogin middleware:', error);

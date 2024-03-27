@@ -3,7 +3,7 @@ import { axiosInstanceAdmin } from '../../../api/axiosinstance';
 import { useNavigate } from 'react-router-dom';
 import logo1 from '../../../assets/logo1.jpg';
 import admin1 from '../../../assets/admin1.jpg'
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import toast from "react-hot-toast";
 import {  useDispatch,useSelector} from 'react-redux'
 import { setAdminInfo } from '../../../Redux/Slices/Adminslice';
@@ -18,6 +18,12 @@ const[password,setPassword]=useState<string>("")
 const adminUser = useSelector((state : AdminrootState) => state.admin.admindata)
   const navigate = useNavigate();
   const dispatch= useDispatch()
+
+  useEffect(()=>{
+  if(adminUser){
+  navigate('/admindashboard');
+  }
+  },[])
 
 console.log(adminUser)
 const handleSubmit=(e :React.FormEvent<HTMLFormElement>)=> {

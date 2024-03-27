@@ -1,7 +1,5 @@
 import Tutornavbar from '../Tutordashboard/Tutornavbar';
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import TutorrootState from "../../../Redux/Rootstate/Tutorstate";
 import { axiosInstanceTutor } from "../../../api/axiosinstance";
 //import Pagination from '../../Pagination/Pagination';
 
@@ -22,13 +20,11 @@ interface Course {
   updatedAt: string;
 }
 function StudentListTutor() {
-  const tutorData = useSelector((state: TutorrootState) => state.tutor.tutordata);
-  const tutorId = tutorData?.tutorId;
   const [enrolledStudentDetails, setEnrolledStudentDetails] = useState<Course[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
-    axiosInstanceTutor.get(`/enrolledstudentdetails/${tutorId}`)
+    axiosInstanceTutor.get(`/enrolledstudentdetails`)
       .then((response) => {
         if (response.data && response.data.enrolledStudentDetails) {
           setEnrolledStudentDetails(response.data.enrolledStudentDetails);

@@ -41,7 +41,7 @@ tutorRouter.get("/getallcourse/:id", isLogin, singleView);
 //TutorEditProfile
 tutorRouter.get("/tutoreditprofile", isLogin, getProfileById);
 tutorRouter.put("/tutorupdateprofile", isLogin, updateProfile);
-tutorRouter.get("/tutoralllessons/:id", tutorAllLessons);
-tutorRouter.get("/enrolledstudentdetails/:tutorId", enrolledStudentData);
+tutorRouter.get("/tutoralllessons/:id", isLogin,tutorAllLessons);
+tutorRouter.get("/enrolledstudentdetails",isLogin, enrolledStudentData);
 
 export default tutorRouter;

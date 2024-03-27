@@ -3,11 +3,11 @@ import authReducer from '../Slices/Authslice';
 import adminReducer from '../Slices/Adminslice';
 import tutorReducer from  '../Slices/Tutorslice';
 import {persistReducer,persistStore} from "redux-persist";
-import storage from "redux-persist/lib/storage";//localstorage
+import storage from "redux-persist/lib/storage";//localStorage
 
 
 const persistConfig = {
-    storage,
+    storage, //localStorage
     key:"auth"
 }
 const persistConfigAdmin = {

@@ -39,6 +39,7 @@ import Createcategory from "./Components/Admin/Category/Createcategory";
 import Courseview from "./Pages/Admin/Courseview/Courseview";
 import { Toaster } from "react-hot-toast";
 import Privatepages from "./Components/Privatepages/Privatepages";
+import PrivatePageAdmin from "./Components/Privatepages/PrivatePageAdmin";
 import EditCategory from "./Components/Admin/Category/Editcategory ";
 import Tutortable from "./Components/Admin/TutorsList/Tutortable";
 import Studenttable from "./Components/Admin/StudentsList/Studenttable";
@@ -102,6 +103,8 @@ function App() {
 
         {/* Admin side */}
         <Route path="/admin" element={<Adminlogin />} />
+
+        <Route element={<PrivatePageAdmin/>}> 
         <Route path="/admindashboard" element={<Dashboard />} />
         <Route path="/getallcategory" element={<Categorylist />} />
         <Route path="/addcategory" element={<Createcategory />} />
@@ -109,6 +112,7 @@ function App() {
         <Route path="/admincourselist" element={<Courseview />} />
         <Route path="/getalltutors" element={<Tutortable />} />
         <Route path="/adminstudentlist" element={<Studenttable />} />
+        </Route>        
       </Routes>
     </Router>
   );
