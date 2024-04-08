@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { axiosInstance } from "../../../api/axiosinstance";
 import Navbar from "../../User/Navbar/Navbar";
+import chatIcon from "../../../assets/chatIcon.png";
 
 interface Lesson {
   _id: string;
@@ -9,41 +10,63 @@ interface Lesson {
   description: string;
   video: string;
 }
-interface EnrolledSingleCourse {  
-    _id: string;
-    courseId:string;
-    courseName: string;
-    courseDescription: string;
-    courseDuration: string;
-    courseFee: number;
-    photo: string[];
-    createdAt: string;
-    updatedAt: string;
-  }
-  
+interface EnrolledSingleCourse {
+  _id: string;
+  isLessonCompleted:boolean;
+  courseId: string;
+  courseName: string;
+  courseDescription: string;
+  courseDuration: string;
+  courseFee: number;
+  photo: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
 function EnrolledSingleView() {
   const { courseId } = useParams();
-  console.log( courseId,"courseId")
-  const [singleViewDetails,setSingleViewDetails] = useState<EnrolledSingleCourse | null>(null);
+  console.log(courseId, "courseId");
+  const [
+    singleViewDetails,
+    setSingleViewDetails,
+  ] = useState<EnrolledSingleCourse | null>(null);
   const [lessonDetails, setLessonDetails] = useState<Lesson[] | null>(null);
   const [loading, setLoading] = useState(true);
+  const [wishlistItemCount, setWishlistItemCount] = useState<number>(0);
+  const [progressPercentage, setProgressPercentage] = useState<number>(0);
+  const [showDownloadButton, setshowDownloadButton] = useState(false);
+
+  //For wishlistCount
+  useEffect(() => {
+    axiosInstance
+      .get("getallwishlistitems")
+      .then((response) => {
+        if (response && response.data) {
+          setWishlistItemCount(response.data.wishlistedCourses.length);
+        }
+      })
+      .catch((error) => {
+        console.error("Error in fetching wishlistCount", error);
+      });
+  }, []);
 
   useEffect(() => {
     axiosInstance
       .get(`/getalllessons/${courseId}`)
       .then((response) => {
         if (response.data) {
-          setLessonDetails(response.data.lessonDetails);
+          console.log(response.data, "lessonDetails");
+          setLessonDetails(response.data.lessonDetails?.lessons);
         }
       })
       .catch((error) => {
         console.error("Error fetching lesson details:", error);
       });
-  }, [courseId ]);
+  }, [courseId]);
 
   useEffect(() => {
     axiosInstance
-      .get(`/enrolledcourseSingleview/${courseId }`)
+      .get(`/enrolledcourseSingleview/${courseId}`)
       .then((response) => {
         if (response.data) {
           setSingleViewDetails(response.data.singleViewDetails);
@@ -67,14 +90,56 @@ function EnrolledSingleView() {
 
   const handleLessonClick = (lessonVideo: any) => {
     window.open(lessonVideo);
+    const totalVideos = lessonDetails ? lessonDetails?.length : 0;
+    const newProgressPercentage = Math.min(
+      progressPercentage + 100 / totalVideos,
+      100
+    );
+    const roundedPercentage = parseFloat(newProgressPercentage.toFixed(2));
+    setProgressPercentage(roundedPercentage);
+    if (roundedPercentage > 98) {
+      setshowDownloadButton(true);
+      //for making the status of lessonCompleted true in db
+      axiosInstance
+        .put(`/lessoncompleted/${courseId}`, { isLessonCompleted: true })
+        .then((response) => {
+          console.log("Lesson completion status updated:", response.data);
+        })
+        .catch((error) => {
+          console.error("Error updating lesson completion status:", error);
+        });
+    }
+  };
+
+  const getColor = () => {
+    if (progressPercentage < 40) {
+      return "#ff0000";
+    } else if (progressPercentage < 70) {
+      return "#ffa500";
+    } else {
+      return "#2ecc71";
+    }
+  };
+  const getEvaluationStatus = (progressPercentage: any) => {
+    if (progressPercentage < 10) {
+      return;
+    }
+    if (progressPercentage < 40) {
+      return "Needs Improvement"; // Red
+    } else if (progressPercentage < 70) {
+      return "Fair Progress"; // Orange
+    } else {
+      return "Excellent Progress";
+    }
   };
 
   return (
     <>
-      <Navbar />
-      <div className="flex justify-center bg-gradient-to-r from-blue-100 to-indigo-200 py-6">
+      <Navbar wishlistItemCount={wishlistItemCount} />
+
+      <div className="flex justify-center bg-gradient-to-r from-gray-100 to-indigo-100 py-6 ">
         <div className="max-w-4xl flex justify-between mx-4 rounded-lg overflow-hidden shadow-xl">
-          <div className="w-1/2 bg-white shadow-md rounded p-8">
+          <div className=" w-1/2 bg-white shadow-md rounded p-8">
             <h1 className="text-3xl font-bold mb-4 text-blue-800">
               Course Details
             </h1>
@@ -111,8 +176,7 @@ function EnrolledSingleView() {
                 Your Lesson Here!!
               </h3>
             </div>
-
-            <div className="overflow-x-auto w-full">
+            <div className="w-full">
               <table className="table text-gray-900 border-separate space-y-6 text-sm w-full">
                 <thead className="bg-gray-500 text-gray-900">
                   <tr>
@@ -124,8 +188,7 @@ function EnrolledSingleView() {
                 </thead>
                 <tbody>
                   {lessonDetails &&
-                    lessonDetails &&
-                    lessonDetails?.lessons.map((lesson, index) => (
+                    lessonDetails?.map((lesson, index) => (
                       <tr
                         key={lesson._id}
                         className={
@@ -147,6 +210,79 @@ function EnrolledSingleView() {
                     ))}
                 </tbody>
               </table>
+              <br />
+              <br />
+              <br />
+              <br />
+
+              {/* Progressbar */}
+              {singleViewDetails?.isLessonCompleted ?(
+
+            <Link to ={`/downloadcertificate/${courseId}`}>
+            <div>
+            <button className="mt-3 bg-green-700 hover:bg-green-900 text-white font-bold py-1 px-4 rounded">View your certificate</button>
+            </div>
+            </Link>  
+           
+              ):(
+                
+              <div>
+              <div className="block p-4 m-auto bg-gray-300 rounded-lg shadow w-72">
+                <div>
+                  <span className="text-xs font-light inline-block  px-2 uppercase rounded-full text-white bg-blue-500">
+                    Progress
+                  </span>
+                </div>
+
+                <div
+                  className="bg-yellow-200 rounded-lg "
+                  style={{ width: 250, height: 20 }}
+                >
+                  <div
+                    className="w-full h-5 bg-gray-400 rounded-full mt-3"
+                    style={{
+                      width: `${progressPercentage}%`,
+                      backgroundColor: getColor(),
+                    }}
+                  >
+                    <div className="w-3/4 h-full text-center text-xs text-white rounded-full">
+                      {progressPercentage}%
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <p
+                    className="text-center text-lg font-semibold mt-3"
+                    style={{ color: getColor() }}
+                  >
+                    {getEvaluationStatus(progressPercentage)}
+                  </p>
+                </div>
+      
+                <Link to={`/downloadcertificate/${courseId}`}>
+                  {showDownloadButton && (
+                    <button className="mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded">
+                      Download Certificate
+                    </button>
+                  )}
+                </Link>
+              </div>
+            </div>
+              )
+              }
+
+              {/* Progressbar */}
+
+
+              <div>
+                <Link to={"/chat"}>
+                  <img
+                    src={chatIcon}
+                    className="absolute bottom-0 right-0 mb-1 mr-6"
+                    style={{ width: 90, height: 90 }}
+                  />
+                </Link>
+              </div>
             </div>
           </div>
         </div>

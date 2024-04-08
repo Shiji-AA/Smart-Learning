@@ -7,6 +7,7 @@ import { logout } from "../../../Redux/Slices/Authslice";
 import { axiosInstance } from "../../../api/axiosinstance";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import heart from "../../../assets/heart.png";
 
 interface Course {
   _id: string;
@@ -24,7 +25,11 @@ interface Course {
   updatedAt: string;
   __v: number;
 }
-function Navbar() {
+interface NavbarProps {
+  wishlistItemCount: number;
+}
+
+function Navbar({ wishlistItemCount }: NavbarProps) {
   const navigate = useNavigate();
   const [queryData, setQueryData] = useState("");
   const [searchError, setSearchError] = useState<boolean>(false);
@@ -122,7 +127,7 @@ function Navbar() {
               className="block md:inline-block text-white hover:text-blue-500 px-3 py-3 border-b-2 border-white-900 md:border-none"
             >
               {" "}
-            Enrolled Courses
+              Enrolled
             </a>
           </div>
 
@@ -137,12 +142,37 @@ function Navbar() {
             />
             <button
               onClick={handleSearchClick}
-              className="bg-blue-300 rounded-tr-full rounded-br-full hover:bg-orange-200 py-2 px-4"
+              className="bg-blue-300 rounded-tr-full rounded-br-full hover:bg-orange-300 py-2 px-4"
             >
               <p className="font-semibold text-base uppercase">Search</p>
             </button>
           </div>
         </div>
+
+        {studentUser?(
+             <Link to="/wishlist">
+             <span
+               style={{
+                 borderRadius: "50%",
+                 backgroundColor: "orange",
+                 color: "white",
+                 padding: "0.5px 3.5px",
+               }}
+             >
+               {wishlistItemCount}
+             </span>
+             <img
+               src={heart}
+               width="50"
+               height="50"
+               style={{ marginLeft: "-15px", marginTop: "-9px" }}
+             />
+           </Link>
+
+        ):(
+          null
+        )
+        } 
 
         {studentUser ? (
           <>

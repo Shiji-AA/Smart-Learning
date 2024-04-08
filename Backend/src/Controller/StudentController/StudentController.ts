@@ -8,6 +8,9 @@ import nodemailer from "nodemailer";
 import bcrypt from 'bcrypt';
 import orderModel from "../../model/orderModel";
 import TutorModel from "../../model/tutorModel";
+import wishlistModel ,{Wishlist }from "../../model/wishlistModel";
+import WishlistModel from "../../model/wishlistModel";
+import categoryModel from "../../model/categoryModel";
 
 
 interface DecodedData {
@@ -15,6 +18,8 @@ interface DecodedData {
   email: string;
   picture: string;
   jti: string;
+  
+
 }
 
 const globalData = {
@@ -22,6 +27,7 @@ const globalData = {
     studentName: string;
     studentEmail: string;
     phone: string;
+  
   },
 };
 
@@ -118,8 +124,10 @@ const googleLogin = async (req: Request, res: Response) => {
     const { name, email, picture, jti } = decodedData;
     const user = await studentModel.findOne({ studentEmail: email });
 
-    if (user) {
-      const token = generateToken(user._id);
+    if (user) {    
+      const { token, refreshToken } = generateToken(user._id);   
+      user.refreshToken = refreshToken;
+      await user.save();   
 
       const userData = {
         name: user.studentName,
@@ -133,6 +141,7 @@ const googleLogin = async (req: Request, res: Response) => {
       return res.json({
         userData,
         token,
+        refreshToken,
         message: "Success",
       });
     } else {
@@ -151,35 +160,32 @@ const googleLogin = async (req: Request, res: Response) => {
 const loginStudent = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-    //console.log(req.body);
-
     const user: Student | null = await studentModel.findOne({
       studentEmail: email,
     });
-
     if (!user) {
       return res.status(401).json({ error: "Invalid user " });
     }
     if (user.isBlocked) {
       return res.status(401).json({ error: "User is blocked" });
     }
-
     if (user && (await user.matchPassword(password))) {
       const userData = {
         name: user.studentName,
         email: user.studentEmail,
         id: user._id,
         phone: user.phone,
-        image : user.photo
-
+        image : user.photo,
       };
+      //generate Token & RefreshToken & save refreshToken in db
+      const { token, refreshToken } = generateToken(user._id);
+      user.refreshToken = refreshToken;
+      await user.save();    
 
-      //generate Token
-      const token = generateToken(user._id);
-      //console.log(token);
-      return res.json({
+     return res.json({
         userData,
         token,
+        refreshToken,
         message: "success",
       });
     } else {
@@ -404,7 +410,7 @@ const enrolledcourseSingleview = async (req: Request, res: Response) => {
   try {
     const courseId = req.params.courseId;
     const singleViewDetails = await courseModel.findOne({ _id:courseId }) 
-    console.log(singleViewDetails,"singleViewDetails")
+    //console.log(singleViewDetails,"singleViewDetails")
     if (!singleViewDetails) {
       return res.status(404).json({ error: "No orders found for the course" });
     }
@@ -425,7 +431,7 @@ const getAllLessons = async (req: Request, res: Response) => {
     if (!lessonDetails) {     
       return res.status(404).json({ error: "Lesson not found" });
     }
-    console.log(lessonDetails, "Lesson Details");
+    //console.log(lessonDetails, "Lesson Details");
     res.status(200).json({ lessonDetails, message: "Lesson details fetched successfully" });
   } catch (error) {
     console.log("Internal server error", error);
@@ -496,6 +502,142 @@ const searchTutorStudent = async (req: Request, res: Response) => {
   }
 };
 
+
+const addWishlistItem = async (req:Request, res:Response) => {
+  try {
+    const { id } = req.params;
+    //console.log(id, "id"); // courseId    
+    const existingItem = await wishlistModel.findOne({ course: id });
+    if (existingItem) {
+      // If the course already exists in the wishlist, send a message indicating that it's already added
+      return res.status(400).json({ error: 'Course is already added to wishlist' });
+    }
+    // If the course doesn't exist in the wishlist, create a new wishlist item
+    const newWishlistItem = new wishlistModel({ course: id, isWishlisted: true });
+    await newWishlistItem.save();
+    console.log(newWishlistItem, "New Wishlist Item");
+
+    // Send success response
+    res.status(201).json({ message: 'Course added to wishlist successfully', data: newWishlistItem });
+  } catch (error) {
+    console.error("Error adding course to wishlist:", error);
+    // Send error response
+    res.status(500).json({ message: 'Failed to add course to wishlist', error });
+  }
+};
+
+const getWishlistItem = async(req:Request, res:Response)=>{
+try{
+  const wishlistedCourses = await WishlistModel.find().populate('course')
+  //console.log(wishlistedCourses,"wishlistedCourses")
+  res.status(200).json({ wishlistedCourses,message:"wishlistedCourses" });
+} catch (error) {
+  res.status(500).json({ message: 'Failed to fetch wishlist items', error });
+}
+}
+
+const removeWishlistItem = async (req: Request, res: Response) => {
+  const itemId = req.params.id; 
+  try {  
+    const deletedItem = await WishlistModel.findByIdAndDelete(itemId);
+    if (!deletedItem) {    
+      return res.status(404).json({ message: "Wishlist item not found" });
+    }
+    res.status(200).json({ message: "Wishlist item removed successfully", deletedItem });
+  } catch (error) { 
+    res.status(500).json({ message: "Failed to remove wishlist item", error });
+  }
+};
+
+const getUsersForSidebar=async (req: Request, res: Response)=>{
+  try{
+    const allUsers = await studentModel.find({__v:{$ne:1}}).select("-password");
+    res.status(200).json({allUsers,message:"allUsers"})
+  }
+  catch(error){
+    console.log("error in getUsersForSidebar ",error)
+    res.status(500).json({error:"Internal server error"})
+  }
+}
+const updateLessonCompletedStatus = async (req: Request, res: Response) => {
+  try {
+    const { courseId } = req.params;
+    await courseModel.findByIdAndUpdate(courseId, { isLessonCompleted: true });
+    res.status(200).json({ message: 'Lesson completion status updated successfully.' });
+  } catch (error) {  
+    console.error('Error updating lesson completion status:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+//FILTER COURSE
+const filterCourse = async (req: Request, res: Response) => {
+  try {
+    let filteredCourses:any;
+    if (req.query && req.query.category !== "All") {    
+      const category = await categoryModel.findOne({ title: req.query.category });      
+    if (!category) {
+        filteredCourses = [];
+      } else {
+        filteredCourses = await courseModel.find({ category: category._id }).populate("category");
+      }
+    } else {     
+      filteredCourses = await courseModel.find().populate("category");
+    }
+    //console.log(filteredCourses, "Filtered courses");
+    res.status(200).json({ filteredCourses, message: "Filtered courses" });
+  } catch (error) {
+    console.error("Error filtering courses:", error);
+    res.status(500).json({ error: "Internal server error" });
+   }
+    };
+
+    
+    const createRefreshToken = async (req: any, res: any) => {
+        try {
+            const { refreshToken } = req.body;
+            console.log(refreshToken,"refresh Token")
+            // Verify the refresh token
+            const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET as string) as { _id: string };
+            const user = await studentModel.findById(decoded?._id);
+    
+          
+            if (!user || user.refreshToken !== refreshToken) {
+                throw new Error('Invalid refresh token');
+            }
+    
+            // Generate a new access token
+            const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET as string, { expiresIn: '2d' });    
+            return token;
+        } catch (error) {
+            console.error('Error refreshing token:', error);
+            res.status(401).json({ message: 'Failed to refresh token' });
+        }
+    };
+    //get All Catagories
+
+const getAllCategoryStudent = async (req: Request, res: Response) => {
+  try {
+    const categoryDetails = await categoryModel.find().exec();
+    if (categoryDetails) {
+      //console.log(categoryDetails,"Get all Category")
+
+      res.status(200).json({
+        categoryDetails,
+        message:"categoryDetails"
+      });
+    } else {
+      return res.status(400).json({
+        message: "no users in this table",
+      });
+    }
+  } catch (error) {
+    console.error("Error while fetching category:", error);
+    res.status(500).json({ error: "Internal server error" });  
+  }
+};
+    
+
 export {
   loginStudent,
   registerStudent,
@@ -515,4 +657,12 @@ export {
   searchCourse,
   tutorsList,
   searchTutorStudent,
+  addWishlistItem,
+  getWishlistItem,
+  removeWishlistItem,
+  getUsersForSidebar,
+  updateLessonCompletedStatus,
+  filterCourse,
+  createRefreshToken ,
+  getAllCategoryStudent,
 };

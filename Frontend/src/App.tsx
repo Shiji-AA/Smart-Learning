@@ -17,6 +17,8 @@ import PaymentSuccess from "./Components/User/CourseDetail/PaymentSuccess";
 import CourseIntro from "./Components/User/CourseDetail/CourseIntro";
 import EnrolledCourses from "./Components/User/EnrolledCourses/EnrolledCourses";
 import EnrolledSingleView from "./Components/User/EnrolledCourses/EnrolledSingleView";
+import Wishlist from "./Components/User/WishList/Wishlist";
+import Chat from "./Components/User/Chat/Chat";
 
 //tutor side
 import Tutorlogin from "./Components/Tutor/Login/Tutorlogin";
@@ -29,7 +31,12 @@ import Addlesson from "./Components/Tutor/Tutorhome/Addlesson";
 import Tutorcourseslist from "./Components/Tutor/Tutorhome/Tutorcourseslist";
 import SingleCoursePageView from "./Components/Tutor/Tutorhome/Singleview";
 import Editcourse from "./Components/Tutor/Tutorhome/Editcourse";
-
+import OnlineCall from "./Components/Tutor/VideoCall/OnlineCall";
+import Room from "./Components/Tutor/VideoCall/Room";
+import Editlesson from "./Components/Tutor/Tutorhome/Editlesson";
+import StudentListTutor from "./Components/Tutor/StudentListTutorSide/StudentListTutor";
+import TutorsList from "./Components/User/TutorsList/TutorsList";
+import Chatroomtutor from "./Pages/Tutor/ChatRoomTutor/Chatroomtutor";
 
 //AdminSide
 import Adminlogin from "./Components/Admin/Adminlogin/Adminlogin";
@@ -44,9 +51,12 @@ import EditCategory from "./Components/Admin/Category/Editcategory ";
 import Tutortable from "./Components/Admin/TutorsList/Tutortable";
 import Studenttable from "./Components/Admin/StudentsList/Studenttable";
 import Pagenotfound from "./Components/Common/Pagenotfound";
-import Editlesson from "./Components/Tutor/Tutorhome/Editlesson";
-import StudentListTutor from "./Components/Tutor/StudentListTutorSide/StudentListTutor";
-import TutorsList from "./Components/User/TutorsList/TutorsList";
+import Certificate from "./Components/User/ProgressBar/Certificate";
+
+
+
+
+
 
 
 function App() {
@@ -79,6 +89,10 @@ function App() {
           <Route path="/getalllessons/:courseId" element={<EnrolledSingleView/>}/>
           <Route path="/postenrollmentcourseview/:orderId" element={<EnrolledSingleView/>}/>
           <Route path="/tutorslist" element={<TutorsList/>}/>
+          <Route path="/wishlist" element={<Wishlist/>}/>
+          <Route path="/chat" element={<Chat/>}/>
+          <Route path="/downloadcertificate/:courseId" element={<Certificate/>}/>
+               
              
           
         </Route>
@@ -88,6 +102,7 @@ function App() {
           <Route path="/tutorregister" element={<Tutorsignup />} />
 
           <Route element={<Privatepages isStudent={false} />} >
+          <Route path="*" element={<Pagenotfound/>} />
           <Route path="/tutordashboard" element={<Tutordashboard />} />
           <Route path="/tutorprofile" element={<Tutorprofile />} />
           <Route path="/tutoreditprofile/:tutorId" element={<Tutoreditprofile />}/>          
@@ -99,12 +114,17 @@ function App() {
           <Route path="/singleview/:id" element={<SingleCoursePageView />} />
           <Route path="/tutoralllessons/:id" element={<SingleCoursePageView />} />
           <Route path='/studentlisttutor' element={<StudentListTutor/>}/>
+          <Route path='/videocall' element={<OnlineCall/>}/>
+          <Route path='/room/:roomId' element={<Room/>}/>
+          <Route path='/getuserforsidebar' element={<Chatroomtutor/>}/>
+          
         </Route>
 
         {/* Admin side */}
         <Route path="/admin" element={<Adminlogin />} />
 
         <Route element={<PrivatePageAdmin/>}> 
+        <Route path="*" element={<Pagenotfound/>} />
         <Route path="/admindashboard" element={<Dashboard />} />
         <Route path="/getallcategory" element={<Categorylist />} />
         <Route path="/addcategory" element={<Createcategory />} />

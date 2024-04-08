@@ -234,15 +234,14 @@ function Addcourse() {
                 )}
               </div>
 
-              <div className="flex justify-between">
+              <div className="flex justify-between pl-4">
                 <button
-                  className="w-1/2 py-2 px-4 text-white font-bold bg-blue-500 rounded-full focus:outline-none focus:shadow-outline hover:bg-blue-700"
+                  className="w-1/2 py-2 px-4  text-white font-bold bg-blue-500  focus:outline-none focus:shadow-outline hover:bg-blue-700"
                   type="submit"
                 >
                   {loading ? "Uploading" : "Create Course"}
                 </button>              
-              </div>
-              
+              </div>              
             </form>
           </div>
         </div>

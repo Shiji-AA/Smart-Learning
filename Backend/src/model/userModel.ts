@@ -15,6 +15,7 @@ export interface Student extends Document {
     updatedAt:Date,
     isBlocked:boolean,
     verifyToken:string,
+    refreshToken:string,
     matchPassword(enteredPassword:string):Promise<boolean>
 }
 const userSchema = new Schema<Student>({
@@ -59,6 +60,9 @@ const userSchema = new Schema<Student>({
         default:Date.now
     },
     verifyToken:{
+        type:String
+    },
+    refreshToken:{
         type:String
     }
 },{timestamps:true})

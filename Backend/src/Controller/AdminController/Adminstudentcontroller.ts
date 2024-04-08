@@ -1,4 +1,3 @@
-
 import { Request,Response } from "express";
 import studentModel from "../../model/userModel";
 
@@ -9,8 +8,6 @@ interface Student{
   phone:string;
   isBlocked:boolean,
 }
-
-
 //get All Students
 
 const getAllstudents = async (req: Request, res: Response) => {

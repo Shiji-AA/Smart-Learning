@@ -1,24 +1,42 @@
-import Homemain from "../../../Components/User/Homemain/Homemain";
-import TutorBanner from "../../../Components/User/Banner/TutorBanner";
-import Carousal from "../../../Components/User/Card/Carousel";
-import Testimonials from "../../../Components/User/Card/Testimonial";
-import Navbar from "../../../Components/User/Navbar/Navbar";
-import HeroSection from "../../../Components/User/Card/HeroSection";
-import Hello from "../../../Components/User/Card/Hello";
-import TutorFooter from "../../../Components/Tutor/Tutordashboard/Tutorfooter";
-import Statistics from "../../../Components/Tutor/Tutordashboard/Statistics";
-import FAQ from "../../../Components/Tutor/FAQ/FAQ";
+import {useEffect,useState} from 'react'
+import { axiosInstance } from "../../../api/axiosinstance";
+import {Suspense,lazy} from "react";
+import LoadingSpinner from '../../../Components/Common/LoadingSpinner';
+
+const Homemain= lazy(()=>import("../../../Components/User/Homemain/Homemain")) ;
+const TutorBanner = lazy(()=>import("../../../Components/User/Banner/TutorBanner"));
+const Carousal= lazy(()=>import("../../../Components/User/Card/Carousel"));
+const Testimonials= lazy(()=>import("../../../Components/User/Card/Testimonial"));
+const Navbar = lazy(()=>import("../../../Components/User/Navbar/Navbar"));
+const HeroSection= lazy(()=>import("../../../Components/User/Card/HeroSection"));
+const Hello = lazy(()=>import("../../../Components/User/Card/Hello"));
+const TutorFooter= lazy(()=>import("../../../Components/Tutor/Tutordashboard/Tutorfooter"));
+const Statistics = lazy(()=>import("../../../Components/Tutor/Tutordashboard/Statistics"));
+const FAQ = lazy(()=>import("../../../Components/Tutor/FAQ/FAQ"));
+
+
 
 function Landingpage() {
+  const [wishlistItemCount,setWishlistItemCount] = useState<number>(0);
+  useEffect(()=>{
+axiosInstance.get('/getallwishlistitems')
+.then((response)=>{
+if(response && response.data){
+  setWishlistItemCount(response.data.wishlistedCourses.length)
+}
+})
+.catch((error)=>{
+  console.error("Error while fetching data",error)
+})
+  },[]);
+
   return (
     <>
-      <div>
-        <Navbar />
+    <Suspense fallback ={<LoadingSpinner/>}>
+    <Navbar wishlistItemCount={wishlistItemCount}/>
         <HeroSection />
-        <Statistics />
-        {/* <div className="mt- lg:px-0"> */}
-        <Homemain />
-        {/* </div> */}
+        <Statistics />       
+        <Homemain />        
         <br />
         <br />
         <Hello />
@@ -26,7 +44,6 @@ function Landingpage() {
         <TutorBanner />
         <hr />
         <br />
-
         <Carousal heading="Popular Courses" />
         <br />
         <br />
@@ -41,15 +58,9 @@ function Landingpage() {
         <Testimonials />
         <br />
         <hr />
-        <FAQ/>
-        <main>
-          <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
-            {/* Your content */}
-          </div>
-        </main>
-
-        <TutorFooter />
-      </div>
+        <FAQ/>       
+        <TutorFooter />      
+    </Suspense>   
     </>
   );
 }

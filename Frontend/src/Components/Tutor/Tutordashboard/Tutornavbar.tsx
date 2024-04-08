@@ -77,7 +77,19 @@ function Navbar() {
             >
               {" "}
               + Create Course
-            </a>           
+            </a>   
+            <a
+              href="/videocall"
+              className="block md:inline-block text-white hover:text-blue-500 px-3 py-3 border-b-2 border-white-900 md:border-none"
+            >
+              VideoCall
+            </a>  
+            <a
+              href="/getuserforsidebar"
+              className="block md:inline-block text-white hover:text-blue-500 px-3 py-3 border-b-2 border-white-900 md:border-none"
+            >
+              ChatRoom
+            </a>        
           </div>
         </div>
 

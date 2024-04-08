@@ -2,7 +2,7 @@ import { axiosInstance } from "../../../api/axiosinstance"
 
 function PayButton({courseDetails:any}) {
 const handleCheckOut =()=>{
-axiosInstance.post('/stripepayment',{courseDetails:any})
+axiosInstance.post('/stripepayment',{courseDetails:any}) //for stripe payments , api calling to stripe server
 .then((response)=>{
 if(response.data.url){
 window.location.href = response.data.url;

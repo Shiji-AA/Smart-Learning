@@ -19,6 +19,7 @@ function TutorsList() {
   const [searchError, setSearchError] = useState<boolean>(false); //search
   const [currentPage, setCurrentPage] = useState<number>(1); //for pagination
   const [paginatedDisplayData, setPaginatedDisplayData] = useState<Tutor[]>([]); //for pagination
+  const [wishlistItemCount,setWishlistItemCount]=useState<number>(0) //for wishlistCount
 
   const itemsPerPage = 5;
   //responsible for updating the current page
@@ -46,6 +47,20 @@ function TutorsList() {
       });
   }, []);
 
+  //for wishlist count
+  useEffect(()=>{
+  axiosInstance.get('/getallwishlistitems')
+  .then((response)=>{
+    if(response && response.data){
+      setWishlistItemCount(response.data.wishlistedCourses.length)
+    }
+
+  })
+  .catch((error)=>{
+    console.error("Error fetching Wishlist count:", error);
+  })
+  },[])
+
   const handleSearchClick = () => {
     axiosInstance
       .get("/searchTutor", {
@@ -67,7 +82,7 @@ function TutorsList() {
 
   return (
     <>
-      <Navbar />
+      <Navbar wishlistItemCount={wishlistItemCount} />
       <div className="bg-gradient-to-b from-blue-200 to-white p-4 rounded-lg">
         <div className="container mx-auto py-1">
           <div className="px-3 mt-10">

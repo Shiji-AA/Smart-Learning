@@ -25,6 +25,7 @@ import {
 } from "../../Controller/AdminController/Adminstudentcontroller";
 
 import { isLogin } from "../../../middleware/studentAuth";
+import { TotalSales } from "../../Controller/AdminController/AdminDashboard";
 
 adminRouter.post("/admin", adminLogin);
 adminRouter.post("/addcategory", isLogin, addCategory);
@@ -45,5 +46,7 @@ adminRouter.get("/getallstudents", isLogin, getAllstudents);
 adminRouter.get("/searchstudent", isLogin, searchStudent);
 adminRouter.post("/unliststudent/:id", isLogin, unlistStudent);
 adminRouter.post("/reliststudent/:id", isLogin, relistStudent);
+//Dashboard
+adminRouter.get('/totalcount',TotalSales)
 
 export default adminRouter;

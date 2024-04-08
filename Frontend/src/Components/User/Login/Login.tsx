@@ -30,7 +30,8 @@ export default function Example() {
     axiosInstance.post("/login", { email, password })
       .then((response) => {
         if (response.data.message) {
-          localStorage.setItem("studentToken", response.data.token);
+          localStorage.setItem("studentToken", response.data.token);        
+          localStorage.setItem("studentRefreshToken", response.data.refreshToken)
           dispatch(setUserInfo(response.data.userData));
           toast.success(response.data.message);
           navigate("/home");
@@ -134,6 +135,7 @@ export default function Example() {
                         console.log(res, 'google @')
                         if (res.data.message) {
                           localStorage.setItem("studentToken", res.data.token);
+                          localStorage.setItem("studentRefreshToken", res.data.refreshToken);
                           dispatch(setUserInfo(res.data.userData));
                           toast.success(res.data.message);
                           navigate('/home');

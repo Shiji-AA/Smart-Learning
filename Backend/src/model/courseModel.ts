@@ -10,6 +10,7 @@ export interface Course extends Document {
     students: mongoose.Schema.Types.ObjectId[],
     lessons: mongoose.Schema.Types.ObjectId[], 
     isApproved:boolean,
+    isLessonCompleted:boolean,
     isEnrolled:boolean,
     courseFee:number,  
     createdAt:Date,
@@ -37,6 +38,10 @@ const coursemodel =new mongoose.Schema({
         default:false
     },
     isEnrolled:{
+        type:Boolean,
+        default:false,
+    },
+    isLessonCompleted:{
         type:Boolean,
         default:false,
     },

@@ -5,6 +5,7 @@ import courseModel, { Course } from "../../model/courseModel";
 import categoryModel from "../../model/categoryModel";
 import lessonModel from "../../model/lessonModel";
 import orderModel from "../../model/orderModel";
+import studentModel from "../../model/userModel";
 
 const registerTutor = async (req: Request, res: Response) => {
   try {
@@ -94,16 +95,8 @@ const getTutorProfile = async (req: Request, res: Response) => {
 
 const addCourse = async (req: Request, res: Response) => {
   try {
-    const {
-      courseName,
-      courseDuration,
-      courseDescription,
-      courseFee,
-      selectcategory,
-      selecttutor,
-      image,
-    } = req.body;
-
+    
+    const{courseName,courseDuration,courseDescription, courseFee,selectcategory,selecttutor,image} = req.body;
     const categoryExist = await categoryModel.findById(selectcategory);
     if (!categoryExist) {
       return res.status(400).json({ error: "Category does not exist" });
@@ -115,23 +108,10 @@ const addCourse = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Course already exists" });
     }
     const newCourse = await courseModel.create({
-      courseName,
-      courseDuration,
-      courseDescription,
-      courseFee,
-      category: selectcategory,
-      tutor: selecttutor,
-      photo: image,
+      courseName,courseDuration,courseDescription,courseFee,category: selectcategory,tutor: selecttutor,photo: image,
     });
     if (newCourse) {
-      return res.status(201).json({
-        courseName,
-        courseDescription,
-        courseFee,
-        courseDuration,
-        selectcategory,
-        selecttutor,
-        image,
+      return res.status(201).json({courseName,courseDescription,courseFee,courseDuration,selectcategory,selecttutor,image,
         message: "Course added successfully",
       });
     } else {
@@ -146,6 +126,9 @@ const addCourse = async (req: Request, res: Response) => {
     });
   }
 };
+
+
+
 
 //to get data in the edit course page
 const editCourse = async (req: Request, res: Response) => {

@@ -14,6 +14,7 @@ function EditProfile() {
   const [studentEmail,setstudentEmail] =useState<string>("");
   const [phone,setPhone] =useState<string>("");
   const [studentDetails, setStudentDetails] = useState<any>(null);
+  const [wishlistItemCount,setWishlistItemCount] = useState<number>(0)
 
 useEffect(()=>{
   axiosInstance.get(`/editProfile`)
@@ -31,6 +32,19 @@ useEffect(()=>{
 
 },[]);
 
+useEffect(()=>{
+axiosInstance.get('/getallwishlistitems')
+.then((response)=>{
+if(response && response.data){
+setWishlistItemCount(response.data.wishlistedCourses.length)
+}
+})
+.catch((error)=>{
+  console.error("Error fetching Wishlist count:", error);
+})
+
+},[])
+
   const handleSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     axiosInstance.put(`/updateprofile`,{studentName,studentEmail,phone})
@@ -46,7 +60,7 @@ useEffect(()=>{
 
   return (
 <>
-<Navbar/>
+<Navbar wishlistItemCount={wishlistItemCount}/>
 <div className="bg-gradient-to-b from-blue-200 to-white p-4 rounded-lg">
 <div className="min-h-screen">
   <br/>

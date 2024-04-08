@@ -18,7 +18,15 @@ import {
   getAllLessons,
   searchCourse,
   tutorsList,
-  searchTutorStudent,
+  searchTutorStudent, 
+  addWishlistItem,
+  getWishlistItem,
+  removeWishlistItem,
+  getUsersForSidebar,
+  updateLessonCompletedStatus,
+  filterCourse,
+  createRefreshToken,
+  getAllCategoryStudent,
 } from "../../Controller/StudentController/StudentController";
 
 import { isLogin } from "../../../middleware/studentAuth";
@@ -47,5 +55,20 @@ router.get("/getalllessons/:courseId", isLogin, getAllLessons); //enrolled
 router.get("/searchcourse", searchCourse);
 router.get("/tutorslist", isLogin, tutorsList);
 router.get("/searchTutor", searchTutorStudent);
+router.post("/addWishlistItem/:id", addWishlistItem);
+router.get("/getallwishlistitems",getWishlistItem);
+router.delete("/removeWishlistItem/:id",removeWishlistItem);
+router.put("/lessoncompleted/:courseId", isLogin,updateLessonCompletedStatus);
+router.get("/filtercourse",filterCourse);
+router.post("/refreshtoken",createRefreshToken);
+router.get('/getallcategory',getAllCategoryStudent)
+
+
+
+
+//for chatImplementation
+router.get("/getuserforsidebar",getUsersForSidebar);
+
+
 
 export default router;

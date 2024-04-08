@@ -19,10 +19,7 @@ export default function Example() {
   const tutorUser = useSelector((state : TutorrootState)=>state.tutor.tutordata)
 
   const handleSubmit = (e :React.FormEvent<HTMLFormElement>)=>{
-    e.preventDefault();
-
-    
-
+    e.preventDefault();   
     axiosInstanceTutor.post("/tutorLogin",{tutorEmail,password})
     .then((response)=>{
       if(response.data.message){  

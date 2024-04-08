@@ -35,8 +35,7 @@ function Tutorcourseslist() {
   return (
     <>
       <Tutornavbar />
-
-      <div className="bg-gradient-to-b from-blue-10 to-white p-4 rounded-lg">
+      <div className="bg-gradient-to-b from-blue-10 to-white p-4 rounded-lg ">
         <div className="min-h-screen">
           <br />
           <h1 className="text-3xl font-bold mb-4">My Courses !!!</h1>

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-//import { useNavigate } from 'react-router-dom';
 import Navbar from '../../User/Navbar/Navbar';
 import { axiosInstance } from '../../../api/axiosinstance';
 import {Link} from 'react-router-dom'
@@ -16,9 +15,9 @@ interface EnrolledCourse {
   }
 
 function EnrolledCourses() {
-  //const navigate = useNavigate();
   const [enrolledCourses, setEnrolledCourses] = useState<EnrolledCourse[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [wishlistItemCount,setWishlistItemCount]=useState<number>(0)
 
   useEffect(() => {  
       axiosInstance.get(`/enrolledcourses`)
@@ -33,16 +32,26 @@ function EnrolledCourses() {
         });    
   }, []);
 
+  useEffect(()=>{
+    axiosInstance.get('getallwishlistitems')
+    .then((response)=>{
+      if(response && response.data){
+        setWishlistItemCount(response.data.wishlistedCourses.length)
+      }
+    })
+    .catch((error)=>{
+      console.error("Error in fetching wishlistCount",error)
+    })
+
+  },[])
+
   const filteredCourses = enrolledCourses.filter(course =>
     course?.courseName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // const handleCourseClick = (courseId: string) => {
-  //   navigate({`/enrolledcourseSingleview/${course._id}`});
-  // };
-  return (
+   return (
     <>
-      <Navbar />
+      <Navbar wishlistItemCount={wishlistItemCount}/>
       <div className="bg-gray-100 min-h-screen">
         <div className="container mx-auto py-8">
           <h1 className="text-3xl font-bold mb-8 text-center">Enrolled Courses</h1>
@@ -60,8 +69,7 @@ function EnrolledCourses() {
               <div
                 key={course._id}
                 className="bg-white border border-gray-200 shadow-md rounded-md overflow-hidden cursor-pointer"
-                // onClick={() => handleCourseClick(course._id)}
-              >
+                >
                 <img
                   className="w-full h-48 object-cover"
                   src={course?.photo}

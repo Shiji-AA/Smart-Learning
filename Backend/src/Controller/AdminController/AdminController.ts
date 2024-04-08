@@ -1,3 +1,4 @@
+import errorHandler from '../../Constants/errorHandler';
 import { Category } from './../../model/categoryModel';
 import { Request, Response } from "express";
 import generateToken from "../../../Utils/generateToken";
@@ -23,7 +24,7 @@ const adminLogin = async (req: Request, res: Response) => {
             return res.status(401).json({ message: "Invalid Email or password" });
         }
     } catch (error) {
-        return res.status(500).json({ message: "Internal Server Error" });
+      return errorHandler(res, error);
     }
 };
 
@@ -47,7 +48,7 @@ const getAllCategory = async (req: Request, res: Response) => {
         });
       }
     } catch (error) {
-      console.log(error);     
+      return errorHandler(res, error);   
     }
   };
 
@@ -68,10 +69,7 @@ const getCategoryById =async (req:Request,res:Response)=>{
       });
     }
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      message: "Internal server error",
-    });
+    return errorHandler(res, error);
   }
 
   }
@@ -79,7 +77,7 @@ const getCategoryById =async (req:Request,res:Response)=>{
   const editCategory =async(req:Request,res: Response)=>{
     try{
       const {id}= req.params;
-      console.log(id,"iddd")
+      //console.log(id,"iddd")
       const {title,description} =req.body;
       const category : Category | null = await categoryModel.findById(id);
       if(!category){
@@ -99,7 +97,7 @@ const getCategoryById =async (req:Request,res:Response)=>{
       }
     }
     catch(error){
-      return res.status(500).json({error:"Internal server error"})
+      return errorHandler(res, error);
     }
   }
   const deleteCategory = async(req:Request,res:Response)=>{
@@ -113,7 +111,7 @@ const getCategoryById =async (req:Request,res:Response)=>{
    res.status(200).json({message:"category deleted successfully"})
       }  
     catch(error){    
-      res.status(500).json({error:"Error while deleting category"})
+      return errorHandler(res, error);
     }  
   }
 
@@ -132,7 +130,7 @@ const getCategoryById =async (req:Request,res:Response)=>{
       }
     }
     catch(error){
-      res.status(500).json({error:"Error while deleting category"})
+    return errorHandler(res,error)
     }
   }
 
@@ -149,8 +147,7 @@ const getCategoryById =async (req:Request,res:Response)=>{
   
       return res.status(200).json({ message: 'Course status toggled successfully', course });
     } catch (error) {
-      console.error('Error toggling course status:', error);
-      return res.status(500).json({ message: 'Internal server error' });
+    return errorHandler(res,error)
     }
   };
   

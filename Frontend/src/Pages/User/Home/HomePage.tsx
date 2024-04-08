@@ -1,17 +1,41 @@
-import Navbar from "../../../Components/User/Navbar/Navbar";
-import Homemain from "../../../Components/User/Homemain/Homemain";
-import TutorBanner from "../../../Components/User/Banner/TutorBanner";
-import Hello from "../../../Components/User/Card/Hello";
-import Carousal from "../../../Components/User/Card/Carousel";
-import Testimonials from "../../../Components/User/Card/Testimonial";
-import Tutorfooter from "../../../Components/Tutor/Tutordashboard/Tutorfooter";
-import HeroSection from "../../../Components/User/Card/HeroSection";
-import Statistics from "../../../Components/Tutor/Tutordashboard/Statistics";
-import FAQ from "../../../Components/Tutor/FAQ/FAQ";
+import{Suspense,lazy} from 'react';
+import {useEffect,useState} from 'react'
+import { axiosInstance } from "../../../api/axiosinstance";
+import LoadingSpinner from '../../../Components/Common/LoadingSpinner';
+
+const Navbar =lazy(()=>import("../../../Components/User/Navbar/Navbar"));
+const Homemain=lazy(()=>import("../../../Components/User/Homemain/Homemain"));
+const TutorBanner=lazy(()=>import("../../../Components/User/Banner/TutorBanner"));
+const Hello=lazy(()=>import("../../../Components/User/Card/Hello"));
+const Carousal=lazy(()=>import("../../../Components/User/Card/Carousel"));
+const Testimonials=lazy(()=>import("../../../Components/User/Card/Testimonial"));
+const Tutorfooter=lazy(()=>import("../../../Components/Tutor/Tutordashboard/Tutorfooter"));
+const HeroSection=lazy(()=>import("../../../Components/User/Card/HeroSection"));
+const Statistics=lazy(()=>import( "../../../Components/Tutor/Tutordashboard/Statistics"));
+const FAQ =lazy(()=>import("../../../Components/Tutor/FAQ/FAQ"));
+
+
 function Home() {
+  const [wishlistItemCount,setWishlistItemCount]=useState<number>(0)
+
+
+  useEffect(()=>{
+    axiosInstance.get('getallwishlistitems')
+    .then((response)=>{
+      if(response && response.data){
+        setWishlistItemCount(response.data.wishlistedCourses.length)
+      }
+    })
+    .catch((error)=>{
+      console.error("Error in fetching wishlistCount",error)
+    })
+
+  },[])
+
   return (
     <>
-      <Navbar />
+    <Suspense fallback={<LoadingSpinner/>}>
+    { <Navbar wishlistItemCount={wishlistItemCount} /> }
       <HeroSection />
       <Statistics />
       <Homemain />
@@ -39,6 +63,8 @@ function Home() {
       <hr />
       <FAQ />
       <Tutorfooter />
+    </Suspense>
+     
     </>
   );
 }

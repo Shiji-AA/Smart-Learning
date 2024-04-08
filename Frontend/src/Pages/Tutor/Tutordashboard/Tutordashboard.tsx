@@ -13,9 +13,10 @@ function Tutordashboard() {
     <div>    
      <Tutornavbar />
      <Banner/>
+     <Statistics/>
      <br/><br/>
      <Carousaltutor/>     
-     <Statistics/>
+    
     <Tutortestimonials/>
     <hr/>
      

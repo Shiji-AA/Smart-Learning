@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import {Link }from 'react-router-dom'
+import { Link, useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../../api/axiosinstance";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -10,13 +10,14 @@ interface Course {
   courseDescription: string;
   courseDuration: string;
   courseFee: number;
-  isEnrolled:boolean;
+  isEnrolled: boolean;
   photo: string;
   createdAt: string;
   updatedAt: string;
 }
 
 function BuyNow1() {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [courseDetails, setCourseDetails] = useState<Course | null>(null);
 
@@ -35,13 +36,28 @@ function BuyNow1() {
       });
   }, []);
 
+  const handlewishlistClick = () => {
+    axiosInstance
+      .post(`/addWishlistItem/${id}`)
+      .then((response) => {
+        if (response.status === 201) {
+          toast.success(response.data.message);
+          navigate("/wishlist");
+        } else {
+          console.error("Failed to add item to wishlist");
+        }
+      })
+      .catch((error) => {
+        toast.error(error.response.data.error);
+      });
+  };
+
   return (
     <>
       <div
         className="w-full text-white flex items-center"
         style={{
           background: "linear-gradient(90deg, #C9D6FF, #E2E2E2)",
-          // background: "linear-gradient(90deg, #93A5CF, #E4EfE9)", 
           height: "60px",
         }}
       >
@@ -71,7 +87,6 @@ function BuyNow1() {
           </p>{" "}
           {/* Added text-white class */}
         </div>
-
         <div className="max-w-md mr-20 cursor-pointer rounded-lg bg-white p-4 shadow duration-150 hover:scale-105 hover:shadow-md h-full bg-white">
           {" "}
           {/* Added bg-white class */}
@@ -87,29 +102,32 @@ function BuyNow1() {
           <h5 className="mb-4 ml-4 text-xl font-semibold text-gray-800">
             ₹ {courseDetails?.courseFee}
           </h5>
+          <div style={{ display: "flex", gap: "10px" }}>
+            {courseDetails?.isEnrolled === false ? (
+              <Link to={`/checkout/${courseDetails?._id}`}>
+                <button className="text-white bg-blue-500 hover:bg-blue-700 py-2 px-4 rounded-md">
+                  Start Subscription
+                </button>
+              </Link>
+            ) : (
+              <Link to="/enrolledcourses">
+                <button className="text-white bg-blue-500 hover:bg-blue-700 py-2 px-4 rounded-md">
+                  Enrolled
+                </button>
+              </Link>
+            )}
 
-
-{courseDetails?.isEnrolled ===false ? (
-   <Link to ={`/checkout/${courseDetails?._id}`}>
-   <button className="text-white bg-blue-500 hover:bg-blue-700 py-2 px-4 rounded-md">
-     Start Subscription
-   </button>
-   </Link> 
-
-):(
- 
-  <Link to ={`/enrolled/${courseDetails?._id}`}>
-  <button className="text-white bg-blue-500 hover:bg-blue-700 py-2 px-4 rounded-md">
-  Enrolled
-  </button>
-  </Link> 
-
-)
- } 
-
+            {courseDetails?.isEnrolled === false ? (
+              <button
+                onClick={handlewishlistClick}
+                className="text-white bg-orange-500 hover:bg-orange-700 py-2 px-4 rounded-md"
+              >
+                Add to WishList
+              </button>
+            ) : null}
+          </div>
           <br />
         </div>
-        
       </div>
     </>
   );

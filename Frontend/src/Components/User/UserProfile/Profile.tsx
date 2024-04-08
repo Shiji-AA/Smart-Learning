@@ -9,6 +9,8 @@ import Navbar from '../../../Components/User/Navbar/Navbar'
 function Profile() {
    const userData = useSelector((state: AuthrootState) => state.auth.userdata); 
   const [profileData, setProfileData] = useState<any | null>(null);
+    //for displaying wishlistCount to navbar
+  const [wishlistItemCount, setWishlistItemCount] = useState<number>(0);
 
   useEffect(() => {
     const userId = userData?.id;
@@ -25,9 +27,24 @@ function Profile() {
     }
   }, [userData]); 
 
+  //for displaying wishlistCount to navbar
+  useEffect(()=>{
+    axiosInstance.get('/getallwishlistitems')
+    .then((response)=>{
+      if (response && response.data) {
+        setWishlistItemCount(response.data.wishlistedCourses.length);
+      }
+    })
+    .catch((error)=>{
+      console.error("Error fetching Wishlist count:", error);
+    })
+  },[userData])
+
+
   return (
     <>
-    <Navbar />
+      {/* for displaying wishlistCount to navbar */}
+ <Navbar wishlistItemCount={wishlistItemCount} />
 
 <div className="bg-gradient-to-b from-blue-200 to-white p-4 rounded-lg">
     <br/>
