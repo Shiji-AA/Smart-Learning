@@ -14,11 +14,14 @@ const adminLogin = async (req: Request, res: Response) => {
         const id = new mongoose.Types.ObjectId("65e6adc6193904154dc390e8")
         const { email, password } = req.body;            
         if (adminEmail === email && adminPassword === password) {
-            const token = generateToken(id);
+
+            const {token,refreshToken} = generateToken(id);
             return res.status(200).json({
                 id,
                 adminEmail,
-                token,message :"Logged successfully"             
+                token,
+                refreshToken,
+                message :"Logged successfully"             
             });
         } else {
             return res.status(401).json({ message: "Invalid Email or password" });

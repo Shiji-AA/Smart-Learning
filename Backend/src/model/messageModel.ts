@@ -13,7 +13,7 @@ const chatMessageSchema = new mongoose.Schema<Message>({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'tutorModel',
     required :true,
-  },
+  }, 
   receiverId : {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'studentModel',

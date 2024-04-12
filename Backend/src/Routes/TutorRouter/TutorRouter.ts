@@ -20,6 +20,7 @@ import {
 } from "../../Controller/TutorController/TutorController";
 import { getAllCategory } from "../../Controller/AdminController/AdminController";
 import { isLogin } from "../../../middleware/studentAuth";
+import { createRefreshToken } from "../../Controller/TutorController/TutorController";
 
 tutorRouter.post("/tutorLogin", tutorLogin);
 tutorRouter.post("/tutorregister", registerTutor);
@@ -43,5 +44,6 @@ tutorRouter.get("/tutoreditprofile", isLogin, getProfileById);
 tutorRouter.put("/tutorupdateprofile", isLogin, updateProfile);
 tutorRouter.get("/tutoralllessons/:id", isLogin,tutorAllLessons);
 tutorRouter.get("/enrolledstudentdetails",isLogin, enrolledStudentData);
+tutorRouter.post("/refreshtoken",createRefreshToken);
 
 export default tutorRouter;

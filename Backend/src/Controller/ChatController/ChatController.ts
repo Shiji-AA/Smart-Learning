@@ -27,7 +27,7 @@ const accessChat = async (req: Request, res: Response) => {
             })
         }
         const newMessage = new MessageModel({
-            senderId,
+            senderId,            
             receiverId,
             message,
         })
@@ -35,17 +35,8 @@ const accessChat = async (req: Request, res: Response) => {
         if(newMessage){
             chat.messages.push(newMessage._id)
         }
-
-        //SOCKET IO FUNCTIONALITY  WILL GO HERE
-
-        //await chat.save();
-        //await newMessage.save();
-
-        //this will run in parallel
         await Promise.all([chat.save(),newMessage.save()]);
-
         res.status(201).json({ newMessage,message:"message created successfully"});
-
     }
     catch(error){
         console.log("error while creating message",error)
@@ -59,26 +50,21 @@ const fetchChats = async (req: Request, res: Response) => {
     //    console.log("message sent",req.params.id)
     try {
         const { id: userToChatId } = req.params; //studentId
-        const senderId = (req as any).user; //tutorId
-        //console.log(senderId,"senderId")
-        //console.log(userToChatId,"ReceiverId")
+        const senderId = (req as any).user?._id; //tutorId     
 
         const chat = await chatModel.findOne({
             participants: { $all: [senderId, userToChatId] },
-        }).populate("messages");    //NOT REFERENCE BUT ACTUAL MESSAGES
+        }).populate("messages"); 
         
-        console.log(chat,"chat");
-
         if (!chat) {return res.status(200).json([])};
         const messageData = chat.messages
+        //console.log(messageData,"messageData")
         res.status(200).json({messageData,message:"ChatMessages"});
     } catch (error) {
         console.error("Error in fetchChats:", error);
         res.status(500).json({ error, message: "Error while fetching messages" });
     }
 };
-
-
 
 
 

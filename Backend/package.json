@@ -21,6 +21,8 @@
   },
   "dependencies": {
     "@types/bcryptjs": "^2.4.6",
+    "@types/react-bootstrap": "^0.32.36",
+    "@types/react-modal": "^3.16.3",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -29,6 +31,7 @@
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.9.10",
     "nodemon": "^3.0.3",
+    "react-bootstrap": "^2.10.2",
     "socket.io": "^4.7.5",
     "stripe": "^14.21.0",
     "ts-node": "^10.9.2"

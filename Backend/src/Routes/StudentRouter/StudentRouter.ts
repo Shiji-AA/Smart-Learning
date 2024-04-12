@@ -30,6 +30,7 @@ import {
 } from "../../Controller/StudentController/StudentController";
 
 import { isLogin } from "../../../middleware/studentAuth";
+import { accessChat } from "../../Controller/ChatController/ChatController";
 
 router.post("/login", loginStudent);
 router.post("/register", registerStudent);
@@ -63,12 +64,9 @@ router.get("/filtercourse",filterCourse);
 router.post("/refreshtoken",createRefreshToken);
 router.get('/getallcategory',getAllCategoryStudent)
 
-
-
-
 //for chatImplementation
 router.get("/getuserforsidebar",getUsersForSidebar);
-
+router.post('/accesschat/:userId',isLogin, accessChat);
 
 
 export default router;

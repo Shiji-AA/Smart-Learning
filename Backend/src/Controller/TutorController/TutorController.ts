@@ -6,6 +6,9 @@ import categoryModel from "../../model/categoryModel";
 import lessonModel from "../../model/lessonModel";
 import orderModel from "../../model/orderModel";
 import studentModel from "../../model/userModel";
+import jwt from "jsonwebtoken";
+import notificationModel from "../../model/notificationModel";
+import mongoose from 'mongoose';
 
 const registerTutor = async (req: Request, res: Response) => {
   try {
@@ -62,10 +65,15 @@ const tutorLogin = async (req: Request, res: Response) => {
         tutorId: tutor._id,
         image: tutor.photo,
       };
-      const token = generateToken(tutor._id);
+
+      const { token, refreshToken } = generateToken(tutor._id);
+      tutor.refreshToken = refreshToken;
+      await tutor.save();    
+ 
       return res.status(200).json({
         tutorData,
         token,
+        refreshToken,
         message: "Login Success",
       });
     } else {
@@ -93,9 +101,8 @@ const getTutorProfile = async (req: Request, res: Response) => {
   }
 };
 
-const addCourse = async (req: Request, res: Response) => {
-  try {
-    
+const addCourse = async (req: Request, res: Response) => { 
+  try {    
     const{courseName,courseDuration,courseDescription, courseFee,selectcategory,selecttutor,image} = req.body;
     const categoryExist = await categoryModel.findById(selectcategory);
     if (!categoryExist) {
@@ -111,6 +118,14 @@ const addCourse = async (req: Request, res: Response) => {
       courseName,courseDuration,courseDescription,courseFee,category: selectcategory,tutor: selecttutor,photo: image,
     });
     if (newCourse) {
+//Creating a notification to admin
+      const notification = await notificationModel.create({
+        senderUser: (req as any).user , 
+        receiverUser: new mongoose.Types.ObjectId("65e6adc6193904154dc390e8"), 
+        message: `New course : '${courseName}' has been added`, 
+        type: 'Pending for Approval',
+        isRead: false,
+    });
       return res.status(201).json({courseName,courseDescription,courseFee,courseDuration,selectcategory,selecttutor,image,
         message: "Course added successfully",
       });
@@ -120,7 +135,7 @@ const addCourse = async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
-    console.error(error); // Log the error for debugging
+    console.error(error); 
     return res.status(500).json({
       error: "Internal server error",
     });
@@ -401,6 +416,28 @@ const enrolledStudentData = async (req: Request, res: Response) => {
   }
 };
 
+  
+const createRefreshToken = async (req: any, res: any) => {
+  try {
+      const { refreshToken } = req.body;
+      console.log(refreshToken,"refresh Token")
+      // Verify the refresh token
+      const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET as string) as { _id: string };
+      const tutor = await TutorModel.findById(decoded?._id);
+    
+      if (!tutor || tutor.refreshToken !== refreshToken) {
+          throw new Error('Invalid refresh token');
+      }
+
+      // Generate a new access token
+      const token = jwt.sign({ _id: tutor._id }, process.env.JWT_SECRET as string, { expiresIn: '3d' });    
+      return token;
+  } catch (error) {
+      console.error('Error refreshing token:', error);
+      res.status(401).json({ message: 'Failed to refresh token' });
+  }
+};
+
 export {
   tutorLogin,
   registerTutor,
@@ -417,4 +454,5 @@ export {
   updateLesson,
   tutorAllLessons,
   enrolledStudentData,
+  createRefreshToken,
 };

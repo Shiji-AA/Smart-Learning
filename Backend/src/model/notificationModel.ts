@@ -5,7 +5,7 @@ export interface Notification extends Document {
     receiverUser:mongoose.Schema.Types.ObjectId,
     message:string,  
     type:string, 
-    read:boolean,  
+    isRead:boolean,  
     createdAt:Date,
     updatedAt:Date
 }
@@ -26,7 +26,7 @@ const notificationSchema =new Schema<Notification>({
     type : {
         type : String,
     },
-    read : {
+    isRead : {
         type : Boolean,
         default : false
     },   

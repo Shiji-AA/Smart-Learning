@@ -10,7 +10,7 @@ export const isLogin = async (req: Request, res: Response, next: NextFunction) =
     try {     
         const authorizationHeader = req.headers.authorization;
         if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
-            return res.status(401).json({error: 'Unauthorized -- No token fou' });
+            return res.status(401).json({error: 'Unauthorized - No token found' });
         }
         const token = authorizationHeader.split(' ')[1];
         //console.log(token,"token")
@@ -20,7 +20,7 @@ export const isLogin = async (req: Request, res: Response, next: NextFunction) =
         const decoded: JwtPayload | any = jwt.verify(token, process.env.JWT_SECRET as string);
         let user = await findUser(decoded.user_id);
         if (!user) {
-            return res.status(401).json({ error: 'Unauthorized - User not found' });
+            return res.status(401).json({ error: 'Unauthorized - No token found' });
         }
         if (user.isBlocked) {
             return res.status(401).json({ error: 'Unauthorized - Account is blocked' });

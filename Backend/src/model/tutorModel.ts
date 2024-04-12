@@ -15,7 +15,7 @@ export interface TUTOR extends Document {
     courses: mongoose.Schema.Types.ObjectId;  
     createdAt: Date;
     updatedAt: Date;
-    refreshToken:string;
+    refreshToken:string,
     matchPassword(enteredPassword: string): Promise<boolean>;
 }
 
@@ -77,7 +77,7 @@ const TutorSchema = new Schema<TUTOR>({
     },
     refreshToken:{
         type:String
-    },
+    }
   
 }, { timestamps: true });
 
