@@ -20,7 +20,7 @@ interface EnrolledSingleCourse {
 const Certificate = () => {
   const userData = useSelector((state: AuthrootState) => state.auth.userdata); 
   const { courseId } = useParams();
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [singleViewDetails, setSingleViewDetails] = useState<EnrolledSingleCourse | null>(null);
 
   useEffect(() => {
@@ -29,14 +29,14 @@ const Certificate = () => {
       .then((response) => {
         if (response.data) {
           setSingleViewDetails(response.data.singleViewDetails);
-          setLoading(false);//data fetching is complete
+          // setLoading(false);//data fetching is complete
         } else {
-          setLoading(false);
+          // setLoading(false);
         }
       })
       .catch((error) => {
         console.error("Error fetching course details:", error);
-        setLoading(false);
+        // setLoading(false);
       });
   }, [courseId]);
 

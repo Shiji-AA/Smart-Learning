@@ -35,7 +35,7 @@ function Addlesson() {
   const [courseDetails, setCourseDetails] = useState<Course[]>([]);
   const [selectcourse, setSelectcourse] = useState("");
   const [video, setVideo] = useState<File | null>(null);
-  const [cloudanaryURL, setCloudanaryURL] = useState("");
+  // const [cloudanaryURL, setCloudanaryURL] = useState("");
 
   useEffect(() => {
     axiosInstanceTutor
@@ -99,7 +99,7 @@ function Addlesson() {
         );
        if (response.data && response.data.url) {
           console.log("Video uploaded successfully. URL:", response.data.url);
-          setCloudanaryURL(response.data.url);//return the url if successful
+          // setCloudanaryURL(response.data.url);//return the url if successful
           return response.data.url;
         } else {
           console.error("Invalid response from Cloudinary", response.data);

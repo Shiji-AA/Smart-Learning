@@ -13,6 +13,7 @@ interface Category {
   description: string;
   createdAt: string;
   updatedAt: string;
+    
 }
 
 function Addcourse() {
@@ -25,7 +26,7 @@ function Addcourse() {
   const [categoryDetails, setCategoryDetails] = useState<Category[]>([]);
   const [selectcategory, setSelectcategory] = useState("");
   const [image, setImage] = useState<File | null>(null);
-  const [cloudanaryURL, setCloudanaryURL] = useState("");
+  const [, setCloudanaryURL] = useState("");
   const tutorData = useSelector(
     (state: TutorrootState) => state.tutor.tutordata
   );
@@ -117,7 +118,8 @@ function Addcourse() {
           navigate("/getallcourse");
         }
       }
-    } catch (error:any) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       if (error.response && error.response.data.error) {
         toast.error(error.response.data.error);
       } else {
@@ -208,7 +210,7 @@ function Addcourse() {
                   className="w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border rounded"
                 >
                   <option>Select Category</option>
-                  {categoryDetails?.map((category: any) => (
+                  {categoryDetails?.map((category) => (
                     <option key={category?._id} value={category?._id}>
                       {category?.title}
                     </option>

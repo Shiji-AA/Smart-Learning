@@ -5,34 +5,34 @@
   import AuthrootState from "../../../Redux/Rootstate/Authstate";
   import { useSocket } from "../../../Providers/SocketProvider";
 
-  interface Message {
-    _id: string;
-    message: string | any[];
-    createdAt: Date;
-  }
+  // interface Message {
+  //   _id: string;
+  //   message: string | any[];
+  //   createdAt: Date;
+  // }
 
   interface Tutor {
     _id: string;
     TutorName: string;
   }
-  interface User {
-    id: string;
-    studentName: string;
-  }
+  // interface User {
+  //   id: string;
+  //   studentName: string;
+  // }
 
-  interface EnrolledSingleCourse {
-    _id: string;
-    tutor: string;
-    isLessonCompleted: boolean;
-    courseId: string;
-    courseName: string;
-    courseDescription: string;
-    courseDuration: string;
-    courseFee: number;
-    photo: string[];
-    createdAt: string;
-    updatedAt: string;
-  }
+  // interface EnrolledSingleCourse {
+  //   _id: string;
+  //   tutor: string;
+  //   isLessonCompleted: boolean;
+  //   courseId: string;
+  //   courseName: string;
+  //   courseDescription: string;
+  //   courseDuration: string;
+  //   courseFee: number;
+  //   photo: string[];
+  //   createdAt: string;
+  //   updatedAt: string;
+  // }
 
   function Chat() {
     const { id: courseId } = useParams();
@@ -41,11 +41,8 @@
     const messagesEndRef = useRef<HTMLDivElement>(null);//to get the last message at bottom of window
 
     // Initialize state variables
-    const [
-      singleViewDetails,
-      setSingleViewDetails,
-    ] = useState<EnrolledSingleCourse | null>(null);
-    const [loading, setLoading] = useState(true);
+    // const [singleViewDetails,setSingleViewDetails] = useState<EnrolledSingleCourse | null>(null);
+    // const [loading, setLoading] = useState(true);
     const [selectedTutor, setSelectedTutor] = useState<Tutor | null>(null);
     const [messageData, setMessageData] = useState<string>("");
     const [message, setMessage] = useState<string>("");
@@ -119,16 +116,16 @@
           if (response.data) {
             const selectedTutor = response.data?.singleViewDetails.tutor;
             //console.log(selectedTutor)
-            setSingleViewDetails(response.data.singleViewDetails);
+            // setSingleViewDetails(response.data.singleViewDetails);
             setSelectedTutor(selectedTutor);
-            setLoading(false);
+            // setLoading(false);
           } else {
-            setLoading(false);
+            // setLoading(false);
           }
         })
         .catch((error) => {
           console.error("Error fetching course details:", error);
-          setLoading(false);
+          // setLoading(false);
         });
     }, [courseId]);
 
@@ -153,7 +150,7 @@
           console.error("Error sending message via HTTP POST request:", error);
         });
 
-      socket.emit(
+      socket?.emit(
         "SEND_MESSAGE",
         {
           senderId: userData?.id,
@@ -196,9 +193,9 @@
       getMessages();
     }, [userData]);
 
-    const getRelativeTime = (createdAt) => {
-      const messageDate = new Date(createdAt);
-      const today = new Date();
+    const getRelativeTime = (createdAt:Date | null | any) => {
+      const messageDate: any = new Date(createdAt);
+      const today: any = new Date();
       const diffInDays = Math.floor(
         (today - messageDate) / (1000 * 60 * 60 * 24)
       );

@@ -26,8 +26,9 @@ function Editcourse() {
   const [courseFee, setCourseFee] = useState('');
   const [courseDescription, setCoursedescription] = useState(''); 
   const [image, setImage] = useState<File | null>(null);
-  const [courseDetails, setCourseDetails] = useState(null);
-  const [cloudanaryURL, setCloudanaryURL] = useState("");
+  // const [courseDetails, setCourseDetails] = useState(null);
+  // const [cloudanaryURL, setCloudanaryURL] = useState("");
+  
 
   useEffect(() => {
     axiosInstanceTutor
@@ -48,7 +49,7 @@ function Editcourse() {
       .then((response) => {
         if (response.data) {
           //console.log(response.data, "responseee")
-          setCourseDetails(response.data.courseDetails);
+          // setCourseDetails(response.data.courseDetails);
           setCourseName(response.data?.courseDetails?.courseName);
           setCourseDuration(response.data?.courseDetails?.courseDuration);
           setCourseFee(response.data?.courseDetails?.courseFee);
@@ -94,7 +95,7 @@ function Editcourse() {
         data
       );
       if (response.data && response.data.url) {
-        setCloudanaryURL(response.data.url);
+        // setCloudanaryURL(response.data.url);
         return response.data.url;
       } else {
         throw new Error("Invalid response from Cloudinary");

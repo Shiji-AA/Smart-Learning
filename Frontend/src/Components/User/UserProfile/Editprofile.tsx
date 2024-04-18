@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useState ,useEffect} from "react";
+import React, { useState ,useEffect} from "react";
 import { axiosInstance } from "../../../api/axiosinstance";
 import { useDispatch } from 'react-redux';
 import { updateProfile } from '../../../Redux/Slices/Authslice';
@@ -13,17 +13,17 @@ function EditProfile() {
   const [studentName,setstudentName] =useState<string>("");
   const [studentEmail,setstudentEmail] =useState<string>("");
   const [phone,setPhone] =useState<string>("");
-  const [studentDetails, setStudentDetails] = useState<any>(null);
+  // const [studentDetails, setStudentDetails] = useState<any>(null);
   const [wishlistItemCount,setWishlistItemCount] = useState<number>(0);
-  const [image, setImage] = useState(null);
-  const [cloudanaryURL, setCloudanaryURL] = useState("");
+  const [image, setImage] = useState<File | null>(null);
+  // const [cloudanaryURL, setCloudanaryURL] = useState("");
   const [loading, setLoading] = useState(false);
 
 useEffect(()=>{
   axiosInstance.get(`/editProfile`)
   .then((response)=>{
     if(response.data){
-      setStudentDetails(response.data?.studentDetails);
+      // setStudentDetails(response.data?.studentDetails);
       setstudentName(response.data?.studentDetails?.studentName) 
       setstudentEmail(response.data?.studentDetails?.studentEmail) 
       setPhone(response.data?.studentDetails?.phone) ;      
@@ -49,12 +49,12 @@ setWishlistItemCount(response.data.wishlistedCourses.length)
 },[])
 
 
-const handleSubmitChange = (e) => {
+const handleSubmitChange = (e:React.ChangeEvent<HTMLInputElement>) => {
   try {
     const inputElement = e.target;
     const files = inputElement.files;
     if (files && files.length > 0) {
-      const file = files[0];
+      const file :File | null = files[0];
       setImage(file);
     } else {
       setImage(null);
@@ -78,7 +78,7 @@ const submitImage = async () => {
       data
     );
     if (response.data && response.data.url) {
-      setCloudanaryURL(response.data.url);
+      // setCloudanaryURL(response.data.url);
       return response.data.url;
     } else {
       throw new Error("Invalid response from Cloudinary");
@@ -90,7 +90,7 @@ const submitImage = async () => {
   }
 };
 
-const handleSubmit = async (e) => {
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   if (
     !studentName.trim() ||
@@ -109,7 +109,7 @@ const handleSubmit = async (e) => {
         studentName,studentEmail,phone,photo: imgUrl,
       });
       if (response.data.message) {
-        setStudentDetails(response.data.studentDetails) ;
+        // setStudentDetails(response.data.studentDetails) ;
         toast.success(response.data.studentDetails);
         dispatch(updateProfile(response.data.userData)); //updating store
         navigate("/userprofile");
@@ -125,7 +125,6 @@ const handleSubmit = async (e) => {
     setLoading(false);
   }
 };
-
 
   return (
 <>
@@ -209,11 +208,7 @@ const handleSubmit = async (e) => {
           </form>
         </div>
       </div>
-
-
-</>
-
-    
+</>    
   );
 }
 

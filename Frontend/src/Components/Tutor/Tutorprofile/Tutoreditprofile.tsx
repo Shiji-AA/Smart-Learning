@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { axiosInstanceTutor } from "../../../api/axiosinstance";
@@ -16,9 +16,9 @@ function Tutoreditprofile() {
   const [experience, setExperience] = useState("");
   const [onlineavailability, setOnlineavailability] = useState("");
   const [phone, setPhone] = useState("");
-  const [tutorDetails, setTutorDetails] = useState(null);
-  const [image, setImage] = useState(null);
-  const [cloudanaryURL, setCloudanaryURL] = useState("");
+  // const [tutorDetails,setTutorDetails] = useState(null);
+  const [image, setImage] = useState<File | null>(null);
+  // const [cloudanaryURL, setCloudanaryURL] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -27,7 +27,7 @@ function Tutoreditprofile() {
       .then((response) => {
         if (response.data) {
           const tutorDetails = response.data?.tutorDetails;
-          setTutorDetails(tutorDetails);
+          // setTutorDetails(tutorDetails);
           setTutorName(tutorDetails?.tutorName);
           setTutorEmail(tutorDetails?.tutorEmail);
           setEducation(tutorDetails?.education);
@@ -41,12 +41,12 @@ function Tutoreditprofile() {
       });
   }, []);
 
-  const handleSubmitChange = (e) => {
+  const handleSubmitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
       const inputElement = e.target;
       const files = inputElement.files;
       if (files && files.length > 0) {
-        const file = files[0];
+        const file: File |null  = files[0];
         setImage(file);
       } else {
         setImage(null);
@@ -70,7 +70,7 @@ function Tutoreditprofile() {
         data
       );
       if (response.data && response.data.url) {
-        setCloudanaryURL(response.data.url);
+        // setCloudanaryURL(response.data.url);
         return response.data.url;
       } else {
         throw new Error("Invalid response from Cloudinary");
@@ -82,7 +82,7 @@ function Tutoreditprofile() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (
       !tutorName.trim() ||
@@ -97,7 +97,7 @@ function Tutoreditprofile() {
     setLoading(true);
     try {
       const imgUrl = await submitImage();
-      console.log(imgUrl, "hhhhhh");
+      console.log(imgUrl, "hh");
       if (imgUrl) {
         const response = await axiosInstanceTutor.put("/tutorupdateprofile", {
           tutorName,
@@ -114,7 +114,7 @@ function Tutoreditprofile() {
           navigate("/tutorprofile");
         }
       }
-    } catch (error) {
+    } catch (error:any) {
       if (error.response && error.response.data.error) {
         toast.error(error.response.data.error);
       } else {

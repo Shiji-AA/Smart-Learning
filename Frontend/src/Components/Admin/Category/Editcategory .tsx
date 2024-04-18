@@ -5,25 +5,26 @@ import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import Adminnavbar from '../../../Components/Admin/Adminnavbar/Adminnavbar'
 
-interface Category {
-  _id: string;
-  title: string;
-  description: string;
+// interface Category {
+//   _id: string;
+//   title: string;
+//   description: string;
  
-  }
+//   }
 
 function EditCategory() {
   const{id}=useParams();
   const navigate = useNavigate();
   const [title,setTitle] =useState<string>("");
   const [description,setDescription] = useState<string>("");
-  const [categoryDetails,setCategoryDetails] = useState< Category | null>(null);
+  //const [categoryDetails,setCategoryDetails] = useState< Category | null>(null);
 
   useEffect(() => {
      axiosInstanceAdmin.get(`/getallcategory1/${id}`)
+     
      .then((response)=>{
       if(response.data){
-      setCategoryDetails(response.data.categoryDetails)   
+      // setCategoryDetails(response.data.categoryDetails)   
       setTitle(response.data.categoryDetails.title)  
       setDescription(response.data.categoryDetails.description)         
       }
@@ -39,8 +40,8 @@ function EditCategory() {
   axiosInstanceAdmin.put(`/editcategory/${id}`,{title,description})
   .then((response)=>{
     if(response){
-      console.log(response,"I am responseee")
-      setCategoryDetails(response.data.categoryDetails)
+      console.log(response,"I am response")
+      // setCategoryDetails(response.data.categoryDetails)
       navigate('/getallcategory')
     }else{
       console.error("Request failed with status code:")

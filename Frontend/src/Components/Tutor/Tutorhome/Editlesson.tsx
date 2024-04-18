@@ -37,8 +37,8 @@ function Editlesson() {
   const [courseDetails, setCourseDetails] = useState<Course[]>([]);
   const [selectcourse, setSelectcourse] = useState("");
   const [video, setVideo] = useState<File | null>(null);
-  const [cloudanaryURL, setCloudanaryURL] = useState("");
-  const [lessonDetails, setLessonDetails] = useState<Lesson[]>([]);
+  // const [cloudanaryURL, setCloudanaryURL] = useState("");
+  // const [lessonDetails, setLessonDetails] = useState<Lesson[]>([]);
 
   useEffect(() => {
     axiosInstanceTutor
@@ -75,7 +75,7 @@ function Editlesson() {
       .get(`/editlesson/${id}`)
       .then((response) => {
         if (response) {
-          setLessonDetails(response.data.lessonDetails);
+          // setLessonDetails(response.data.lessonDetails);
           setTitle(response.data.lessonDetails?.title);
           setDescription(response.data.lessonDetails?.description);
           setSelectcategory(response.data.lessonDetails?.categoryId);
@@ -120,7 +120,7 @@ function Editlesson() {
       );
       if (response.data && response.data.url) {
         console.log("Video uploaded successfully. URL:", response.data.url);
-        setCloudanaryURL(response.data.url); //return the url if successful
+        // setCloudanaryURL(response.data.url); //return the url if successful
         return response.data.url;
       } else {
         console.error("Invalid response from Cloudinary", response.data);
@@ -153,7 +153,7 @@ function Editlesson() {
           navigate("/getallcourse");
         }
       }
-    } catch (error:any) {
+    } catch (error: any) {
       console.error("Error while adding lesson:", error);
       if (error.response && error.response.data && error.response.data.error) {
         toast.error(error.response.data.error);

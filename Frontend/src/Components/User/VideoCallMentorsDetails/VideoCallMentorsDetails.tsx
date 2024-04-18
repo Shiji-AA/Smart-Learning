@@ -47,7 +47,7 @@ function VideoCallMentorsDetails() {
 
   const handleMentoring = async (tutorid: string) => {
     const tutorID = tutorid;
-    const studentID = userData?.id;
+    const studentID: any = userData?.id;
 
     if (tutorID) {
       await generateToken(

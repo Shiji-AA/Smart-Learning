@@ -6,7 +6,7 @@ interface ProgressbarProps {
   
 }
 
-const Progressbar: React.FC<ProgressbarProps> = ({ courseId ,lessonDetails}) => {
+const Progressbar: React.FC<ProgressbarProps> = ({ courseId }) => {
   const [lessonCount, setLessonCount] = useState<number>(0);
   const [progressPercentage, setProgressPercentage] = useState<number>(0);
 

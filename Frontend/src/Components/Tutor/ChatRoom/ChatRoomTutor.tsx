@@ -7,7 +7,8 @@ import { useSocket } from "../../../Providers/SocketProvider";
 interface Message {
   _id: string;
   message: string | any[];
-  createdAt: string;
+  senderId:string;
+  createdAt: Date;
 }
 
 interface User {
@@ -46,7 +47,7 @@ function ChatRoomTutor() {
       console.log("connected");
     });
 
-    socket?.on("NEW_MESSAGE", (data) => {
+    socket?.on("NEW_MESSAGE", () => {
       getMessages();
     });
   }, [socket, user]);
@@ -133,7 +134,7 @@ function ChatRoomTutor() {
 
       .then((response) => {
         if (response) {
-          socket.emit("SEND_MESSAGE", {
+          socket?.emit("SEND_MESSAGE", {
             senderId: tutorData?.tutorId,
             receiverId: selectedUser?._id,
             message: message,
@@ -157,9 +158,9 @@ function ChatRoomTutor() {
     }
   };
 
-  const getRelativeTime = (createdAt) => {
-    const messageDate = new Date(createdAt);
-    const today = new Date();
+  const getRelativeTime = (createdAt: Date) => {
+    const messageDate: any = new Date(createdAt);
+    const today: any = new Date();
     const diffInDays = Math.floor((today - messageDate) / (1000 * 60 * 60 * 24));
 
     if (diffInDays === 0) {

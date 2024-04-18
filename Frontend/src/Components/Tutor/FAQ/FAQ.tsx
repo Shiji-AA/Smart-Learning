@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 
 const FAQSection = () => {
   const [isOpen, setIsOpen] = useState([false, false, false]);
 
-  const toggleAnswer = (index) => {
+  const toggleAnswer = (index: number) => {
     setIsOpen((prev) => {
       const newState = [...prev];
       newState[index] = !newState[index];
