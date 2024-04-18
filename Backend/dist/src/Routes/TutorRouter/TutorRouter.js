@@ -1,0 +1,35 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const tutorRouter = express_1.default.Router();
+const TutorController_1 = require("../../Controller/TutorController/TutorController");
+const AdminController_1 = require("../../Controller/AdminController/AdminController");
+const studentAuth_1 = require("../../../middleware/studentAuth");
+const TutorController_2 = require("../../Controller/TutorController/TutorController");
+tutorRouter.post("/tutorLogin", TutorController_1.tutorLogin);
+tutorRouter.post("/tutorregister", TutorController_1.registerTutor);
+tutorRouter.get("/tutorprofile", studentAuth_1.isLogin, TutorController_1.getTutorProfile);
+tutorRouter.post("/addcourse", studentAuth_1.isLogin, TutorController_1.addCourse);
+tutorRouter.get("/editcourse/:id", TutorController_1.editCourse);
+tutorRouter.put("/updatecourse/:id", TutorController_1.updateCourse);
+tutorRouter.get("/getallcourse", studentAuth_1.isLogin, TutorController_1.getAllCourse);
+tutorRouter.get("/categories", studentAuth_1.isLogin, AdminController_1.getAllCategory);
+tutorRouter.post("/addlesson", studentAuth_1.isLogin, TutorController_1.addLesson);
+tutorRouter.get("/editlesson/:id", TutorController_1.editLesson);
+tutorRouter.put("/updatelesson/:id", TutorController_1.updateLesson);
+tutorRouter.get("/singleview", studentAuth_1.isLogin, TutorController_1.singleView);
+tutorRouter.get("/getallcourse/:id", studentAuth_1.isLogin, TutorController_1.singleView);
+//TutorEditProfile
+tutorRouter.get("/tutoreditprofile", studentAuth_1.isLogin, TutorController_1.getProfileById);
+tutorRouter.put("/tutorupdateprofile", studentAuth_1.isLogin, TutorController_1.updateProfile);
+tutorRouter.get("/tutoralllessons/:id", studentAuth_1.isLogin, TutorController_1.tutorAllLessons);
+tutorRouter.get("/enrolledstudentdetails", studentAuth_1.isLogin, TutorController_1.enrolledStudentData);
+tutorRouter.post("/refreshtoken", TutorController_2.createRefreshToken);
+tutorRouter.post("/addquiz", TutorController_1.addQuiz);
+tutorRouter.put("/activatequiz/:id", TutorController_1.activateQuiz);
+tutorRouter.put("/removequiz/:id", TutorController_1.removeQuiz);
+tutorRouter.get("/getallquestions", TutorController_1.getAllQuestions);
+exports.default = tutorRouter;

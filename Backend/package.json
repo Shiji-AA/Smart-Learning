@@ -2,10 +2,11 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "server.ts",
+  "main": "dist/src/server.js",
   "scripts": {
     "start": "nodemon src/server.ts",
-    "server": "ts-node src/server.ts"
+    "server": "ts-node src/server.ts",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
