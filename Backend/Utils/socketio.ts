@@ -68,7 +68,6 @@ const initializeSocketIO = (io: Server) => {
 
      
       socket.user = user._id;
-
       const roomId = user._id.toString();
       socket.join(roomId);
       socket.emit(ChatEventEnum.CONNECTED_EVENT);

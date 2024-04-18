@@ -115,8 +115,7 @@ function Editcourse() {
     
       try {
         // Upload the image and get the URL
-        const imgUrl = await submitImage();
-        console.log(imgUrl,"hhhhhhi")        
+        const imgUrl = await submitImage();              
         if (imgUrl) {
           // Once image is uploaded, update the course data with the new image URL
           const response = await axiosInstanceTutor.put(`/updatecourse/${id}`, {

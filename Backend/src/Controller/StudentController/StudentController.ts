@@ -11,26 +11,23 @@ import TutorModel from "../../model/tutorModel";
 import wishlistModel ,{Wishlist }from "../../model/wishlistModel";
 import WishlistModel from "../../model/wishlistModel";
 import categoryModel from "../../model/categoryModel";
+import errorHandler from "../../Constants/errorHandler";
+import quizModel from "../../model/quizModel";
 
 
 interface DecodedData {
   name: string;
   email: string;
   picture: string;
-  jti: string;
-  
-
+  jti: string; 
 }
-
 const globalData = {
   user: null as null | {
     studentName: string;
     studentEmail: string;
-    phone: string;
-  
+    phone: string;  
   },
 };
-
 // @desc Register A new user
 //route POST /api/users
 //access  Public
@@ -39,42 +36,34 @@ const registerStudent = async (req: Request, res: Response) => {
   try {
     const { name, email, password, phone } = req.body;
     //console.log("body data",req.body)
-
     const userExist = await studentModel.findOne({ email });
     const userphone = await studentModel.findOne({ phone });
-
     if (userExist) {
       return res
         .status(400)
         .json({ error: "User with this email already exists" });
     }
-
     if (userphone) {
       return res
         .status(400)
         .json({ error: "User with this phone number already exists" });
     }
-
     const newUser: Student = new studentModel({
       studentName: name,
       studentEmail: email,
       phone,
       password,
     });
-
     await newUser.save();
-
     // Store user information in globalData if registration is successful
     globalData.user = {
       studentName: name,
       studentEmail: email,
       phone,
     };
-
     return res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "An error occurred" });
+    return errorHandler(res,error); 
   }
 };
 
@@ -85,9 +74,7 @@ const googleRegister = async (req: Request, res: Response) => {
     console.log("This is credential in body: ", req.body.credential);
     const token = req.body.credential;
     const decodedData = jwt.decode(req.body.credential);
-
     console.log("Decoded data: ", decodedData);
-
     // Assuming decodedData is of type 'string | JwtPayload | null'
     const {
       name,
@@ -108,7 +95,7 @@ const googleRegister = async (req: Request, res: Response) => {
     await newUser.save();
     res.status(200).json({ message: "user saved successfully" });
   } catch (error) {
-    res.status(400).json({ error: "User already exists" });
+    return errorHandler(res,error); 
   }
 };
 
@@ -116,18 +103,15 @@ const googleRegister = async (req: Request, res: Response) => {
 const googleLogin = async (req: Request, res: Response) => {
   try {
     const decodedData = jwt.decode(req.body.credential) as DecodedData | null;
-
     if (!decodedData) {
       return res.status(400).json({ error: "Invalid credentials" });
     }
-
     const { name, email, picture, jti } = decodedData;
     const user = await studentModel.findOne({ studentEmail: email });
-
     if (user) {    
       const { token, refreshToken } = generateToken(user._id);   
       user.refreshToken = refreshToken;
-      await user.save();   
+      await user.save();
 
       const userData = {
         name: user.studentName,
@@ -137,7 +121,6 @@ const googleLogin = async (req: Request, res: Response) => {
         image:user.photo,     
         role : user.studentRole
       };
-
       return res.json({
         userData,
         token,
@@ -148,8 +131,7 @@ const googleLogin = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Invalid Email and Password" });
     }
   } catch (error) {
-    console.error("Error:", error);
-    return res.status(500).json({ message: "Server Error" });
+    return errorHandler(res,error); 
   }
 };
 
@@ -192,7 +174,7 @@ const loginStudent = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Invalid Email and Password" });
     }
   } catch (error) {
-    res.status(500).json({ error: "server Error " });
+    return errorHandler(res,error); 
   }
 };
 
@@ -229,7 +211,7 @@ const sendOTP = async (req: Request, res: Response) => {
       }
     });
   } catch (error) {
-    return res.status(500).json({ message: "Failed to send OTP email" });
+    return errorHandler(res,error); 
   }
 };
 
@@ -246,14 +228,13 @@ const verifyOTP = async (req: Request, res: Response) => {
       res.status(404).json({error:"Invalid OTP"});
     }
   } catch (error) {
-    res.status(500).json({error:"Oops! Something went wrong!"});
+    return errorHandler(res,error); 
   }
 };
 
 //reset password
 
-const resetPassword = async (req: Request, res: Response) => { 
-
+const resetPassword = async (req: Request, res: Response) => {
   try {
     const {newpassword, confirmpassword , email} = req.body;
     // You can directly use the `email` variable here
@@ -277,7 +258,7 @@ const resetPassword = async (req: Request, res: Response) => {
     }  
     return res.status(200).json({ message: "Password reset successfully" });
   } catch (error) {
-    return res.status(500).json({ message: "Failed to reset password" });
+    return errorHandler(res,error); 
   }
 }
 
@@ -292,15 +273,13 @@ const getStudentProfile = async (req: Request, res: Response) => {
     }
     res.status(200).json({ userData });
   } catch (error) {
-    console.error("Error fetching student profile:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    return errorHandler(res,error); 
   }
 };
 
 //to get data in the editprofile page
 const getProfileById =async (req:Request,res:Response)=>{
   const user =   (req as any).user 
-
   try{  
     const studentDetails = await studentModel.findById(user._id).exec();
     if (studentDetails) {
@@ -314,12 +293,8 @@ const getProfileById =async (req:Request,res:Response)=>{
       });
     }
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      message: "Internal server error",
-    });
+    return errorHandler(res,error); 
   }
-
   }
 
 
@@ -328,7 +303,7 @@ const getProfileById =async (req:Request,res:Response)=>{
       const user =   (req as any).user 
       console.log(user,"user") //from middleware
         
-      const { studentName, studentEmail, phone } = req.body;
+      const { studentName, studentEmail, phone,photo } = req.body;
   
       const student = await studentModel.findById(user._id);
        
@@ -339,6 +314,7 @@ const getProfileById =async (req:Request,res:Response)=>{
       student.studentName = studentName || student.studentName;
       student.studentEmail = studentEmail || student.studentEmail;
       student.phone = phone || student.phone;
+      student.photo=photo;
   
       const updateStudentData = await student.save();
       //updating store 
@@ -349,7 +325,7 @@ const getProfileById =async (req:Request,res:Response)=>{
         phone: updateStudentData.phone,
         image:updateStudentData.photo,
         //photo : updateStudentData.photo,
-        role : updateStudentData.studentRole
+        
       };
       console.log(updateStudentData)
   
@@ -359,8 +335,7 @@ const getProfileById =async (req:Request,res:Response)=>{
         return res.status(404).json({ error: "Failed to update student" });
       }
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: "Internal server error" });
+      return errorHandler(res,error); 
     }
   }
   const userCourseList = async(req:Request,res:Response)=>{
@@ -376,8 +351,10 @@ const getProfileById =async (req:Request,res:Response)=>{
 
     }
     catch(error){
-    console.log(error)
-    }}
+      return errorHandler(res,error); 
+    }
+  }
+
 //getCourseDetails by Id
 const getCourseDetails = async(req:Request,res:Response)=>{
 try{
@@ -390,18 +367,21 @@ if(courseDetails){
 }
 }
 catch(error){
-  console.log(error);
+  return errorHandler(res,error); 
 }}  
   
+
 const enrolledcourses = async(req:Request,res:Response)=>{  
   try{   
-    const enrolledCourses = await courseModel.find({ isEnrolled:true })  
-    //console.log(enrolledCourses, "enrolled courses");
+    const user =   (req as any).user 
+    //console.log(user,"user") //from middleware
+    const studentId = user._id;
+    const enrolledCourses = await orderModel.find({studentId:studentId}).populate('courseId');
+    //console.log(enrolledCourses, "enrolled courses");  
     res.status(200).json({enrolledCourses, message:"enrolledCourses"});
   }
   catch(error){
-    console.log("error While Fetching EnrolledCourses", error);
-    res.status(500).json({ error: "internal Server Error" });
+    return errorHandler(res,error); 
   }
 };
 
@@ -409,6 +389,7 @@ const enrolledcourses = async(req:Request,res:Response)=>{
 const enrolledcourseSingleview = async (req: Request, res: Response) => {
   try {
     const courseId = req.params.courseId;
+    console.log(courseId,"courseId")
     const singleViewDetails = await courseModel.findOne({ _id:courseId }) 
     //console.log(singleViewDetails,"singleViewDetails")
     if (!singleViewDetails) {
@@ -416,8 +397,7 @@ const enrolledcourseSingleview = async (req: Request, res: Response) => {
     }
     res.status(200).json({singleViewDetails,message:"SingleCourseDetails"});
   } catch (error) {
-    console.error("Internal Server Error:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    return errorHandler(res,error); 
   }
 };
 
@@ -434,8 +414,7 @@ const getAllLessons = async (req: Request, res: Response) => {
     //console.log(lessonDetails, "Lesson Details");
     res.status(200).json({ lessonDetails, message: "Lesson details fetched successfully" });
   } catch (error) {
-    console.log("Internal server error", error);
-    res.status(500).json({ error: "Internal server error" });
+    return errorHandler(res,error); 
   }
 };
 
@@ -455,8 +434,7 @@ const searchCourse = async(req:Request,res:Response)=>{
     //console.log(courseDetails,"courseDetails");
     res.status(200).json(courseDetails); 
 } catch (error:any) {
-    console.log(error.message);
-    res.status(500).send('Internal Server Error');
+  return errorHandler(res,error); 
 }
 }
 
@@ -476,10 +454,7 @@ const tutorsList = async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
-    console.error("Error fetching tutors:", error);
-    res.status(500).json({
-      message: "Internal server error",
-    });
+    return errorHandler(res,error); 
   }
 };
 
@@ -497,8 +472,7 @@ const searchTutorStudent = async (req: Request, res: Response) => {
     });
     res.status(200).json(tutorDetails); // Send the found tutors as a JSON response
   } catch (error:any) {
-    console.log(error.message);
-    res.status(500).send("Internal Server Error");
+    return errorHandler(res,error); 
   }
 };
 
@@ -520,9 +494,7 @@ const addWishlistItem = async (req:Request, res:Response) => {
     // Send success response
     res.status(201).json({ message: 'Course added to wishlist successfully', data: newWishlistItem });
   } catch (error) {
-    console.error("Error adding course to wishlist:", error);
-    // Send error response
-    res.status(500).json({ message: 'Failed to add course to wishlist', error });
+    return errorHandler(res,error); 
   }
 };
 
@@ -532,7 +504,7 @@ try{
   //console.log(wishlistedCourses,"wishlistedCourses")
   res.status(200).json({ wishlistedCourses,message:"wishlistedCourses" });
 } catch (error) {
-  res.status(500).json({ message: 'Failed to fetch wishlist items', error });
+  return errorHandler(res,error); 
 }
 }
 
@@ -545,7 +517,7 @@ const removeWishlistItem = async (req: Request, res: Response) => {
     }
     res.status(200).json({ message: "Wishlist item removed successfully", deletedItem });
   } catch (error) { 
-    res.status(500).json({ message: "Failed to remove wishlist item", error });
+    return errorHandler(res,error); 
   }
 };
 
@@ -555,8 +527,7 @@ const getUsersForSidebar=async (req: Request, res: Response)=>{
     res.status(200).json({allUsers,message:"allUsers"})
   }
   catch(error){
-    console.log("error in getUsersForSidebar ",error)
-    res.status(500).json({error:"Internal server error"})
+    return errorHandler(res,error); 
   }
 }
 const updateLessonCompletedStatus = async (req: Request, res: Response) => {
@@ -565,8 +536,7 @@ const updateLessonCompletedStatus = async (req: Request, res: Response) => {
     await courseModel.findByIdAndUpdate(courseId, { isLessonCompleted: true });
     res.status(200).json({ message: 'Lesson completion status updated successfully.' });
   } catch (error) {  
-    console.error('Error updating lesson completion status:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    return errorHandler(res,error); 
   }
 };
 
@@ -587,8 +557,7 @@ const filterCourse = async (req: Request, res: Response) => {
     //console.log(filteredCourses, "Filtered courses");
     res.status(200).json({ filteredCourses, message: "Filtered courses" });
   } catch (error) {
-    console.error("Error filtering courses:", error);
-    res.status(500).json({ error: "Internal server error" });
+    return errorHandler(res,error); 
    }
     };
 
@@ -610,8 +579,7 @@ const filterCourse = async (req: Request, res: Response) => {
             const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET as string, { expiresIn: '2d' });    
             return token;
         } catch (error) {
-            console.error('Error refreshing token:', error);
-            res.status(401).json({ message: 'Failed to refresh token' });
+          return errorHandler(res,error); 
         }
     };
     //get All Catagories
@@ -621,7 +589,6 @@ const getAllCategoryStudent = async (req: Request, res: Response) => {
     const categoryDetails = await categoryModel.find().exec();
     if (categoryDetails) {
       //console.log(categoryDetails,"Get all Category")
-
       res.status(200).json({
         categoryDetails,
         message:"categoryDetails"
@@ -632,11 +599,22 @@ const getAllCategoryStudent = async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
-    console.error("Error while fetching category:", error);
-    res.status(500).json({ error: "Internal server error" });  
+    return errorHandler(res,error);  
   }
 };
-    
+
+
+const quizList= async(req: Request, res: Response)=>{
+  try{
+    const{courseId}= req.params;
+    //console.log(courseId)
+    const allQuizSets = await quizModel.find({courseId:courseId})
+    console.log(allQuizSets,"allQuizSet")
+    res.status(200).json({message:"quizList",allQuizSets})
+  }
+  catch(error){
+    return errorHandler(res,error);
+  }}
 
 export {
   loginStudent,
@@ -665,4 +643,5 @@ export {
   filterCourse,
   createRefreshToken ,
   getAllCategoryStudent,
+  quizList,
 };

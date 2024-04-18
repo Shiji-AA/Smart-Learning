@@ -9,10 +9,12 @@ import studentModel from "../../model/userModel";
 import jwt from "jsonwebtoken";
 import notificationModel from "../../model/notificationModel";
 import mongoose from 'mongoose';
+import errorHandler from "../../Constants/errorHandler";
+import quizModel from "../../model/quizModel";
 
 const registerTutor = async (req: Request, res: Response) => {
   try {
-    const { tutorName, tutorEmail, password, phone } = req.body;
+    const { tutorName, tutorEmail, password,education,experience,onlineavailability, phone } = req.body;
     //console.log(req.body, "i am tutor");
     const tutorExist = await TutorModel.findOne({ tutorEmail: tutorEmail });
     const phoneExist = await TutorModel.findOne({ phone: phone });
@@ -23,6 +25,9 @@ const registerTutor = async (req: Request, res: Response) => {
       tutorName,
       tutorEmail,
       password,
+      education,
+      experience,
+      onlineavailability,
       phone,
     });
     if (tutor) {
@@ -30,6 +35,9 @@ const registerTutor = async (req: Request, res: Response) => {
         tutorName: tutor.tutorName,
         tutorEmail: tutor.tutorEmail,
         phone: tutor.phone,
+        education:tutor.education,
+        experience:tutor.experience,
+        onlineavailability:tutor.onlineavailability,
         tutorId: tutor._id,
       };
       return res.status(201).json({
@@ -39,9 +47,7 @@ const registerTutor = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Invalid Tutor Details" });
     }
   } catch (error) {
-    res.status(500).json({
-      error: "Internal Server Error",
-    });
+    return errorHandler(res,error); 
   }
 };
 
@@ -80,9 +86,7 @@ const tutorLogin = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Invalid Email or Password" });
     }
   } catch (error) {
-    return res.status(500).json({
-      error: "Internal Server Error ",
-    });
+    return errorHandler(res,error); 
   }
 };
 
@@ -96,8 +100,7 @@ const getTutorProfile = async (req: Request, res: Response) => {
     }
     return res.status(200).json({ tutorData });
   } catch (error) {
-    console.error("Error fetching tutor profile:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    return errorHandler(res,error); 
   }
 };
 
@@ -135,10 +138,7 @@ const addCourse = async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
-    console.error(error); 
-    return res.status(500).json({
-      error: "Internal server error",
-    });
+    return errorHandler(res,error); 
   }
 };
 
@@ -161,7 +161,7 @@ const editCourse = async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
-    return res.status(500).json({ error: "Internal Server Error" });
+    return errorHandler(res,error); 
   }
 };
 
@@ -184,8 +184,7 @@ const updateCourse = async (req: Request, res: Response) => {
       res.status(404).json({ message: "Course not found" });
     }
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    return errorHandler(res,error); 
   }
 };
 
@@ -203,7 +202,7 @@ const getAllCourse = async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
-    console.log(error);
+    return errorHandler(res,error); 
   }
 };
 
@@ -222,7 +221,7 @@ const singleView = async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
-    console.log(error);
+    return errorHandler(res,error); 
   }
 };
 
@@ -268,10 +267,7 @@ const addLesson = async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
-    console.error(error); // Log the error for debugging
-    return res.status(500).json({
-      error: "Internal server error",
-    });
+    return errorHandler(res,error); 
   }
 };
 
@@ -292,17 +288,14 @@ const getProfileById = async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      message: "Internal server error",
-    });
+    return errorHandler(res,error); 
   }
 };
 
 const updateProfile = async (req: Request, res: Response) => {
   try {
-    const tutor1 = (req as any).user;
-    const { tutorName, tutorEmail, phone } = req.body;
+    const tutor1 = (req as any).user;  
+    const { tutorName, tutorEmail, phone ,education,experience,onlineavailability,photo} = req.body;
     const tutor = await TutorModel.findById(tutor1._id);
     if (!tutor) {
       return res.status(404).json({ error: "Invalid category" });
@@ -310,12 +303,20 @@ const updateProfile = async (req: Request, res: Response) => {
     tutor.tutorName = tutorName || tutor.tutorName;
     tutor.tutorEmail = tutorEmail || tutor.tutorEmail;
     tutor.phone = phone || tutor.phone;
+    tutor.education = education || tutor.education;
+    tutor.experience = experience || tutor.experience;
+    tutor.onlineavailability = onlineavailability || tutor.onlineavailability;
+    tutor.photo =  photo
+
     const updateTutorData = await tutor.save();
     //this is  sending along with response so that update the store
     const tutorData = {
       tutorName: updateTutorData.tutorName,
       tutorEmail: updateTutorData.tutorEmail,
       phone: updateTutorData.phone,
+      education:updateTutorData.education,
+      experience:updateTutorData.experience,
+      onlineavailability:updateTutorData.onlineavailability,
       image: updateTutorData.photo,
       tutorId: updateTutorData._id,
     };
@@ -327,8 +328,7 @@ const updateProfile = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Failed to update tutor" });
     }
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal server error" });
+    return errorHandler(res,error); 
   }
 };
 
@@ -348,8 +348,7 @@ const tutorAllLessons = async (req: Request, res: Response) => {
     // Send response with lesson details
     res.status(200).json({ lessonDetails, message: "lessonDetails" });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal server error" });
+    return errorHandler(res,error); 
   }
 };
 
@@ -368,7 +367,7 @@ const editLesson = async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
-    return res.status(500).json({ error: "Unable to Edit the course" });
+    return errorHandler(res,error); 
   }
 };
 
@@ -392,8 +391,7 @@ const updateLesson = async (req: Request, res: Response) => {
       res.status(404).json({ error: "Lesson not found" });
     }
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ error: "Unable to Edit the course" });
+    return errorHandler(res,error); 
   }
 };
 //for getting enrolled student Details
@@ -411,8 +409,7 @@ const enrolledStudentData = async (req: Request, res: Response) => {
     //console.log(enrolledStudentDetails, "enrolledStudentDetails");
     res.status(200).json({ enrolledStudentDetails, message: "enrolledStudentDetails" });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Unable to fetch data" });
+    return errorHandler(res,error); 
   }
 };
 
@@ -423,21 +420,105 @@ const createRefreshToken = async (req: any, res: any) => {
       console.log(refreshToken,"refresh Token")
       // Verify the refresh token
       const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET as string) as { _id: string };
-      const tutor = await TutorModel.findById(decoded?._id);
-    
+      const tutor = await TutorModel.findById(decoded?._id);    
       if (!tutor || tutor.refreshToken !== refreshToken) {
           throw new Error('Invalid refresh token');
       }
-
       // Generate a new access token
       const token = jwt.sign({ _id: tutor._id }, process.env.JWT_SECRET as string, { expiresIn: '3d' });    
       return token;
   } catch (error) {
-      console.error('Error refreshing token:', error);
-      res.status(401).json({ message: 'Failed to refresh token' });
+    return errorHandler(res,error); 
+  }
+};
+const addQuiz = async (req: any, res: any) => {
+  const { questionset, courseId, count } = req.body;
+  //console.log(req.body,"req.body");
+
+  try {
+    const existQuiz = await quizModel.find({ courseId: courseId });
+
+    if (existQuiz.length === 0) {
+      // If no quiz exists for the course, create a new one
+      const newQuiz = await quizModel.create({
+        courseId: courseId,
+        questionset,
+      });
+
+      // Update the course document with the number of quiz questions
+      await courseModel.findByIdAndUpdate(courseId, { quizQuestions: count });
+
+      res.status(201).json({newQuiz,message:"new quiz  added"});
+    } else {
+      // If a quiz already exists for the course, update the existing quiz
+      const numberOfQuestionSets = existQuiz[0].questionset.length;
+      const updateQuizSet = await quizModel.findOneAndUpdate(
+        { courseId: courseId },
+        { $push: { questionset: { $each: questionset } } },
+        { new: true }
+      );
+      // Update the course document with the new number of quiz questions
+      await courseModel.findByIdAndUpdate(courseId, { quizQuestions: numberOfQuestionSets });
+      res.status(201).json(updateQuizSet);
+    }
+  } catch (error) {
+    return errorHandler(res,error);    
   }
 };
 
+
+const activateQuiz = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const quiz = await quizModel.findOneAndUpdate(
+      { "questionset._id": id },
+      { $set: { "questionset.$.isActive": true } },
+      { new: true }
+    );
+    if (quiz) {
+      res.status(201).json({
+        _id: quiz._id,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+const removeQuiz = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const quiz = await quizModel.findOneAndUpdate(
+      { "questionset._id": id },
+      { $set: { "questionset.$.isActive": false } },
+      { new: true }
+    );
+
+    if (quiz) {
+      res.status(201).json({
+        _id: quiz._id,
+      });
+    } else {
+      res.status(404).json({ error: "Quiz not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+const getAllQuestions = async(req: Request, res: Response)=>{
+  try{
+    const questionDetails = await quizModel.find()
+    res.status(200).json({message:"questionDetails",questionDetails})
+  }
+  catch(error){
+    return errorHandler(res,error);
+  }}
 export {
   tutorLogin,
   registerTutor,
@@ -455,4 +536,8 @@ export {
   tutorAllLessons,
   enrolledStudentData,
   createRefreshToken,
+  addQuiz,
+  activateQuiz,
+  removeQuiz,
+  getAllQuestions,
 };

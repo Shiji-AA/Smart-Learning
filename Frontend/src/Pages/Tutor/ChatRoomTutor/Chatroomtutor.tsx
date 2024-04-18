@@ -1,12 +1,15 @@
 
 //import Tutornavbar from "../../../Components/Tutor/Tutordashboard/Tutornavbar";
 import ChatRoomTutor from '../../../Components/Tutor/ChatRoom/ChatRoomTutor';
+import {SocketProvider} from '../../../Providers/SocketProvider';
 
 function Chatroomtutor() {
     return (
         <div>
-               {/* <Tutornavbar /> */}
-               <ChatRoomTutor/>
+            <SocketProvider role="tutor">                        
+                <ChatRoomTutor/> 
+            </SocketProvider>
+            
             
             
         </div>

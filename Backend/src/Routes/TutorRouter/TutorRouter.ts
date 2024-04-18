@@ -17,6 +17,10 @@ import {
   updateLesson,
   tutorAllLessons,
   enrolledStudentData,
+  addQuiz,
+  activateQuiz,
+  removeQuiz,
+  getAllQuestions,
 } from "../../Controller/TutorController/TutorController";
 import { getAllCategory } from "../../Controller/AdminController/AdminController";
 import { isLogin } from "../../../middleware/studentAuth";
@@ -45,5 +49,10 @@ tutorRouter.put("/tutorupdateprofile", isLogin, updateProfile);
 tutorRouter.get("/tutoralllessons/:id", isLogin,tutorAllLessons);
 tutorRouter.get("/enrolledstudentdetails",isLogin, enrolledStudentData);
 tutorRouter.post("/refreshtoken",createRefreshToken);
+tutorRouter.post("/addquiz",addQuiz);
+tutorRouter.put("/activatequiz/:id", activateQuiz);
+tutorRouter.put("/removequiz/:id", removeQuiz);
+tutorRouter.get("/getallquestions",getAllQuestions);
+
 
 export default tutorRouter;

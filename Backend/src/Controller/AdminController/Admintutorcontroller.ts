@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import TutorModel, { TUTOR } from "../../model/tutorModel";
+import errorHandler from "../../Constants/errorHandler";
 
 interface Tutor {
   _id: string;
@@ -26,10 +27,7 @@ const getAlltutors = async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
-    console.error("Error fetching tutors:", error);
-    res.status(500).json({
-      message: "Internal server error",
-    });
+    return errorHandler(res, error);
   }
 };
 
@@ -49,8 +47,7 @@ const searchTutor = async (req: Request, res: Response) => {
     });
     res.status(200).json(tutorDetails); // Send the found tutors as a JSON response
   } catch (error:any) {
-    console.log(error.message);
-    res.status(500).send("Internal Server Error");
+    return errorHandler(res, error);
   }
 };
 
@@ -73,8 +70,7 @@ const unlistTutor = async (req: Request, res: Response) => {
       .status(200)
       .json({ message: "Tutor has been successfully unlisted" });
   } catch (error) {
-    console.error("Error while unlisting tutor:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    return errorHandler(res, error);
   }
 };
 
@@ -97,8 +93,7 @@ const relistTutor = async (req: Request, res: Response) => {
       .status(200)
       .json({ message: "Tutor has been successfully relisted" });
   } catch (error) {
-    console.error("Error while relisting tutor:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    return errorHandler(res, error);
   }
 };
 

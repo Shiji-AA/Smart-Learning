@@ -3,6 +3,7 @@ import studentModel, { Student } from "../../model/userModel";
 import orderModel from "../../model/orderModel";
 import courseModel from "../../model/courseModel";
 import Stripe from "stripe";
+import errorHandler from "../../Constants/errorHandler";
 
 const stripeSecretKey = process.env.STRIPE_KEY as string;
 
@@ -72,10 +73,7 @@ const stripePayment = async (req: Request, res: Response) => {
       return order;
     }
   } catch (error) {
-    console.error("Stripe Payment Error:", error);
-    res.status(500).json({
-      error: "Payment error",
-    });
+    return errorHandler(res,error); 
   }
 };
 

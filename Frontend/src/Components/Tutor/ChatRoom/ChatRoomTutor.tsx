@@ -1,58 +1,115 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect } from "react";
-import ChatrootState from "../../../Redux/Rootstate/Chatstate";
-import MessagerootState from "../../../Redux/Rootstate/Messagestate";
-import { useSelector } from "react-redux";
+import { useState, useEffect, useRef } from "react";
 import { axiosInstance, axiosInstanceChat } from "../../../api/axiosinstance";
-//import Tuturnavbar from "../../../Components/Tutor/Tutordashboard/Tutornavbar";
+import { useSelector } from "react-redux";
+import TutorrootState from "../../../Redux/Rootstate/Tutorstate";
+import { useSocket } from "../../../Providers/SocketProvider";
 
 interface Message {
   _id: string;
   message: string | any[];
+  createdAt: string;
 }
 
 interface User {
   _id: string;
-  studentName: string; 
+  photo: string;
+  studentName: string;
 }
 
 function ChatRoomTutor() {
-
-  const chat = useSelector((state: ChatrootState) => state.chat.selectedchat);
-  console.log(chat, "chat");
-  const message = useSelector(
-    (state: MessagerootState) => state.message.selectedmessage
+  const tutorData = useSelector(
+    (state: TutorrootState) => state.tutor.tutordata
   );
-  console.log(message, "message");
+  const user = tutorData?.tutorId;
 
-  const [allUsers, setallUsers] = useState<User[]>([]); // to list users in the sidebar
-  const [selectedUser, setSelectedUser] = useState<User | null>(null); // to show name on the message heading
-  const [messageData, setMessageData] = useState<Message | string>(""); // Initialize as an empty string
+  const [allUsers, setallUsers] = useState<User[]>([]);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [messageData, setMessageData] = useState<Message[]>([]);
+  const [message, setMessage] = useState<string>("");
 
+  const socket = useSocket();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  //for fetching all messages to a particular user
+  const getLiveMessages = () => {
+    if (!socket) return;
+    socket.emit("JOIN_CHAT_TUTOR", { userId: selectedUser?._id });
+    socket.on("GET_MESSAGE", () => {
+      if (selectedUser?._id) {
+        getMessages();
+      }
+    });
+  };
+
   useEffect(() => {
-    if (!selectedUser?._id) return; // Check if selectedUser is available  
-    axiosInstanceChat.get(`/fetchchats/${selectedUser._id}`, { params: { id: selectedUser._id } })
+    if (!socket || !user) return;
+    socket?.on("connected", () => {
+      console.log("connected");
+    });
+
+    socket?.on("NEW_MESSAGE", (data) => {
+      getMessages();
+    });
+  }, [socket, user]);
+
+  useEffect(() => {
+    if (!selectedUser) return;
+    getLiveMessages();
+  }, [selectedUser]);
+
+  useEffect(() => {
+    // JavaScript for showing/hiding the menu
+    const menuButton = document.getElementById("menuButton");
+    const menuDropdown = document.getElementById("menuDropdown");
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        !menuDropdown?.contains(e.target as Node) &&
+        !menuButton?.contains(e.target as Node)
+      ) {
+        menuDropdown?.classList.add("hidden");
+      }
+    };
+
+    menuButton?.addEventListener("click", () => {
+      if (menuDropdown?.classList.contains("hidden")) {
+        menuDropdown?.classList.remove("hidden");
+      } else {
+        menuDropdown?.classList.add("hidden");
+      }
+    });
+
+    document.addEventListener("click", handleClickOutside);
+
+    // Cleanup event listener on unmount
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []); // Run this effect only once when the component mounts
+
+  const getMessages = () => {
+    if (!selectedUser?._id) return;
+    axiosInstanceChat
+      .get(`/fetchchats/${selectedUser._id}`, {
+        params: { id: selectedUser._id },
+      })
       .then((response) => {
         if (response) {
-          console.log(response.data?.messageData,"messageData");
           setMessageData(response.data?.messageData);
         }
       })
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  useEffect(() => {
+    getMessages();
   }, [selectedUser?._id]);
 
-
-//getting sidebarUsers
   useEffect(() => {
     axiosInstance
       .get("/getuserforsidebar")
       .then((response) => {
         if (response.data) {
-          console.log(response.data.allUsers, "allUsers");
           setallUsers(response.data.allUsers);
         }
       })
@@ -61,25 +118,28 @@ function ChatRoomTutor() {
       });
   }, []);
 
-
-  //for selecting a particular user while clicking on sidebar
   const handleUserClick = (user: User) => {
     setSelectedUser(user);
   };
 
-  //for submitting a message(send button)
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!messageData || !selectedUser?._id) return;
+    if (!message || !selectedUser?._id) return;
     axiosInstanceChat
       .post(`/accesschat/${selectedUser?._id}`, {
         userId: selectedUser?._id,
-        message: messageData,
+        message: message,
       })
+
       .then((response) => {
         if (response) {
-          console.log(response.data,"messages");
-          setMessageData("");
+          socket.emit("SEND_MESSAGE", {
+            senderId: tutorData?.tutorId,
+            receiverId: selectedUser?._id,
+            message: message,
+          });
+          setMessage("");
+          getMessages();
         }
       })
       .catch((error) => {
@@ -87,189 +147,134 @@ function ChatRoomTutor() {
       });
   };
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [messageData]);
+
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const getRelativeTime = (createdAt) => {
+    const messageDate = new Date(createdAt);
+    const today = new Date();
+    const diffInDays = Math.floor((today - messageDate) / (1000 * 60 * 60 * 24));
+
+    if (diffInDays === 0) {
+      return messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } else if (diffInDays === 1) {
+      return "Yesterday";
+    } else {
+      return `${diffInDays} days ago`;
+    }
+  };
+
   return (
     <>
-      {/* <Tuturnavbar /> */}
-      {/* <h1 style={{backgroundColor:"pink"}}>CHAT ROOM</h1> */}
+      <div>
+        {/* component */}
+        <div className="flex h-screen overflow-hidden">
+          {/* Sidebar */}
+          <div className="w-1/4 bg-gray-200 border-r border-cyan-100">
+            {/* Sidebar Header  */}
+            <header className="p-4 border-b border-blue-300 flex justify-between items-center bg-gradient-to-r from-indigo-300 to-cyan-400 text-black">
+              <h1 className="text-2xl font-semibold">Chat Room</h1>
+            </header>
 
-      <div className="flex h-screen overflow-hidden bg-blue-gray-500">
-        {/* SIDE BAR */}
-        <div className="w-1/4 border-r border-gray-300 b bg-red-100">
-          <header className="p-4 border-b border-gray-300 flex justify-between items-center bg-blue-400 text-white">
-            <div className="max-w-2xl mx-auto">
-              <form className="flex items-center">
-                <label htmlFor="simple-search" className="sr-only">
-                  Search
-                </label>
-                <div className="relative w-full">
-                  <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-                    <svg
-                      className="w-5 h-5 text-gray-500 dark:text-gray-400"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                        clip-rule="evenodd"
-                      ></path>
-                    </svg>
-                  </div>
-                  <input
-                    type="text"
-                    id="simple-search"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Search"
-                    required
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="p-2.5 ml-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            {/* Contact List  */}
+            <div className="overflow-y-auto h-screen p-3 mb-9 pb-20 bg-blue-50">
+              {allUsers.map((user) => (
+                <div
+                  key={user?._id}
+                  onClick={() => handleUserClick(user)}
+                  className="flex items-center mb-4 cursor-pointer hover:bg-gray-100 p-2 rounded-md"
                 >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    ></path>
-                  </svg>
-                </button>
-              </form>
+                  <div className="w-12 h-12 bg-gray-300 rounded-full mr-3">
+                    <img
+                      src={user?.photo}
+                      alt="User Avatar"
+                      className="w-12 h-12 rounded-full"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <h2 className="text-lg font-semibold">
+                      {user?.studentName}
+                    </h2>
+                    <p className="text-gray-600">hello 🍕</p>
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="relative">
-              <div
-                id="menuDropdown"
-                className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg hidden"
-              >
-                <ul className="py-2 px-3">
-                  <li>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-gray-800 hover:text-gray-400"
-                    >
-                      Option 1
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-gray-800 hover:text-gray-400"
-                    >
-                      Option 2
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </header>
+          </div>
 
-          <div className="overflow-y-auto h-screen p-3 mb-9 pb-20">
-            {allUsers.map((user) => (
-              <div
-                key={user?._id}
-                onClick={() => handleUserClick(user)}
-                className="flex items-center mb-4 cursor-pointer hover:bg-gray-100 p-2 rounded-md"
-              >
-                <div className="w-12 h-12 bg-gray-300 rounded-full mr-3">
-                  <img
-                    src="https://placehold.co/200x/ffa8e4/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato"
-                    alt="User Avatar"
-                    className="w-12 h-12 rounded-full"
-                  />
-                </div>
-                <div className="flex-1">
-                  <h2 className="text-lg font-semibold">{user?.studentName}</h2>
-                  <p className="text-gray-600">How are you!!</p>
-                </div>
-              </div>
-            ))}
+          {/* Main Chat Area  */}
+          <div className="flex-1  ">
+            {/* Chat Header  */}
+            {
+              <header className="bg-cyan-400 p-4 text-gray-900">
+                <h1 className="text-2xl font-semibold">
+                  {" "}
+                  {selectedUser?.studentName}
+                </h1>
+              </header>
+            }
+
+            {/* Chat Messages */}
+            <div className=" bg-blue-50 h-screen overflow-y-auto p-4 pb-36 flex flex-col">
+              {/* Outgoing Message--Right side */}
+
+              {Array.isArray(messageData) &&
+                messageData.map((item, index) => {
+                  const relativeTime = getRelativeTime(item.createdAt);
+                  const isLastMessage = index === messageData.length - 1;
+                  return (
+                    <div
+                      key={item?._id}
+                      className={`flex mb-4 cursor-pointer ${
+                        item.senderId == tutorData?.tutorId
+                          ? "justify-end"
+                          : "justify-start"
+                      }`}
+                    >
+                      <div className={`flex max-w-96 ${item.senderId == tutorData?.tutorId ? "bg-green-700" :"bg-red-700" } text-white rounded-lg p-3 gap-3`}>
+                        <p className="self-left">{item?.message}</p>
+                        <p className="text-xs text-gray-400">{relativeTime}</p>
+                      </div>
+                      {isLastMessage && <div ref={messagesEndRef} />}
+                    </div>
+                  );
+                })}
+            </div>
+
+            {/* Chat Input - */}
+            <footer className="bg-blue-50 border-t border-gray-300 p-4 absolute bottom-0 w-3/4">
+              {selectedUser && (
+                <form onSubmit={handleSubmit}>
+                  <div className="flex items-center">
+                    <input
+                      type="text"
+                      placeholder="Type a message..."
+                      className="w-full p-2 rounded-md border border-gray-400 focus:outline-none focus:border-blue-500"
+                      value={message}
+                      onChange={(e) => {
+                        console.log(e.target.value);
+                        setMessage(e.target.value);
+                      }}
+                    />
+                    <button
+                      type="submit"
+                      className="bg-indigo-600 text-white px-4 py-2 rounded-md ml-2"
+                    >
+                      Send
+                    </button>
+                  </div>
+                </form>
+              )}
+            </footer>
           </div>
         </div>
-
-        {/* ==================MESSAGE CONTAINER================================= */}
-
-        <div className="flex-1 bg-gray-400">
-          {selectedUser && (
-            <header className="bg-orange-200 p-4 text-gray-700">
-              <h1 className="text-2xl font-semibold">
-                {selectedUser?.studentName}
-              </h1>
-            </header>
-          )}
-
-            {/* StudentSide */}
-        <div className="h-screen overflow-y-auto p-4 pb-36">
-            <div className="flex mb-4 cursor-pointer">
-              <div className="w-9 h-9 rounded-full flex items-center justify-center mr-2">
-                <img
-                  src="https://placehold.co/200x/ffa8e4/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato"
-                  alt="User Avatar"
-                  className="w-8 h-8 rounded-full"
-                 />
-                </div>
-                <div className="flex max-w-96 bg-white rounded-lg p-3 gap-3">
-                <p className="text-gray-700">HeyHey</p>
-              </div>
-           </div>
-
-
-            {/* TutorSide */}
-            {Array.isArray(messageData) && messageData.map((item) => (
-  <div key={item._id} className="flex flex-col items-end mb-4 cursor-pointer">
-    <div className="flex flex-col max-w-96 bg-indigo-500 text-white rounded-lg p-3 gap-3">
-      <p>{item?.message}</p>
-      <div className="text-xs text-gray-300">12:48 PM</div>
-    </div>
-    <div className="w-9 h-9 rounded-full flex items-center justify-center mt-1">
-      <img
-        src="https://placehold.co/200x/b7a8ff/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato"
-        alt="My Avatar"
-        className="w-8 h-8 rounded-full"
-      />
-    </div>
-  </div>
-))}
-      
-
-         </div>
-
-          {/* Message posting Section */}
-
-          <footer className="bg-green-300 border-t border-gray-300 p-4 absolute bottom-0 w-3/4">
-            {selectedUser && (
-              <form onSubmit={handleSubmit}>
-                <div className="flex items-center">
-                  <input
-                    type="text"
-                    placeholder="Type a message..."
-                    value={typeof messageData === 'string' ? messageData : messageData?.message || ''}
-                    onChange={(e) => {
-                      console.log(e.target.value);
-                      setMessageData(e.target.value);
-                    }}
-                    className="w-full p-2 rounded-md border border-gray-400 focus:outline-none focus:border-blue-500"
-                  />
-                  <button
-                    type="submit"
-                    className="bg-indigo-500 text-white px-4 py-2 rounded-md ml-2"
-                  >
-                    Send
-                  </button>
-                </div>
-              </form>
-            )}
-          </footer>
-        </div>
-        {/* MESSAGE CONTAINER ENDS HERE */}
       </div>
     </>
   );

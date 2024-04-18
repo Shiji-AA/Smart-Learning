@@ -1,13 +1,13 @@
 import { Request,Response } from "express";
 import categoryModel,{Category} from "../../model/categoryModel";
+import errorHandler from "../../Constants/errorHandler";
 
 
 
 //addcategory
 const addCategory= async(req :Request,res :Response)=>{
     try{
-        const {title,description} = req.body;
-          // Check if a category with the same title exists 
+        const {title,description} = req.body;         
     const categoryExist: Category | null = await categoryModel.findOne({
         title: { $regex: new RegExp(title, 'i') },
       });
@@ -16,8 +16,7 @@ const addCategory= async(req :Request,res :Response)=>{
         console.log('Category already exists');
         return res.status(400).json({ message: 'Category already exists' });
       }
-  
-      // If the category doesn't exist,  creating New
+      
       const newCategory = await categoryModel.create({
         title,
         description,
@@ -35,7 +34,7 @@ const addCategory= async(req :Request,res :Response)=>{
         }
           }
     catch(error){
-        res.status(400).json({error:"Invalid category"})
+      return errorHandler(res, error);
     }}
 
     

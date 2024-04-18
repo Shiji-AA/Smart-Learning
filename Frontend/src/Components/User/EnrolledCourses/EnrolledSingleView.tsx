@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { axiosInstance } from "../../../api/axiosinstance";
 import Navbar from "../../User/Navbar/Navbar";
 import chatIcon from "../../../assets/chatIcon.png";
+import videocall from "../../../assets/videocall.png";
 
 interface Lesson {
   _id: string;
@@ -12,7 +13,7 @@ interface Lesson {
 }
 interface EnrolledSingleCourse {
   _id: string;
-  isLessonCompleted:boolean;
+  isLessonCompleted: boolean;
   courseId: string;
   courseName: string;
   courseDescription: string;
@@ -216,73 +217,90 @@ function EnrolledSingleView() {
               <br />
 
               {/* Progressbar */}
-              {singleViewDetails?.isLessonCompleted ?(
+              {singleViewDetails?.isLessonCompleted ? (
+                <div className="flex flex-row justify-between">
+                  {/* Button for downloading certificate */}
+                  <Link to={`/downloadcertificate/${courseId}`}>
+                    <button className="mt-3 bg-green-700 hover:bg-green-900 text-white font-bold py-1 px-4 rounded">
+                      View your certificate
+                    </button>
+                  </Link>
 
-            <Link to ={`/downloadcertificate/${courseId}`}>
-            <div>
-            <button className="mt-3 bg-green-700 hover:bg-green-900 text-white font-bold py-1 px-4 rounded">View your certificate</button>
-            </div>
-            </Link>  
-           
-              ):(
-                
-              <div>
-              <div className="block p-4 m-auto bg-gray-300 rounded-lg shadow w-72">
-                <div>
-                  <span className="text-xs font-light inline-block  px-2 uppercase rounded-full text-white bg-blue-500">
-                    Progress
-                  </span>
+                  {/* Button for taking a quiz */}
+                  <Link to={`/getquiz/${courseId}`}>
+                    <button className="mt-3 bg-green-700 hover:bg-green-900 text-white font-bold py-1 px-4 rounded">
+                      Take a Quiz
+                    </button>
+                  </Link>
                 </div>
-
-                <div
-                  className="bg-yellow-200 rounded-lg "
-                  style={{ width: 250, height: 20 }}
-                >
-                  <div
-                    className="w-full h-5 bg-gray-400 rounded-full mt-3"
-                    style={{
-                      width: `${progressPercentage}%`,
-                      backgroundColor: getColor(),
-                    }}
-                  >
-                    <div className="w-3/4 h-full text-center text-xs text-white rounded-full">
-                      {progressPercentage}%
+              ) : (
+                <div>
+                  <div className="block p-4 m-auto bg-gray-300 rounded-lg shadow w-72">
+                    <div>
+                      <span className="text-xs font-light inline-block  px-2 uppercase rounded-full text-white bg-blue-500">
+                        Progress
+                      </span>
                     </div>
+
+                    <div
+                      className="bg-yellow-200 rounded-lg "
+                      style={{ width: 250, height: 20 }}
+                    >
+                      <div
+                        className="w-full h-5 bg-gray-400 rounded-full mt-3"
+                        style={{
+                          width: `${progressPercentage}%`,
+                          backgroundColor: getColor(),
+                        }}
+                      >
+                        <div className="w-3/4 h-full text-center text-xs text-white rounded-full">
+                          {progressPercentage}%
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <p
+                        className="text-center text-lg font-semibold mt-3"
+                        style={{ color: getColor() }}
+                      >
+                        {getEvaluationStatus(progressPercentage)}
+                      </p>
+                    </div>
+
+                    <Link to={`/downloadcertificate/${courseId}`}>
+                      {showDownloadButton && (
+                        <button className="mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded">
+                          Download Certificate
+                        </button>
+                      )}
+                    </Link>
                   </div>
                 </div>
-                <div>
-                  <p
-                    className="text-center text-lg font-semibold mt-3"
-                    style={{ color: getColor() }}
-                  >
-                    {getEvaluationStatus(progressPercentage)}
-                  </p>
-                </div>
-      
-                <Link to={`/downloadcertificate/${courseId}`}>
-                  {showDownloadButton && (
-                    <button className="mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded">
-                      Download Certificate
-                    </button>
-                  )}
-                </Link>
-              </div>
-            </div>
-              )
-              }
+              )}
 
               {/* Progressbar */}
+              
+              <div className="absolute bottom-0 right-0 mb-1 mr-6 flex flex-col">
+                <Link to={`/videocalluser/${courseId}`} className="mb-20 block">
+                  <h2 className="text-xl font-bold mb-4 sm:mb-0 sm:mr-4 text-indigo-800">
+                    Video Call
+                  </h2>
+                  <img
+                    src={videocall}
+                    className="mb-20"
+                    style={{ width: 160, height: 130 }}
+                  />
+                </Link>
 
-
-              <div>
-                <Link to={"/chat"}>
+                <Link to={`/chat/${courseId}`}>
                   <img
                     src={chatIcon}
-                    className="absolute bottom-0 right-0 mb-1 mr-6"
+                    className="mb-1"
                     style={{ width: 90, height: 90 }}
                   />
                 </Link>
               </div>
+
             </div>
           </div>
         </div>

@@ -44,6 +44,7 @@ function Addcourse() {
       });
   }, []);
 
+  //while selecting an image
   const handleSubmitChange = (e: React.FormEvent<HTMLInputElement>) => {
     try {
       const inputElement = e.target as HTMLInputElement;
@@ -57,10 +58,8 @@ function Addcourse() {
     } catch (error) {
       console.log(error);
     }
-  };
-
-  
-
+  };  
+//cloudinary setup
   const submitImage = async () => {
     try {
       if (!image) {
@@ -87,6 +86,7 @@ function Addcourse() {
     }
   };
 
+  //while pressing form submit button
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (

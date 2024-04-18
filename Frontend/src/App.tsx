@@ -18,7 +18,7 @@ import CourseIntro from "./Components/User/CourseDetail/CourseIntro";
 import EnrolledCourses from "./Components/User/EnrolledCourses/EnrolledCourses";
 import EnrolledSingleView from "./Components/User/EnrolledCourses/EnrolledSingleView";
 import Wishlist from "./Components/User/WishList/Wishlist";
-import Chat from "./Components/User/Chat/Chat";
+import Chat from "./Pages/User/ChatRoomStudent/ChatRoomStudent";
 
 //tutor side
 import Tutorlogin from "./Components/Tutor/Login/Tutorlogin";
@@ -37,6 +37,9 @@ import Editlesson from "./Components/Tutor/Tutorhome/Editlesson";
 import StudentListTutor from "./Components/Tutor/StudentListTutorSide/StudentListTutor";
 import TutorsList from "./Components/User/TutorsList/TutorsList";
 import Chatroomtutor from "./Pages/Tutor/ChatRoomTutor/Chatroomtutor";
+import AddQuiz from "./Components/Tutor/QuizTutorSide/AddQuiz";
+
+
 
 //AdminSide
 import Adminlogin from "./Components/Admin/Adminlogin/Adminlogin";
@@ -52,11 +55,8 @@ import Tutortable from "./Components/Admin/TutorsList/Tutortable";
 import Studenttable from "./Components/Admin/StudentsList/Studenttable";
 import Pagenotfound from "./Components/Common/Pagenotfound";
 import Certificate from "./Components/User/ProgressBar/Certificate";
-
-
-
-
-
+import StudentQuizForm from "./Components/User/QuizUserSide/StudentQuizForm";
+import VideoCallMentorsDetails from "./Components/User/VideoCallMentorsDetails/VideoCallMentorsDetails";
 
 
 function App() {
@@ -90,17 +90,17 @@ function App() {
           <Route path="/postenrollmentcourseview/:orderId" element={<EnrolledSingleView/>}/>
           <Route path="/tutorslist" element={<TutorsList/>}/>
           <Route path="/wishlist" element={<Wishlist/>}/>
-          <Route path="/chat" element={<Chat/>}/>
+          <Route path="/chat/:id" element={<Chat/>}/>
           <Route path="/downloadcertificate/:courseId" element={<Certificate/>}/>
-               
-             
-          
-        </Route>
+          <Route path="/getquiz/:courseId" element={<StudentQuizForm/>}/>  
+          <Route path="/videocalluser/:courseId" element={<VideoCallMentorsDetails/>}/>  
+                   
+         
+          </Route>
 
         {/* Tutor side */}
           <Route path="/tutorLogin" element={<Tutorlogin />} />
           <Route path="/tutorregister" element={<Tutorsignup />} />
-
           <Route element={<Privatepages isStudent={false} />} >
           <Route path="*" element={<Pagenotfound/>} />
           <Route path="/tutordashboard" element={<Tutordashboard />} />
@@ -117,12 +117,12 @@ function App() {
           <Route path='/videocall' element={<OnlineCall/>}/>
           <Route path='/room/:roomId' element={<Room/>}/>
           <Route path='/getuserforsidebar' element={<Chatroomtutor/>}/>
-          
-        </Route>
+          <Route path="/addquiz/:id" element={<AddQuiz/>} />      
+
+         </Route>
 
         {/* Admin side */}
         <Route path="/admin" element={<Adminlogin />} />
-
         <Route element={<PrivatePageAdmin/>}> 
         <Route path="*" element={<Pagenotfound/>} />
         <Route path="/admindashboard" element={<Dashboard />} />

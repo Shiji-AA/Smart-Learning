@@ -1,6 +1,6 @@
 import { Request,Response } from "express";
 import studentModel from "../../model/userModel";
-
+import errorHandler from "../../Constants/errorHandler";
 interface Student{
   _id: string;
   studentName:string,
@@ -24,10 +24,7 @@ const getAllstudents = async (req: Request, res: Response) => {
         });
       }
     } catch (error) {
-      console.error("Error fetching students:", error);
-      res.status(500).json({
-        message: "Internal server error",
-      });
+      return errorHandler(res, error);    
     }
   };
 
@@ -47,8 +44,7 @@ const getAllstudents = async (req: Request, res: Response) => {
           });  
           res.status(200).json(studentDetails); 
       } catch (error:any) {
-          console.log(error.message);
-          res.status(500).send('Internal Server Error');
+        return errorHandler(res, error);
       }
   }
 //Block the student
@@ -69,8 +65,7 @@ const unlistStudent = async (req: Request, res: Response) => {
 
       return res.status(200).json({ message: "Student has been successfully unlisted" });
   } catch (error) {
-      console.error("Error while unlisting student:", error);
-      return res.status(500).json({ message: "Internal server error" });
+    return errorHandler(res, error);
   }
 }
   
@@ -91,8 +86,7 @@ const unlistStudent = async (req: Request, res: Response) => {
 
         return res.status(200).json({ message: "Student has been successfully relisted" });
     } catch (error) {
-        console.error("Error while relisting student:", error);
-        return res.status(500).json({ message: "Internal server error" });
+      return errorHandler(res, error);
     }
 }
 

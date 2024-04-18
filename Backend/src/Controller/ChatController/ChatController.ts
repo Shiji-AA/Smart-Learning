@@ -1,7 +1,5 @@
 import { Request, Response } from 'express';
 import chatModel from '../../model/chatModel';
-import studentModel from '../../model/userModel';
-import TutorModel from '../../model/tutorModel';
 import MessageModel from '../../model/messageModel';
 
 //for creating message
@@ -13,10 +11,8 @@ const accessChat = async (req: Request, res: Response) => {
         if (!message) {
         return res.status(400).json({ error: 'Message is required' });
         }
-
         const{ userId: receiverId } = req.params;
-
-       console.log(receiverId,"userID");
+        console.log(receiverId,"userID");
         const senderId=(req as any).user;
         let chat = await chatModel.findOne({
             participants:{$all:[senderId,receiverId]}
@@ -31,11 +27,11 @@ const accessChat = async (req: Request, res: Response) => {
             receiverId,
             message,
         })
-
         if(newMessage){
             chat.messages.push(newMessage._id)
         }
         await Promise.all([chat.save(),newMessage.save()]);
+        //console.log(newMessage, "success!!!!!!!")
         res.status(201).json({ newMessage,message:"message created successfully"});
     }
     catch(error){
@@ -49,14 +45,15 @@ const accessChat = async (req: Request, res: Response) => {
 const fetchChats = async (req: Request, res: Response) => {
     //    console.log("message sent",req.params.id)
     try {
-        const { id: userToChatId } = req.params; //studentId
-        const senderId = (req as any).user?._id; //tutorId     
-
+        const { id } = req.params; //studentId
+        //console.log(id, "id")
+        const senderId = (req as any).user?._id; //tutorId   
+        //console.log(id, senderId,"jjj")
         const chat = await chatModel.findOne({
-            participants: { $all: [senderId, userToChatId] },
+            participants: { $all: [senderId, id] },
         }).populate("messages"); 
-        
         if (!chat) {return res.status(200).json([])};
+        //console.log(chat?.messages, "chat")
         const messageData = chat.messages
         //console.log(messageData,"messageData")
         res.status(200).json({messageData,message:"ChatMessages"});

@@ -27,6 +27,7 @@ import {
   filterCourse,
   createRefreshToken,
   getAllCategoryStudent,
+  quizList,
 } from "../../Controller/StudentController/StudentController";
 
 import { isLogin } from "../../../middleware/studentAuth";
@@ -49,7 +50,7 @@ router.get("/usercourselist", isLogin, userCourseList);
 //StudentCoursePurchase
 router.get("/coursedetail/:id", isLogin, getCourseDetails);
 router.get("/checkout/:id", isLogin, getCourseDetails);
-router.get("/enrolledcourses", enrolledcourses);
+router.get("/enrolledcourses",isLogin, enrolledcourses);
 router.get("/enrolledcourseSingleview/:courseId", enrolledcourseSingleview);
 router.get("/postenrollmentcourseview/:courseId", enrolledcourseSingleview);
 router.get("/getalllessons/:courseId", isLogin, getAllLessons); //enrolled
@@ -63,6 +64,8 @@ router.put("/lessoncompleted/:courseId", isLogin,updateLessonCompletedStatus);
 router.get("/filtercourse",filterCourse);
 router.post("/refreshtoken",createRefreshToken);
 router.get('/getallcategory',getAllCategoryStudent)
+router.get('/quizList/:courseId',quizList)
+
 
 //for chatImplementation
 router.get("/getuserforsidebar",getUsersForSidebar);

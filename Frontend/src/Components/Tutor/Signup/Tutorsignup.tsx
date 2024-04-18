@@ -11,6 +11,9 @@ export default function Example() {
 
   const[tutorName,setName] = useState<string>('');
   const[tutorEmail,setEmail] = useState<string>('');
+  const[education,setEducation] = useState<string>('');
+  const[experience,setExperience] = useState<string>('');
+  const[onlineavailability,setOnlineavailability] = useState<string>('');
   const[phone,setPhone] = useState<string>('');
   const[password,setPassword] = useState<string>(''); 
   const[confirmpassword,setConfirmpassword] = useState<string>('');
@@ -36,7 +39,7 @@ export default function Example() {
     return toast.error("Password must contain at least 6 characters including at least one uppercase letter, one lowercase letter, one digit, and one special character.");
   } 
 
-  axiosInstanceTutor.post('/tutorregister',{tutorName:tutorName.trim(),tutorEmail,phone,password})
+  axiosInstanceTutor.post('/tutorregister',{tutorName:tutorName.trim(),tutorEmail,phone,password,experience,education,onlineavailability})
   .then((response)=>{
     if(response.data.message){
       // console.log(response.data.message,"rtgh")
@@ -99,6 +102,63 @@ export default function Example() {
                   onChange={(e)=>setEmail(e.target.value)}
                   placeholder="Enter your email address"
                   autoComplete="email"
+                  required
+                  className="block w-full py-2 px-3 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                />
+              </div>
+            </div>
+
+            <div className="rounded-md shadow-sm">
+              <label htmlFor="education" className="block text-sm font-medium text-gray-700">
+                Highest Qualification
+              </label>
+              <div className="mt-1">
+                <input
+                  id="education"
+                  name="education"
+                  type="education"
+                  value={education}
+                  onChange={(e)=>setEducation(e.target.value)}
+                  placeholder="Enter your Highest Qualification"
+                  autoComplete="education"
+                  required
+                  className="block w-full py-2 px-3 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                />
+              </div>
+            </div>
+
+            <div className="rounded-md shadow-sm">
+              <label htmlFor="experience" className="block text-sm font-medium text-gray-700">
+                Experience
+              </label>
+              <div className="mt-1">
+                <input
+                  id="experience"
+                  name="experience"
+                  type="experience"
+                  value={experience}
+                  onChange={(e)=>setExperience(e.target.value)}
+                  placeholder="Enter your Experience"
+                  autoComplete="experience"
+                  required
+                  className="block w-full py-2 px-3 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                />
+              </div>
+            </div>
+
+            <div className="rounded-md shadow-sm">
+              <label htmlFor="onlineavailability" className="block text-sm font-medium text-gray-700">
+                Online Availability
+              </label>
+              <div className="mt-1">
+                <input
+                  id="onlineavailability"
+                  name="onlineavailability"
+                  type="onlineavailability"
+                  value={onlineavailability}
+                  onChange={(e)=>setOnlineavailability(e.target.value)}
+                  placeholder="Enter your Online Availability"
+                  autoComplete="onlineavailability"
                   required
                   className="block w-full py-2 px-3 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />

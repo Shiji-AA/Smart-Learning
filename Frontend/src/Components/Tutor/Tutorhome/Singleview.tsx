@@ -74,11 +74,21 @@ function SingleCoursePageView() {
         <div className="max-w-screen-xl mx-auto flex justify-between w-full rounded-lg overflow-hidden shadow-xl">
           <div className="w-1/2 bg-white shadow-md rounded p-8 relative">
             <br />
-            <Link to={`/editcourse/${courseDetails?._id}`}>
-              <button className="absolute top-3 left-3 font-semibold  bg-orange-600  hover:bg-orange-800 focus:outline-none focus:ring-2 focus:ring-orange-500 text-white px-7 py-2 rounded-lg shadow-md text-xl">
-                Edit Course
-              </button>
-            </Link>
+
+
+            <div className="flex flex-wrap justify-between">
+  <Link to={`/editcourse/${courseDetails?._id}`}>
+    <button className="font-semibold bg-orange-600 hover:bg-orange-800 focus:outline-none focus:ring-2 focus:ring-orange-500 text-white px-7 py-2 rounded-lg shadow-md text-xl mb-4 md:mr-6">
+      Edit Course
+    </button>
+  </Link>
+  <Link to={`/addquiz/${courseDetails?._id}`}>
+    <button className="font-semibold bg-green-600 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-orange-500 text-white px-7 py-2 rounded-lg shadow-md text-xl">
+      Add Quiz
+    </button>
+  </Link> 
+</div>
+
 
             <br />
             <h1 className="text-3xl font-bold mb-4 text-blue-800">
@@ -107,7 +117,7 @@ function SingleCoursePageView() {
                   className="w-full rounded-lg shadow-lg"
                 />
               )}
-            </div>
+            </div>            
           </div>
 
           {/* Lesson Details */}
@@ -124,8 +134,7 @@ function SingleCoursePageView() {
                 <button className="px-4 py-2.5 text-sm font-semibold text-white bg-green-600 rounded-md hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                   Add New Lesson
                 </button>
-                </Link>
-                
+                </Link>                
               </div>
               <table className="table text-gray-900 border-separate space-y-6 text-sm w-full">
                 <thead className="bg-gray-500 text-gray-900">
@@ -165,11 +174,11 @@ function SingleCoursePageView() {
                         </td>
                       </tr>
                     ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+                </tbody>              
+              </table>                      
+            </div>                    
+          </div>        
+        </div>        
       </div>
     </>
   );

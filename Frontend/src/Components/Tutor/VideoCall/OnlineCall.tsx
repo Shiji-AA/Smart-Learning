@@ -5,7 +5,7 @@ function OnlineCall() {
   const navigate = useNavigate();
   const [value, setValue] = useState<string>("");
 
-  // Define the callback function using useCallback hook
+
   const handleRoomJoinCallback = useCallback(() => {
     navigate(`/room/${value}`);
   }, [navigate, value]);

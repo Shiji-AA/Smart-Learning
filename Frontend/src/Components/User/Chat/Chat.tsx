@@ -1,159 +1,292 @@
-import React, { useState, useRef } from "react";
+  import React, { useState, useEffect, useRef } from "react";
+  import { axiosInstance, axiosInstanceChat } from "../../../api/axiosinstance";
+  import { useParams } from "react-router-dom";
+  import { useSelector } from "react-redux";
+  import AuthrootState from "../../../Redux/Rootstate/Authstate";
+  import { useSocket } from "../../../Providers/SocketProvider";
 
-function Chat() {
-  const [messages, setMessages] = useState([
-    "Hey Mam, how's it going?",
-    "Hi Alice! I'm good, Have you  finished your assignment.Any doubts?",
-    // "That book sounds interesting! What's it about?",
-    // "It's about an astronaut stranded on Mars, trying to survive. Gripping stuff!",
-    // "I'm intrigued! Maybe I'll borrow it from you when you're done?",
-    // "Of course! I'll drop it off at your place tomorrow.",
-    // "Thanks, you're the best!",   
-    // "Hoorayy!!",
-    "Sure thing!"
-  ]);
-  const messagesEndRef = useRef(null);
+  interface Message {
+    _id: string;
+    message: string | any[];
+    createdAt: Date;
+  }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Add your message submission logic here
-  };
+  interface Tutor {
+    _id: string;
+    TutorName: string;
+  }
+  interface User {
+    id: string;
+    studentName: string;
+  }
 
-  return (
-    <div className="flex flex-col h-screen overflow-hidden items-center border border-gray-300 bg-gray-100">
-      <div className="max-w-md w-full border border-gray-300">
-        <header className="bg-blue-500 p-4 text-white rounded-t-lg">
-          <h1 className="text-2xl font-semibold">Tutor</h1>
-        </header>
-        <div className="max-w-md w-full overflow-y-auto p-4 pb-36">
-          <div className="flex flex-col gap-4">
-            {messages.map((message, index) => (
-              <div key={index} className="flex mb-4 cursor-pointer">
-                <div className="w-9 h-9 rounded-full flex items-center justify-center mr-2">
-                  <img
-                    src="https://placehold.co/200x/ffa8e4/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato"
-                    alt="User Avatar"
-                    className="w-8 h-8 rounded-full"
-                  />
-                </div>
-                <div className="flex max-w-96 bg-white rounded-lg p-3 gap-3">
-                  <p className="text-gray-700">{message}</p>
-                </div>
-              </div>
-            ))}
-            <div ref={messagesEndRef}></div>
+  interface EnrolledSingleCourse {
+    _id: string;
+    tutor: string;
+    isLessonCompleted: boolean;
+    courseId: string;
+    courseName: string;
+    courseDescription: string;
+    courseDuration: string;
+    courseFee: number;
+    photo: string[];
+    createdAt: string;
+    updatedAt: string;
+  }
+
+  function Chat() {
+    const { id: courseId } = useParams();
+    const userData = useSelector((state: AuthrootState) => state.auth.userdata);
+    const user = userData?.id;
+    const messagesEndRef = useRef<HTMLDivElement>(null);//to get the last message at bottom of window
+
+    // Initialize state variables
+    const [
+      singleViewDetails,
+      setSingleViewDetails,
+    ] = useState<EnrolledSingleCourse | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [selectedTutor, setSelectedTutor] = useState<Tutor | null>(null);
+    const [messageData, setMessageData] = useState<string>("");
+    const [message, setMessage] = useState<string>("");
+    const socket = useSocket();
+
+    const getLiveMessages = () => {
+      if (!socket) return;
+      socket.emit("JOIN_CHAT_STUDENT", { tutorId: selectedTutor });
+      socket.on("GET_MESSAGE", () => {
+        console.log("getmessages")
+        getMessages();
+      });
+    };
+
+    useEffect(() => {
+      if (!socket || !user || !selectedTutor) return;
+      socket?.on("connected", () => {
+        console.log("connected");
+        getLiveMessages();
+      });
+
+      // socket?.on("NEW_MESSAGE", (data) => {});
+    }, [socket, user, selectedTutor]);
+
+    useEffect(() => {
+      // JavaScript for showing/hiding the menu
+      const menuButton = document.getElementById("menuButton");
+      const menuDropdown = document.getElementById("menuDropdown");
+
+      const handleClickOutside = (e: MouseEvent) => {
+        if (
+          !menuDropdown?.contains(e.target as Node) &&
+          !menuButton?.contains(e.target as Node)
+        ) {
+          menuDropdown?.classList.add("hidden");
+        }
+      };
+
+      menuButton?.addEventListener("click", () => {
+        if (menuDropdown?.classList.contains("hidden")) {
+          menuDropdown?.classList.remove("hidden");
+        } else {
+          menuDropdown?.classList.add("hidden");
+        }
+      });
+
+      document.addEventListener("click", handleClickOutside);
+
+      // Cleanup event listener on unmount
+      return () => {
+        document.removeEventListener("click", handleClickOutside);
+      };
+    }, []);
+
+  //to get the last message at bottom of window
+    useEffect(() => {
+      scrollToBottom();
+    }, [messageData]);
+
+    const scrollToBottom = () => {
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    };
+
+    // Fetch course details
+    useEffect(() => {
+      axiosInstance
+        .get(`/enrolledcourseSingleview/${courseId}`)
+        .then((response) => {
+          if (response.data) {
+            const selectedTutor = response.data?.singleViewDetails.tutor;
+            //console.log(selectedTutor)
+            setSingleViewDetails(response.data.singleViewDetails);
+            setSelectedTutor(selectedTutor);
+            setLoading(false);
+          } else {
+            setLoading(false);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching course details:", error);
+          setLoading(false);
+        });
+    }, [courseId]);
+
+    // Posting Messages to Tutor
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      if (!message || !selectedTutor) return;// SOCKETIO: Sending message
+      // HTTP POST request
+      axiosInstance
+        .post(`/accesschat/${selectedTutor}`, {
+          userId: selectedTutor,
+          message: message,
+        })
+        .then((response) => {
+          if (response) {
+            // console.log(response.data, "messages");
+            setMessage("");
+            getMessages();
+          }
+        })
+        .catch((error) => {
+          console.error("Error sending message via HTTP POST request:", error);
+        });
+
+      socket.emit(
+        "SEND_MESSAGE",
+        {
+          senderId: userData?.id,
+          receiverId: selectedTutor,
+          message: message,
+        },
+        (error: any) => {
+          if (error) {
+            console.error("Error sending message via socket.io:", error);
+          } else {
+            console.log("Message sent via socket.io successfully");
+            setMessage("");
+            getMessages();
+          }
+        }
+      );
+    };
+
+    const getMessages = () => {
+      const userId = userData?.id;//studentId;
+      console.log(userId)
+      if (!userId && !selectedTutor) return;
+      console.log(selectedTutor, "tutor id")
+      axiosInstanceChat
+        .get(`/fetchchats/${userId}`, { params: { id: userId } })
+        .then((response) => {
+          if (response) {
+            console.log(response)
+            //console.log(response.data?.messageData,"messageDataSTUDENT");
+            setMessageData(response.data.messageData);
+            console.log(response.data.messageData, "this is messagedata")
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+    //for fetching all messages to a particular user from tutor(Tutor to student)
+    useEffect(() => {
+      getMessages();
+    }, [userData]);
+
+    const getRelativeTime = (createdAt) => {
+      const messageDate = new Date(createdAt);
+      const today = new Date();
+      const diffInDays = Math.floor(
+        (today - messageDate) / (1000 * 60 * 60 * 24)
+      );
+
+      if (diffInDays === 0) {
+        return messageDate.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      } else if (diffInDays === 1) {
+        return "Yesterday";
+      } else {
+        return `${diffInDays} days ago`;
+      }
+    };
+
+    return (
+      <>
+      <>
+      {/* component */}
+      <div className="flex h-screen overflow-hidden">
+        {/* Sidebar */}
+        <div className="w-1/4 border-r border-gray-300 bg-gray-200"></div>
+        {/* Main Chat Area  */}
+        <div className="flex-1 flex flex-col">
+          {/* Chat Header  */}
+          <header className="bg-gradient-to-r from-indigo-300 to-cyan-400 p-4 text-gray-900">
+            <h1 className="text-2xl font-semibold">Tutor</h1>
+          </header>
+
+          {/* Chat Messages */}
+          <div className="flex-1 overflow-y-auto p-4 pb-36 bg-blue-50">
+            {/* Outgoing Message--Right side-message sent by student*/}
+            {Array.isArray(messageData) &&
+              messageData.map((item, index) => {
+                const relativeTime = getRelativeTime(item.createdAt);
+                const isLastMessage = index === messageData.length - 1;
+
+                return (
+                  <div
+                    key={item?._id}
+                    className={`flex mb-4 cursor-pointer ${
+                      item.senderId == userData?.id
+                        ? "justify-end "
+                        : "justify-start "
+                    }`}
+                  >
+                    <div
+                      className={`flex max-w-96 ${
+                        item.senderId == userData?.id
+                          ? "bg-green-700 "
+                          : "bg-red-700"
+                      } text-white rounded-lg p-3 gap-3`}
+                    >
+                      <p>{item?.message}</p>
+                      <p className="text-xs text-gray-400">{relativeTime}</p>
+                    </div>
+                    {isLastMessage && <div ref={messagesEndRef} />}
+                  </div>
+                );
+              })}
           </div>
+
+          {/* Chat Input */}
+          <footer className="bg-blue-50 border-t border-gray-300 p-4 w-full">
+            {selectedTutor && (
+              <form onSubmit={handleSubmit} className="flex items-center">
+                <input
+                  type="text"
+                  placeholder="Type a message..."
+                  value={message}
+                  className="flex-1 p-2 rounded-md border border-gray-400 focus:outline-none focus:border-blue-500"
+                  onChange={(e) => setMessage(e.target.value)}
+                />
+                <button
+                  type="submit"
+                  className="bg-indigo-600 text-white px-4 py-2 rounded-md ml-2"
+                >
+                  Send
+                </button>
+              </form>
+            )}
+          </footer>
         </div>
       </div>
+    </>
+      </>
+    );
+  }
 
-      <footer className="max-w-md w-full bg-gray-300 p-4 rounded-b-lg mt-0.2">
-        <form className="flex items-center" onSubmit={handleSubmit}>
-        <button
-            type="button"
-            className="p-2 text-gray-600 rounded-lg hover:text-gray-900 hover:bg-gray-100"
-          >
-            <svg
-              className="w-5 h-5"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 20 18"
-            >
-              {/* Add button SVG content */}
-              <svg
-                className="w-5 h-5"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 20 18"
-              >
-                <path
-                  fill="currentColor"
-                  d="M13 5.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0ZM7.565 7.423 4.5 14h11.518l-2.516-3.71L11 13 7.565 7.423Z"
-                />
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M18 1H2a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z"
-                />
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M13 5.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0ZM7.565 7.423 4.5 14h11.518l-2.516-3.71L11 13 7.565 7.423Z"
-                />
-              </svg>
-            </svg>
-          </button>
-
-         
-          <button
-            type="button"
-            className="p-2 text-gray-600 rounded-lg hover:text-gray-900 hover:bg-gray-100"
-          >
-            <svg
-              className="w-5 h-5"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 20 20"
-            >
-              {/* Add button SVG content */}
-              <svg
-                className="w-5 h-5"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M13.408 7.5h.01m-6.876 0h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM4.6 11a5.5 5.5 0 0 0 10.81 0H4.6Z"
-                />
-              </svg>
-            </svg>
-          </button>
-
-          <textarea
-            rows="1"
-            className="w-full max-w-xs p-2.5 text-sm text-gray-900 bg-gray-100 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Your message..."
-          ></textarea>
-
-       <button
-            type="submit"
-            className="p-2 text-blue-700 rounded-full hover:bg-blue-200"
-          >
-            <svg
-              className="w-5 h-5 rotate-90 rtl:-rotate-90"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 18 20"
-            >
-              {/* Add button SVG content */}
-              <svg
-                className="w-5 h-5 rotate-90 rtl:-rotate-90"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 18 20"
-              >
-                <path d="m17.914 18.594-8-18a1 1 0 0 0-1.828 0l-8 18a1 1 0 0 0 1.157 1.376L8 18.281V9a1 1 0 0 1 2 0v9.281l6.758 1.689a1 1 0 0 0 1.156-1.376Z" />
-              </svg>
-            </svg>
-          </button>
-
-        </form>
-      </footer>
-    </div>
-  );
-}
-
-export default Chat;
+  export default Chat;

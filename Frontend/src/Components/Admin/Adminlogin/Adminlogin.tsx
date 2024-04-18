@@ -33,6 +33,7 @@ const handleSubmit=(e :React.FormEvent<HTMLFormElement>)=> {
     console.log(response)
     if(response.data.message){
       localStorage.setItem("adminToken",response.data.token) // for setting token in local storage
+      localStorage.setItem("adminRefreshToken",response.data.refreshToken)
       dispatch(setAdminInfo(response.data))
       toast.success(response.data.message);   
       navigate('/admindashboard')

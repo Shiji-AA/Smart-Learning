@@ -94,14 +94,29 @@ axiosInstanceTutor.interceptors.request.use((config) => {
 })
 axiosInstanceTutor.interceptors.response.use(
     (response) => response,
-    (error) => {
-        if (error.response && error.response.data) {          
-            const errorMessage = error.response.data.error || 'An error occurred';
-            // Show error toast with errorMessage
-            toast.error(errorMessage, { duration: 2000, style: { color: '#fff', background: 'black' } });
-        } else {
-            console.error('Axios error:', error);
-        }
+    async(error) => {
+        if (error.response.data.status === 401 && error.response.data.error === "Unauthorized - No token found") {
+            console.log(error.response,"Error.response")
+             try {
+               // Perform token refresh
+               const refreshToken = localStorage.getItem('tutorRefreshToken');
+               const response = await axiosInstanceTutor.post('/refreshtoken', { refreshToken });
+     
+               const newToken = response.data.token;
+               
+               // Update local storage with the new token
+               localStorage.setItem('tutorToken', newToken);          
+               // Retry the original request with the new token
+               error.config.headers.Authorization = `Bearer ${newToken}`;
+               return axiosInstanceTutor(error.config);
+     
+             } catch (refreshError) { 
+             const error = refreshError as Error;         
+               console.error('Error refreshing token:', error);         
+               toast.error(error .message, { duration: 2000, style: { color: '#fff', background: 'black' } });        
+               return Promise.reject(error);
+             }
+           }
         return Promise.reject(error);
     }
 )

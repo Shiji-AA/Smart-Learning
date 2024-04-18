@@ -11,11 +11,12 @@ export interface TUTOR extends Document {
     photo: string;
     education:string;
     experience:string;
+    onlineavailability:string;
     isBlocked: boolean;
     courses: mongoose.Schema.Types.ObjectId;  
     createdAt: Date;
     updatedAt: Date;
-    refreshToken:string,
+    refreshToken:string,  
     matchPassword(enteredPassword: string): Promise<boolean>;
 }
 
@@ -38,14 +39,17 @@ const TutorSchema = new Schema<TUTOR>({
         type: String,
         required: true, 
     },
+    onlineavailability:{
+        type: String,
+        required: true, 
+    },
     education: {
         type: String,
-        default:"Master of Education",
-
+        required: true, 
     },
     experience: {
         type: String,
-        default:"5 Years in  Teaching",
+        required: true, 
     },
     password: {
         type: String,
@@ -60,8 +64,7 @@ const TutorSchema = new Schema<TUTOR>({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'courseModel',
     },
-    
-    createdAt: {
+        createdAt: {
         type: Date,
         required: true,
         default: Date.now,

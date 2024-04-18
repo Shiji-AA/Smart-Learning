@@ -1,12 +1,21 @@
 import mongoose, { Schema,Model, model, Document } from "mongoose";
 
 interface Quiz extends Document {
-  questionset: string;
+  questionset: {
+    question: string;
+    option1: string;
+    option2: string;
+    option3: string;
+    option4: string;
+    answerOption: string;
+    isActive: boolean;
+  }[];
   createdAt: Date;
   updatedAt: Date;
-  courseId: mongoose.Schema.Types.ObjectId;
+  courseId: mongoose.Schema.Types.ObjectId; 
   isActive: boolean;
 }
+
 
 const courseQuizSchema = new Schema<Quiz>({
   questionset: [
@@ -43,10 +52,6 @@ const courseQuizSchema = new Schema<Quiz>({
     },
   ],
 
-  courseId:{
-    type:mongoose.Schema.Types.ObjectId,
-    ref:'courseModel',
-},
   createdAt: {
     type: Date,
     required: true,
@@ -57,6 +62,11 @@ const courseQuizSchema = new Schema<Quiz>({
     required: true,
     default: Date.now,
   },
+  courseId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'courseModel',
+}
+
 });
 
 const quizModel: Model<Quiz> = mongoose.model<Quiz>('quizModel', courseQuizSchema);
