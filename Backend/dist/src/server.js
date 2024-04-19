@@ -39,12 +39,12 @@ dotenv.config(); // This will read your .env file and apply the configurations
 const io = new socket_io_1.Server(httpServer, {
     pingTimeout: 60000,
     cors: {
-        origin: ['http://localhost:4000', "https://smartlearningofficial.online", "http://localhost:3000"],
+        origin: "https://smartlearningofficial.online",
         credentials: true,
     },
 });
 const corsOptions = {
-    origin: ['http://localhost:4000', "https://smartlearningofficial.online", "http://localhost:3000"],
+    origin: "https://smartlearningofficial.online",
     methods: "GET, PUT, POST, PATCH, DELETE"
 };
 app.set('io', io);
@@ -60,14 +60,14 @@ const PaymentRouter_1 = __importDefault(require("./Routes/PaymentRouter/PaymentR
 const ChatRouter_1 = __importDefault(require("./Routes/ChatRouter/ChatRouter"));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
-app.use(express_1.default.static((0, path_1.join)(__dirname, "../../../Frontend/dist")));
+app.use(express_1.default.static((0, path_1.join)(__dirname, "../../../Frontend/dist"))); //this is a static file
 app.use('/api/student', StudentRouter_1.default);
 app.use('/api/admin', AdminRouter_1.default);
 app.use('/api/tutor', TutorRouter_1.default);
 app.use('/api/payment', PaymentRouter_1.default);
 app.use('/api/chat', ChatRouter_1.default);
 app.get("*", function (req, res) {
-    res.sendFile((0, path_1.join)(__dirname, "../../../Frontend/dist/index.html"));
+    res.sendFile((0, path_1.join)(__dirname, "../../../Frontend/dist/index.html")); //
 });
 app.get('/', (req, res) => res.send("Hello Server is running"));
 httpServer.listen(port, () => console.log(`Server started at ${port}`));
