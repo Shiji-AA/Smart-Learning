@@ -2,8 +2,6 @@ import axios from 'axios';
 import toast from 'react-hot-toast'
 
 
-
-
 export const axiosInstanceChat = axios.create({
     baseURL:'https://smartlearningofficial.online/api/chat'
 })
