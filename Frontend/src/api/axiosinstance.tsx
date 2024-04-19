@@ -5,7 +5,7 @@ import toast from 'react-hot-toast'
 
 
 export const axiosInstanceChat = axios.create({
-    baseURL:'http://localhost:3000/api/chat'
+    baseURL:'https://smartlearningofficial.online/api/chat'
 })
 //axiosInterceptor for Chat
 axiosInstanceChat.interceptors.request.use((config) => {
@@ -32,11 +32,11 @@ axiosInstanceChat.interceptors.response.use(
 
 
 export const axiosInstancePayment = axios.create({
-    baseURL:'http://localhost:3000/api/payment'
+    baseURL:'https://smartlearningofficial.online/api/payment'
 })
 ///////////////////////////////////////////////////////
 export const axiosInstance = axios.create({
-    baseURL:'http://localhost:3000/api/student'
+    baseURL:'https://smartlearningofficial.online/api/student'
 })
 
 //axiosInterceptor for student
@@ -80,7 +80,7 @@ axiosInstance.interceptors.response.use(
 ///////////////////////////////////////////////////////
 
 export const axiosInstanceTutor = axios.create({
-    baseURL:'http://localhost:3000/api/tutor'
+    baseURL:'https://smartlearningofficial.online/api/tutor'
 })
 
 //axiosInterceptor for Tutor
@@ -123,7 +123,7 @@ axiosInstanceTutor.interceptors.response.use(
 
 ///////////////////////////////////////////////////////
 export const axiosInstanceAdmin = axios.create({
-    baseURL:'http://localhost:3000/api/admin'
+    baseURL:'https://smartlearningofficial.online/api/admin'
 })
 
 //axiosInterceptor for Admin
