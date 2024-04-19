@@ -39,12 +39,12 @@ dotenv.config(); // This will read your .env file and apply the configurations
 const io = new socket_io_1.Server(httpServer, {
     pingTimeout: 60000,
     cors: {
-        origin: "https://smartlearningofficial.online",
+        origin: ['http://localhost:4000', "https://smartlearningofficial.online", "http://localhost:3000"],
         credentials: true,
     },
 });
 const corsOptions = {
-    origin: "https://smartlearningofficial.online",
+    origin: ['http://localhost:4000', "https://smartlearningofficial.online", "http://localhost:3000"],
     methods: "GET, PUT, POST, PATCH, DELETE"
 };
 app.set('io', io);
