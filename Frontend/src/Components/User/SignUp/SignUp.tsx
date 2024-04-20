@@ -13,7 +13,7 @@ export default function Example() {
   const [password, setPassword] = useState<string>("");
   const [confirmpassword, setConfirmpassword] = useState<string>("");
 
-  const client_id = import.meta.env.VITE_CLIENT_ID || "";
+  // const client_id = import.meta.env.VITE_CLIENT_ID || "";
 
   const navigate = useNavigate();
 

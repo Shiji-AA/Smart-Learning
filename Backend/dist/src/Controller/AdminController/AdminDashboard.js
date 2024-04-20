@@ -21,6 +21,7 @@ const notificationModel_1 = __importDefault(require("../../model/notificationMod
 const mongoose_1 = __importDefault(require("mongoose"));
 const errorHandler_1 = __importDefault(require("../../Constants/errorHandler"));
 const TotalSales = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
         const totalOrderCount = yield orderModel_1.default.countDocuments({ status: "success" });
         const totalUsersCount = yield userModel_1.default.countDocuments({});
@@ -39,7 +40,7 @@ const TotalSales = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                 },
             },
         ]);
-        const totals = TotalRevenue[0].total || 0;
+        const totals = ((_a = TotalRevenue[0]) === null || _a === void 0 ? void 0 : _a.total) || 0;
         const adminRevenue = (totals * 0.2).toFixed(2);
         const tutorRevenue = (totals * 0.8).toFixed(2);
         res.status(200).json({

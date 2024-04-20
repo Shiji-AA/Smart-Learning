@@ -31,7 +31,7 @@ const mongo_uri = process.env.MONGO_URI;
 function connectDB() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            yield mongoose_1.default.connect('mongodb+srv://shiji123:shiji123@smartlearning.xrns1og.mongodb.net/?retryWrites=true&w=majority&appName=SmartLearning');
+            yield mongoose_1.default.connect('mongodb+srv://shiji123:shiji123@smartlearning.xrns1og.mongodb.net/?retryWrites=true&w=majority');
             console.log('====================================');
             console.log("MongoDB connected");
             console.log('====================================');
