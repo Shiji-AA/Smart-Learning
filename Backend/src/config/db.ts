@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const mongo_uri: string | undefined = process.env.MONGO_URI;
+const mongo_uri = 'mongodb+srv://shiji123:shiji123@smartlearning.xrns1og.mongodb.net/?retryWrites=true&w=majority&appName=SmartLearning';
 
 export const connectDB = async (): Promise<void> => {
     try {
