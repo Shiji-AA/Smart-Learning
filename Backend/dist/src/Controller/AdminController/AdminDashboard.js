@@ -39,7 +39,7 @@ const TotalSales = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                 },
             },
         ]);
-        const totals = TotalRevenue[0].total;
+        const totals = TotalRevenue[0].total || 0;
         const adminRevenue = (totals * 0.2).toFixed(2);
         const tutorRevenue = (totals * 0.8).toFixed(2);
         res.status(200).json({

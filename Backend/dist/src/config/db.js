@@ -17,16 +17,28 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const mongo_uri = process.env.MONGO_URI;
-const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        if (!mongo_uri) {
-            throw new Error("MONGO_URI is not defined in environment variables.");
+// export const connectDB = async (): Promise<void> => {
+//     try {
+//         if (!mongo_uri) {
+//             throw new Error("MONGO_URI is not defined in environment variables.");
+//         }
+//         await mongoose.connect(mongo_uri);
+//         console.log("Database connected successfully");
+//     } catch (error) {
+//         console.error("Failed to connect to the database:", error);
+//     }
+// };
+function connectDB() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield mongoose_1.default.connect('mongodb+srv://shiji123:shiji123@smartlearning.xrns1og.mongodb.net/?retryWrites=true&w=majority&appName=SmartLearning');
+            console.log('====================================');
+            console.log("MongoDB connected");
+            console.log('====================================');
         }
-        yield mongoose_1.default.connect(mongo_uri);
-        console.log("Database connected successfully");
-    }
-    catch (error) {
-        console.error("Failed to connect to the database:", error);
-    }
-});
+        catch (error) {
+            console.error(error);
+        }
+    });
+}
 exports.connectDB = connectDB;
