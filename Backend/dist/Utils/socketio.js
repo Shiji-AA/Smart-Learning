@@ -78,25 +78,28 @@ const initializeSocketIO = (io) => {
                 }
             });
             socket.on("JOIN_CHAT_STUDENT", ({ tutorId }) => __awaiter(void 0, void 0, void 0, function* () {
-                var _b, _c, _d;
+                var _b, _c;
                 const chat = yield chatModel_1.default.findOne({ participants: { $all: [(_b = socket.user) === null || _b === void 0 ? void 0 : _b._id, tutorId] } });
-                console.log((_c = socket.user) === null || _c === void 0 ? void 0 : _c._id, "socketUserIdd");
-                console.log(tutorId, "userIdd");
+                //console.log(socket.user?._id,"socketUserIdd")
+                //console.log(tutorId,"userIdd")     
                 socket.join(chat === null || chat === void 0 ? void 0 : chat.id);
-                console.log((_d = socket === null || socket === void 0 ? void 0 : socket.user) === null || _d === void 0 ? void 0 : _d._id.toString(), " joined room: 1234", chat === null || chat === void 0 ? void 0 : chat.id);
+                console.log((_c = socket === null || socket === void 0 ? void 0 : socket.user) === null || _c === void 0 ? void 0 : _c._id.toString(), " joined room: 1234", chat === null || chat === void 0 ? void 0 : chat.id);
             }));
             socket.on("JOIN_CHAT_TUTOR", ({ userId }) => __awaiter(void 0, void 0, void 0, function* () {
-                var _e, _f;
-                const chat = yield chatModel_1.default.findOne({ participants: { $all: [(_e = socket.user) === null || _e === void 0 ? void 0 : _e._id, userId] } });
+                var _d, _e;
+                const chat = yield chatModel_1.default.findOne({ participants: { $all: [(_d = socket.user) === null || _d === void 0 ? void 0 : _d._id, userId] } });
                 // console.log(socket.user?._id,"socketUserIdd")
                 // console.log(userId,"userIdd")
                 socket.join(chat === null || chat === void 0 ? void 0 : chat.id);
-                console.log((_f = socket === null || socket === void 0 ? void 0 : socket.user) === null || _f === void 0 ? void 0 : _f._id.toString(), " joined room: ", chat === null || chat === void 0 ? void 0 : chat.id);
+                console.log((_e = socket === null || socket === void 0 ? void 0 : socket.user) === null || _e === void 0 ? void 0 : _e._id.toString(), " joined room: ", chat === null || chat === void 0 ? void 0 : chat.id);
             }));
-            socket.on("LEAVE_CHAT", ({ chatId }) => {
-                socket.leave(chatId);
-                console.log(user._id.toString(), " left room: ", chatId);
-            });
+            socket.on("LEAVE_CHAT", ({ tutorId }) => __awaiter(void 0, void 0, void 0, function* () {
+                var _f;
+                const chat = yield chatModel_1.default.findOne({ participants: { $all: [(_f = socket.user) === null || _f === void 0 ? void 0 : _f._id, tutorId] } });
+                if (chat === null || chat === void 0 ? void 0 : chat._id)
+                    socket.leave(chat === null || chat === void 0 ? void 0 : chat._id.toString());
+                console.log(user._id.toString(), " left room: ", chat === null || chat === void 0 ? void 0 : chat._id);
+            }));
             socket.on("SEND_MESSAGE", ({ senderId, receiverId, message }) => __awaiter(void 0, void 0, void 0, function* () {
                 var _g;
                 console.log("message: " + message);
