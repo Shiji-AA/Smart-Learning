@@ -42,11 +42,18 @@ const initializeSocketIO = (io: Server) => {
         console.log("Un-authorized handshake. Token is missing");
         return;
       }
+      let decodedToken:JwtPayload | any;
+      try{
+        decodedToken = jwt.verify(
+          token,
+          process.env.JWT_SECRET as string
+        );
 
-      const decodedToken: JwtPayload | any = jwt.verify(
-        token,
-        process.env.JWT_SECRET as string
-      );
+      }
+      catch(error){
+        console.log(error,"Error in JWT")
+      }
+    
       //console.log(decodedToken, "DECODED TOKEN");
       if (!decodedToken?.user_id) {
         console.log("Un-authorized handshake. Token is invalid");
@@ -99,6 +106,7 @@ const initializeSocketIO = (io: Server) => {
       });
 
       socket.on("LEAVE_CHAT", async ({ tutorId}: { tutorId: string }) => {
+        console.log(tutorId,"tutord")
         const chat =await chatModel.findOne({participants:{$all:[socket.user?._id,tutorId]}}) 
         if(chat?._id )
         socket.leave(chat?._id.toString());
