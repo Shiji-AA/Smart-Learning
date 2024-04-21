@@ -2,7 +2,6 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { Server, Socket } from "socket.io"; 
 
 import UserModel from "../src/model/userModel"; 
-import TUTOR from "../src/model/tutorModel"; 
 import TutorModel from "../src/model/tutorModel";
 import chatModel from "../src/model/chatModel";
 
@@ -84,8 +83,8 @@ const initializeSocketIO = (io: Server) => {
 
       socket.on("JOIN_CHAT_STUDENT",async ({ tutorId}: { tutorId: string }) => {
         const chat =await chatModel.findOne({participants:{$all:[socket.user?._id,tutorId]}}) 
-        console.log(socket.user?._id,"socketUserIdd")
-        console.log(tutorId,"userIdd")     
+        //console.log(socket.user?._id,"socketUserIdd")
+        //console.log(tutorId,"userIdd")     
         socket.join(chat?.id);
         console.log(socket?.user?._id.toString(), " joined room: 1234", chat?.id);
       });
@@ -99,9 +98,11 @@ const initializeSocketIO = (io: Server) => {
         console.log(socket?.user?._id.toString(), " joined room: ", chat?.id);
       });
 
-      socket.on("LEAVE_CHAT", ({ chatId }: { chatId: string }) => {
-        socket.leave(chatId);
-        console.log(user._id.toString(), " left room: ", chatId);
+      socket.on("LEAVE_CHAT", async ({ tutorId}: { tutorId: string }) => {
+        const chat =await chatModel.findOne({participants:{$all:[socket.user?._id,tutorId]}}) 
+        if(chat?._id )
+        socket.leave(chat?._id.toString());
+        console.log(user._id.toString(), " left room: ", chat?._id);
       });
 
       socket.on(

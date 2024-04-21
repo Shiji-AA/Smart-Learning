@@ -7,7 +7,7 @@ import { accessChat,fetchChats,}
       from '../../Controller/ChatController/ChatController';
 
 
-chatRouter.post('/accesschat/:userId',isLogin, accessChat);
-chatRouter.get('/fetchchats/:id',isLogin,fetchChats);
+chatRouter.post('/accesschat/:userId',isLogin , accessChat);
+chatRouter.get('/fetchchats/:id', isLogin ,fetchChats);
 
 export default chatRouter;
