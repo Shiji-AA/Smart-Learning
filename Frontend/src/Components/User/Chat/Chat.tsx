@@ -63,6 +63,9 @@
         console.log("connected");
         getLiveMessages();
       });
+      return ()=>{
+        socket?.emit("LEAVE_CHAT",{ tutorId: selectedTutor })
+      }
 
       // socket?.on("NEW_MESSAGE", (data) => {});
     }, [socket, user, selectedTutor]);

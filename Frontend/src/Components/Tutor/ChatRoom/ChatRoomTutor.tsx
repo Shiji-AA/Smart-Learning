@@ -46,7 +46,6 @@ function ChatRoomTutor() {
     socket?.on("connected", () => {
       console.log("connected");
     });
-
     socket?.on("NEW_MESSAGE", () => {
       getMessages();
     });
@@ -55,7 +54,9 @@ function ChatRoomTutor() {
   useEffect(() => {
     if (!selectedUser) return;
     getLiveMessages();
-  }, [selectedUser]);
+    return ()=>{ socket?.emit("LEAVE_CHAT",{ tutorId: selectedUser })}
+  }, [selectedUser,socket]);
+  
 
   useEffect(() => {
     // JavaScript for showing/hiding the menu
