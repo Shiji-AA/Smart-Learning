@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { axiosInstance, axiosInstanceChat } from "../../../api/axiosinstance";
+import { axiosInstance,  axiosInstanceTutor } from "../../../api/axiosinstance";
 import { useSelector } from "react-redux";
 import TutorrootState from "../../../Redux/Rootstate/Tutorstate";
 import { useSocket } from "../../../Providers/SocketProvider";
@@ -89,9 +89,10 @@ function ChatRoomTutor() {
     };
   }, []); // Run this effect only once when the component mounts
 
+    //for fetching all messages to a particular user from tutor(Tutor to student)
   const getMessages = () => {
     if (!selectedUser?._id) return;
-    axiosInstanceChat
+    axiosInstanceTutor
       .get(`/fetchchats/${selectedUser._id}`, {
         params: { id: selectedUser._id },
       })
@@ -129,7 +130,7 @@ function ChatRoomTutor() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!message || !selectedUser?._id) return;
-    axiosInstanceChat
+    axiosInstanceTutor
       .post(`/accesschat/${selectedUser?._id}`, {
         userId: selectedUser?._id,
         message: message,
