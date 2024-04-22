@@ -13,6 +13,7 @@ import WishlistModel from "../../model/wishlistModel";
 import categoryModel from "../../model/categoryModel";
 import errorHandler from "../../Constants/errorHandler";
 import quizModel from "../../model/quizModel";
+import chatModel from "../../model/chatModel";
 
 
 interface DecodedData {
@@ -616,6 +617,29 @@ const quizList= async(req: Request, res: Response)=>{
     return errorHandler(res,error);
   }}
 
+    //fetch all chats to a particular user
+
+const fetchChatss = async (req: Request, res: Response) => {
+  //    console.log("message sent",req.params.id)
+  try {
+      const { id } = req.params; //studentId
+      console.log(id, "id")
+      const senderId = (req as any).user?._id; //tutorId   
+      //console.log(id, senderId,"jjj")
+      const chat = await chatModel.findOne({
+          participants: { $all: [senderId, id] },
+      }).populate("messages"); 
+      if (!chat) {return res.status(200).json([])};
+      //console.log(chat?.messages, "chat")
+      const messageData = chat.messages
+      console.log(messageData,"messageData")
+      res.status(200).json({messageData,message:"ChatMessages"});
+  } catch (error) {
+      console.error("Error in fetchChats:", error);
+      res.status(500).json({ error, message: "Error while fetching messages" });
+  }
+};
+
 export {
   loginStudent,
   registerStudent,
@@ -644,4 +668,5 @@ export {
   createRefreshToken ,
   getAllCategoryStudent,
   quizList,
+  fetchChatss,
 };

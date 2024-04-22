@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.quizList = exports.getAllCategoryStudent = exports.createRefreshToken = exports.filterCourse = exports.updateLessonCompletedStatus = exports.getUsersForSidebar = exports.removeWishlistItem = exports.getWishlistItem = exports.addWishlistItem = exports.searchTutorStudent = exports.tutorsList = exports.searchCourse = exports.getAllLessons = exports.enrolledcourseSingleview = exports.enrolledcourses = exports.getCourseDetails = exports.userCourseList = exports.updateProfile = exports.getProfileById = exports.resetPassword = exports.verifyOTP = exports.sendOTP = exports.googleLogin = exports.googleRegister = exports.getStudentProfile = exports.registerStudent = exports.loginStudent = void 0;
+exports.fetchChatss = exports.quizList = exports.getAllCategoryStudent = exports.createRefreshToken = exports.filterCourse = exports.updateLessonCompletedStatus = exports.getUsersForSidebar = exports.removeWishlistItem = exports.getWishlistItem = exports.addWishlistItem = exports.searchTutorStudent = exports.tutorsList = exports.searchCourse = exports.getAllLessons = exports.enrolledcourseSingleview = exports.enrolledcourses = exports.getCourseDetails = exports.userCourseList = exports.updateProfile = exports.getProfileById = exports.resetPassword = exports.verifyOTP = exports.sendOTP = exports.googleLogin = exports.googleRegister = exports.getStudentProfile = exports.registerStudent = exports.loginStudent = void 0;
 const userModel_1 = __importDefault(require("../../model/userModel"));
 const courseModel_1 = __importDefault(require("../../model/courseModel"));
 const generateToken_1 = __importDefault(require("../../../Utils/generateToken"));
@@ -26,6 +26,7 @@ const wishlistModel_2 = __importDefault(require("../../model/wishlistModel"));
 const categoryModel_1 = __importDefault(require("../../model/categoryModel"));
 const errorHandler_1 = __importDefault(require("../../Constants/errorHandler"));
 const quizModel_1 = __importDefault(require("../../model/quizModel"));
+const chatModel_1 = __importDefault(require("../../model/chatModel"));
 const globalData = {
     user: null,
 };
@@ -620,3 +621,30 @@ const quizList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.quizList = quizList;
+//fetch all chats to a particular user
+const fetchChatss = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    //    console.log("message sent",req.params.id)
+    try {
+        const { id } = req.params; //studentId
+        console.log(id, "id");
+        const senderId = (_a = req.user) === null || _a === void 0 ? void 0 : _a._id; //tutorId   
+        //console.log(id, senderId,"jjj")
+        const chat = yield chatModel_1.default.findOne({
+            participants: { $all: [senderId, id] },
+        }).populate("messages");
+        if (!chat) {
+            return res.status(200).json([]);
+        }
+        ;
+        //console.log(chat?.messages, "chat")
+        const messageData = chat.messages;
+        console.log(messageData, "messageData");
+        res.status(200).json({ messageData, message: "ChatMessages" });
+    }
+    catch (error) {
+        console.error("Error in fetchChats:", error);
+        res.status(500).json({ error, message: "Error while fetching messages" });
+    }
+});
+exports.fetchChatss = fetchChatss;
