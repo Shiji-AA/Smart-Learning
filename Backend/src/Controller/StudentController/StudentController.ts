@@ -616,6 +616,7 @@ const quizList= async(req: Request, res: Response)=>{
     return errorHandler(res,error);
   }}
 
+  
 export {
   loginStudent,
   registerStudent,
@@ -644,4 +645,5 @@ export {
   createRefreshToken ,
   getAllCategoryStudent,
   quizList,
+  
 };

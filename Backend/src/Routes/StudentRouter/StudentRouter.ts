@@ -28,10 +28,11 @@ import {
   createRefreshToken,
   getAllCategoryStudent,
   quizList,
+  
 } from "../../Controller/StudentController/StudentController";
 
 import { isLogin } from "../../../middleware/studentAuth";
-import { accessChat, fetchChats } from "../../Controller/ChatController/ChatController";
+import { accessChat, fetchChats} from "../../Controller/ChatController/ChatController";
 
 router.post("/login", loginStudent);
 router.post("/register", registerStudent);
