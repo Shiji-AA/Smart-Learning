@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { axiosInstance, axiosInstanceChat } from "../../../api/axiosinstance";
+import { axiosInstance,  axiosInstanceTutor } from "../../../api/axiosinstance";
 import { useSelector } from "react-redux";
 import TutorrootState from "../../../Redux/Rootstate/Tutorstate";
 import { useSocket } from "../../../Providers/SocketProvider";
@@ -7,7 +7,7 @@ import { useSocket } from "../../../Providers/SocketProvider";
 interface Message {
   _id: string;
   message: string | any[];
-  senderId:string;
+  senderId: string;
   createdAt: Date;
 }
 
@@ -46,7 +46,6 @@ function ChatRoomTutor() {
     socket?.on("connected", () => {
       console.log("connected");
     });
-
     socket?.on("NEW_MESSAGE", () => {
       getMessages();
     });
@@ -55,7 +54,11 @@ function ChatRoomTutor() {
   useEffect(() => {
     if (!selectedUser) return;
     getLiveMessages();
-  }, [selectedUser]);
+    return () => {      
+      socket?.off("GET_MESSAGE")
+      socket?.emit("LEAVE_CHAT", { tutorId: selectedUser._id });
+    };
+  }, [selectedUser, socket]);
 
   useEffect(() => {
     // JavaScript for showing/hiding the menu
@@ -86,9 +89,10 @@ function ChatRoomTutor() {
     };
   }, []); // Run this effect only once when the component mounts
 
+    //for fetching all messages to a particular user from tutor(Tutor to student)
   const getMessages = () => {
     if (!selectedUser?._id) return;
-    axiosInstanceChat
+    axiosInstanceTutor
       .get(`/fetchchats/${selectedUser._id}`, {
         params: { id: selectedUser._id },
       })
@@ -120,13 +124,13 @@ function ChatRoomTutor() {
   }, []);
 
   const handleUserClick = (user: User) => {
-    setSelectedUser(user);
+      setSelectedUser(user);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!message || !selectedUser?._id) return;
-    axiosInstanceChat
+    axiosInstanceTutor
       .post(`/accesschat/${selectedUser?._id}`, {
         userId: selectedUser?._id,
         message: message,
@@ -161,10 +165,15 @@ function ChatRoomTutor() {
   const getRelativeTime = (createdAt: Date) => {
     const messageDate: any = new Date(createdAt);
     const today: any = new Date();
-    const diffInDays = Math.floor((today - messageDate) / (1000 * 60 * 60 * 24));
+    const diffInDays = Math.floor(
+      (today - messageDate) / (1000 * 60 * 60 * 24)
+    );
 
     if (diffInDays === 0) {
-      return messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      return messageDate.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
     } else if (diffInDays === 1) {
       return "Yesterday";
     } else {
@@ -189,10 +198,12 @@ function ChatRoomTutor() {
               {allUsers.map((user) => (
                 <div
                   key={user?._id}
-                  onClick={() => handleUserClick(user)}
-                  className="flex items-center mb-4 cursor-pointer hover:bg-gray-100 p-2 rounded-md"
+                  onClick={() => handleUserClick(user)
+                  
+                  }
+                  className="flex items-center mb-4 cursor-pointer hover:bg-gray-100 p-2 rounded-md  border"
                 >
-                  <div className="w-12 h-12 bg-gray-300 rounded-full mr-3">
+                  <div className="w-12 h-12 rounded-full mr-3">
                     <img
                       src={user?.photo}
                       alt="User Avatar"
@@ -203,7 +214,7 @@ function ChatRoomTutor() {
                     <h2 className="text-lg font-semibold">
                       {user?.studentName}
                     </h2>
-                    <p className="text-gray-600">hello 🍕</p>
+                    <p className="text-gray-600">hello </p>
                   </div>
                 </div>
               ))}
@@ -239,7 +250,13 @@ function ChatRoomTutor() {
                           : "justify-start"
                       }`}
                     >
-                      <div className={`flex max-w-96 ${item.senderId == tutorData?.tutorId ? "bg-green-700" :"bg-red-700" } text-white rounded-lg p-3 gap-3`}>
+                      <div
+                        className={`flex max-w-96 ${
+                          item.senderId == tutorData?.tutorId
+                            ? "bg-green-700"
+                            : "bg-red-700"
+                        } text-white rounded-lg p-3 gap-3`}
+                      >
                         <p className="self-left">{item?.message}</p>
                         <p className="text-xs text-gray-400">{relativeTime}</p>
                       </div>

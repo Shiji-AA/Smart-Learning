@@ -36,11 +36,16 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
   useEffect(() => {
     if (!user) return;
 
-    const token =
+    const token:string | null =
       role === "user"
         ? localStorage.getItem("studentToken")
         : localStorage.getItem("tutorToken");
     console.log(token, "TOKEN");
+    if (!token) {
+      console.error("Token not found in localStorage.");
+      return;
+    }
+    
     const newSocket = io("http://localhost:3000", {
       query: { role },
       withCredentials: true,
