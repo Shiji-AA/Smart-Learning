@@ -91,7 +91,6 @@
           menuDropdown?.classList.add("hidden");
         }
       });
-
       document.addEventListener("click", handleClickOutside);
 
       // Cleanup event listener on unmount

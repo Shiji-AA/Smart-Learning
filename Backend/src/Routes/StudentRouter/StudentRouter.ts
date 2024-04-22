@@ -28,10 +28,11 @@ import {
   createRefreshToken,
   getAllCategoryStudent,
   quizList,
+  fetchChatss,
 } from "../../Controller/StudentController/StudentController";
 
 import { isLogin } from "../../../middleware/studentAuth";
-import { accessChat, fetchChats } from "../../Controller/ChatController/ChatController";
+import { accessChat } from "../../Controller/ChatController/ChatController";
 
 router.post("/login", loginStudent);
 router.post("/register", registerStudent);
@@ -70,7 +71,7 @@ router.get('/quizList/:courseId',quizList)
 //for chatImplementation
 router.get("/getuserforsidebar",getUsersForSidebar);
 router.post('/accesschat/:userId',isLogin, accessChat);
-router.get('/fetchchats/:id', isLogin ,fetchChats);
+router.get('/fetchchats/:id', isLogin ,fetchChatss);
 
 
 export default router;
