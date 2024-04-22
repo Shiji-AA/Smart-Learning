@@ -43,4 +43,5 @@ router.get('/quizList/:courseId', StudentController_1.quizList);
 //for chatImplementation
 router.get("/getuserforsidebar", StudentController_1.getUsersForSidebar);
 router.post('/accesschat/:userId', studentAuth_1.isLogin, ChatController_1.accessChat);
+router.get('/fetchchats/:id', studentAuth_1.isLogin, ChatController_1.fetchChats);
 exports.default = router;

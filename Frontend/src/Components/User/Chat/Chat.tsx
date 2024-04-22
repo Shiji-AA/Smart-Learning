@@ -1,5 +1,5 @@
   import React, { useState, useEffect, useRef } from "react";
-  import { axiosInstance, axiosInstanceChat } from "../../../api/axiosinstance";
+  import { axiosInstance} from "../../../api/axiosinstance";
   import { useParams } from "react-router-dom";
   import { useSelector } from "react-redux";
   import AuthrootState from "../../../Redux/Rootstate/Authstate";
@@ -174,7 +174,7 @@
       console.log(userId)
       if (!userId && !selectedTutor) return;
       console.log(selectedTutor, "tutor id")
-      axiosInstanceChat
+      axiosInstance
         .get(`/fetchchats/${userId}`, { params: { id: userId } })
         .then((response) => {
           if (response) {
