@@ -14,7 +14,7 @@ const addCategory= async(req :Request,res :Response)=>{
   
       if (categoryExist) {
         console.log('Category already exists');
-        return res.status(400).json({ message: 'Category already exists' });
+        return res.status(400).json({ error: 'Category already exists' });
       }
       
       const newCategory = await categoryModel.create({

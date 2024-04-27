@@ -5,6 +5,7 @@ import generateToken from "../../../Utils/generateToken";
 import categoryModel from "../../model/categoryModel";
 import courseModel from '../../model/courseModel';
 import mongoose from 'mongoose';
+import notificationModel from '../../model/notificationModel';
 
 
 const adminLogin = async (req: Request, res: Response) => {  
@@ -152,6 +153,24 @@ const getCategoryById =async (req:Request,res:Response)=>{
     return errorHandler(res,error)
     }
   };
+  const marknotificationasread = async(req:Request,res:Response)=>{
+    try{
+      const notificationId = req.params.notificationId;
+      if(!notificationId){
+        return res.status(404).send({message:"NOTificationID Not found"})
+      }
+      const updatedNotification= await notificationModel.findByIdAndUpdate(
+    notificationId,{isRead : true},{new:true}
+      )
+      if(!updatedNotification){
+        return res.status(404).send({ message: "Notification is not found" });
+      }
+      res.status(200).send({message:"Notification marked as read",notification: updatedNotification });
+    }
+    catch(error){
+    return errorHandler(res,error)
+    }
+  }
   
 export{
     adminLogin,
@@ -161,4 +180,5 @@ export{
   deleteCategory,
   getAdminCourseList,
   toggleCourseStatus,
+  marknotificationasread,
 }

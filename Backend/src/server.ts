@@ -20,26 +20,18 @@ const corsOptions = {
 	origin: ['http://localhost:4000', "https://smartlearningofficial.online", "http://localhost:3000"],
 	methods: "GET, PUT, POST, PATCH, DELETE"
 }
-
 app.set('io', io)
 app.use (cors(corsOptions));
 initializeSocketIO(io)
 
 import {connectDB} from "./config/db";
-
-
 const port = process.env.PORT || 3000;
 connectDB();
-
-
-
 import studentRouter from './Routes/StudentRouter/StudentRouter';
 import adminRouter from "./Routes/AdminRouter/AdminRouter";
 import tutorRouter from "./Routes/TutorRouter/TutorRouter";
 import paymentRouter from './Routes/PaymentRouter/PaymentRouter';
 import chatRouter from "./Routes/ChatRouter/ChatRouter";
-
-
    
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 

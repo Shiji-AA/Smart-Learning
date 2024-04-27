@@ -9,6 +9,7 @@ const TutorController_1 = require("../../Controller/TutorController/TutorControl
 const AdminController_1 = require("../../Controller/AdminController/AdminController");
 const studentAuth_1 = require("../../../middleware/studentAuth");
 const TutorController_2 = require("../../Controller/TutorController/TutorController");
+const ChatController_1 = require("../../Controller/ChatController/ChatController");
 tutorRouter.post("/tutorLogin", TutorController_1.tutorLogin);
 tutorRouter.post("/tutorregister", TutorController_1.registerTutor);
 tutorRouter.get("/tutorprofile", studentAuth_1.isLogin, TutorController_1.getTutorProfile);
@@ -32,4 +33,5 @@ tutorRouter.post("/addquiz", TutorController_1.addQuiz);
 tutorRouter.put("/activatequiz/:id", TutorController_1.activateQuiz);
 tutorRouter.put("/removequiz/:id", TutorController_1.removeQuiz);
 tutorRouter.get("/getallquestions", TutorController_1.getAllQuestions);
+tutorRouter.post('/accesschat/:userId', studentAuth_1.isLogin, ChatController_1.accessChat);
 exports.default = tutorRouter;

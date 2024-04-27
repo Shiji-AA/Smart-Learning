@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Tuturnavbar from "../../../Components/Tutor/Tutordashboard/Tutornavbar";
+import { FaStar, FaRegStar } from 'react-icons/fa';
 
 interface Course {
   _id: string;
@@ -105,6 +106,11 @@ function SingleCoursePageView() {
               <p className="font-bold">Duration:</p>
               <p>{courseDetails?.courseDuration}</p>
             </div>
+            <div className="flex mt-1 text-yellow-500">
+                        {[...Array(5)].map((_, index) => (
+                          <span key={index}>{index < 4 ? <FaStar /> : <FaRegStar />}</span>
+                        ))}
+                      </div>
             <div className="mb-4">
               <p className="font-bold">Fee:</p>
               <p>₹{courseDetails?.courseFee}</p>

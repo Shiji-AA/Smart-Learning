@@ -35,6 +35,7 @@ function Addlesson() {
   const [courseDetails, setCourseDetails] = useState<Course[]>([]);
   const [selectcourse, setSelectcourse] = useState("");
   const [video, setVideo] = useState<File | null>(null);
+ 
   // const [cloudanaryURL, setCloudanaryURL] = useState("");
 
   useEffect(() => {
@@ -117,7 +118,17 @@ function Addlesson() {
     e.preventDefault();
 
     setLoading(true);
+
     try {
+      // validation part
+      if (!title || !description || !selectcategory || !selectcourse || !video) {
+        toast.error("All fields are required");
+      }
+      const existingTitles = categoryDetails.map((lesson) => lesson.title.toLowerCase());
+      if (existingTitles.includes(title.toLowerCase())) {
+        toast.error("Lesson title already exists");
+      }
+
         const videoUrl = await submitVideo();
         
         if (videoUrl) {
@@ -144,6 +155,8 @@ function Addlesson() {
         setLoading(false);
     }
 };
+
+
 
 
   return (

@@ -5,12 +5,13 @@ import courseModel, { Course } from "../../model/courseModel";
 import categoryModel from "../../model/categoryModel";
 import lessonModel from "../../model/lessonModel";
 import orderModel from "../../model/orderModel";
-import studentModel from "../../model/userModel";
 import jwt from "jsonwebtoken";
 import notificationModel from "../../model/notificationModel";
 import mongoose from 'mongoose';
 import errorHandler from "../../Constants/errorHandler";
 import quizModel from "../../model/quizModel";
+import chatModel from "../../model/chatModel";
+
 
 const registerTutor = async (req: Request, res: Response) => {
   try {
@@ -519,6 +520,49 @@ const getAllQuestions = async(req: Request, res: Response)=>{
   catch(error){
     return errorHandler(res,error);
   }}
+
+  //fetch all chats to a particular Tutor
+  const fetchChats = async (req: Request, res: Response) => {  
+    try {
+        const { id } = req.params; //studentId
+       // console.log(id, "StudentId")
+        const senderId = (req as any).user?._id; //tutorId   
+        //console.log(id, senderId,"jjj")
+        const chat = await chatModel.findOne({
+            participants: { $all: [senderId, id] },
+        }).populate("messages"); 
+        if (!chat) {return res.status(200).json([])};
+        //console.log(chat?.messages, "chat")
+        const messageData = chat.messages
+        //console.log(messageData,"messageData")
+        res.status(200).json({messageData,message:"ChatMessages"});
+    } catch (error) {
+        console.error("Error in fetchChats:", error);
+        res.status(500).json({ error, message: "Error while fetching messages" });
+    }
+  };
+
+  //FILTER COURSE
+const filterCourseTutor = async (req: Request, res: Response) => {
+  try {
+    let filteredCourses:any;
+    if (req.query && req.query.category !== "All") {    
+      const category = await categoryModel.findOne({ title: req.query.category });      
+    if (!category) {
+        filteredCourses = [];
+      } else {
+        filteredCourses = await courseModel.find({ category: category._id }).populate("category");
+      }
+    } else {     
+      filteredCourses = await courseModel.find().populate("category");
+    }
+    //console.log(filteredCourses, "Filtered courses");
+    res.status(200).json({ filteredCourses, message: "Filtered courses" });
+  } catch (error) {
+    return errorHandler(res,error); 
+   }
+    };
+
 export {
   tutorLogin,
   registerTutor,
@@ -540,4 +584,6 @@ export {
   activateQuiz,
   removeQuiz,
   getAllQuestions,
+  fetchChats ,
+  filterCourseTutor
 };

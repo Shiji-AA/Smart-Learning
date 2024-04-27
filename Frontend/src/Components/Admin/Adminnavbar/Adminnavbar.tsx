@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import AdminrootState from "../../../Redux/Rootstate/Adminstate";
 import { axiosInstanceAdmin } from "../../../api/axiosinstance";
+import toast from "react-hot-toast";
 
 interface Notification {
   _id: string;
@@ -12,8 +13,14 @@ interface Notification {
   type: string;
   isRead: boolean;
 }
+interface Course {
+  _id: string;
+  photo: string;
+  isApproved: boolean;
+}
 
 function Navbar2() {
+  const [courseDetails, setCourseDetails] = useState<Course[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -28,7 +35,7 @@ function Navbar2() {
   const adminUser = useSelector(
     (state: AdminrootState) => state.admin.admindata
   );
-  console.log(adminUser);
+  //console.log(adminUser);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -40,7 +47,7 @@ function Navbar2() {
       .get("/getnotifications")
       .then((response) => {
         if (response.data) {
-          console.log(response.data, "notifications");
+          //console.log(response.data, "notifications");
           const { notificationCount } = response.data;
           setNotificationCount(notificationCount);
           setNotifications(response.data.notifications);
@@ -51,6 +58,43 @@ function Navbar2() {
       });
   }, []);
 
+  const handleNotificationClick = (notificationId: string) => {
+    // Mark the notification as read in the backend
+    axiosInstanceAdmin
+      .put(`/marknotificationasread/${notificationId}`)
+      .then((response) => {
+        if (response) {
+          // console.log(response.data.notification,"dcghdgcjhdgcnotification")
+        }
+
+        // Update the UI to mark the notification as read
+        setNotifications((prevNotifications) =>
+          prevNotifications.map((notification) =>
+            notification._id === notificationId
+              ? { ...notification, isRead: true }
+              : notification
+          )
+        );
+      })
+      .catch((error) => {
+        console.error("Error marking notification as read:", error);
+      });
+  };
+
+  //to display courseDetails
+  useEffect(() => {
+    axiosInstanceAdmin
+      .get("/admincourselist")
+      .then((response) => {
+        if (response.data.courseDetails) {
+          setCourseDetails(response.data.courseDetails);
+        }
+      })
+      .catch((error) => {
+        console.log("Error in fetching data", error);
+        toast("Error in fetching data");
+      });
+  }, []);
   return (
     <div>
       <nav className="flex flex-wrap items-center justify-between p-3 bg-gray-800">
@@ -119,9 +163,14 @@ function Navbar2() {
           <div>
             <button type="button" onClick={() => setIsOpen(true)}>
               <div className="relative m-2 inline-flex">
-                <div className="absolute bottom-auto left-0 right-auto top-0 z-10 inline-block -translate-x-2/4 -translate-y-1/2 rotate-0 skew-x-0 skew-y-0 scale-x-100 scale-y-90 rounded-full bg-red-600 text-white p-1.5 text-xs">
-                  {notificationCount}
-                </div>
+                {courseDetails.map((course) =>
+                  course.isApproved ? null : (
+                    <div className="absolute bottom-auto left-0 right-auto top-0 z-10 inline-block -translate-x-2/4 -translate-y-1/2 rotate-0 skew-x-0 skew-y-0 scale-x-100 scale-y-90 rounded-full bg-red-600 text-white p-1.5 text-xs">
+                      {notificationCount}
+                    </div>
+                  )
+                )}
+
                 <div className="flex items-center justify-center rounded-lg bg-blue-500 hover:bg-blue-900 px-3 py-1 text-center text-white shadow-lg dark:text-gray-200">
                   <span className="[&>svg]:h-8 [&>svg]:w-8">
                     <svg
@@ -144,10 +193,13 @@ function Navbar2() {
               <div
                 id="authentication-modal"
                 aria-hidden="true"
-                className="fixed inset-0 overflow-x-hidden overflow-y-auto h-full top-0 left-0 z-50 flex justify-center items-center"
+                className="fixed inset-0 overflow-x-hidden overflow-y-auto h-full pb-60  z-50 flex justify-end items-center"
               >
-                <div className="bg-white rounded-lg shadow relative dark:bg-gray-700">
-                  <div className="flex justify-end p-2">
+                <div
+                  className="bg-blue-200 rounded-lg shadow relative dark:bg-gray-700 "
+                  style={{ width: "26%" }}
+                >
+                  <div className="flex justify-end ">
                     <button
                       type="button"
                       className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
@@ -170,17 +222,27 @@ function Navbar2() {
 
                   <div className="space-y-3 px-3 lg:px-4 pb-2 sm:pb-4 xl:pb-6  bg-yellow-00">
                     {notifications.map((notification) => (
-                      <div key={notification._id} className="w-1/2 mx-auto p-2">
+                      <a>
                         <div
-                          className="leading-normal text-blue-600 bg-blue-200 rounded-lg"
-                          role="alert"
+                          key={notification._id}
+                          onClick={() =>
+                            handleNotificationClick(notification._id)
+                          }
+                          className="w-1/2 mx-auto p-2"
                         >
-                          <h2 className="text-base font-semibold">
-                            {notification.type}
-                          </h2>
-                          <p className="mt-1 text-sm">{notification.message}</p>
+                          <div
+                            className="leading-normal text-blue-600 bg-blue-200 rounded-lg"
+                            role="alert"
+                          >
+                            <h2 className="text-base font-semibold">
+                              {notification.type}
+                            </h2>
+                            <a className="mt-1 text-sm">
+                              {notification.message}
+                            </a>
+                          </div>
                         </div>
-                      </div>
+                      </a>
                     ))}
                   </div>
                 </div>
@@ -201,7 +263,6 @@ function Navbar2() {
             Logout
           </button>
         )}
-        {/* <img src={adminlogo1} alt="Student Logo" className="h-10 w-10" /> */}
       </nav>
     </div>
   );

@@ -53,13 +53,12 @@ const accessChat = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.accessChat = accessChat;
-//fetch all chats to a particular user
+//fetch all chats to a particular Tutor
 const fetchChats = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    //    console.log("message sent",req.params.id)
     try {
         const { id } = req.params; //studentId
-        //console.log(id, "id")
+        // console.log(id, "StudentId")
         const senderId = (_a = req.user) === null || _a === void 0 ? void 0 : _a._id; //tutorId   
         //console.log(id, senderId,"jjj")
         const chat = yield chatModel_1.default.findOne({
@@ -71,7 +70,7 @@ const fetchChats = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         ;
         //console.log(chat?.messages, "chat")
         const messageData = chat.messages;
-        //console.log(messageData,"messageData")
+        console.log(messageData, "messageData");
         res.status(200).json({ messageData, message: "ChatMessages" });
     }
     catch (error) {

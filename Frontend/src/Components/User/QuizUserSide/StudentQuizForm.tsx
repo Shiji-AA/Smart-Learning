@@ -38,14 +38,22 @@ function StudentQuizForm() {
           }
 
           quizSet.questionset.forEach((question: any) => {
+
+            const shuffledOptions = [
+              question.option1,
+              question.option2,
+              question.option3,
+              question.option4,
+            ].sort(() => Math.random() - 0.5);
+
             questions.push({
               _id: question._id,
               courseId: quizSet.courseId,            
               question: question.question,
-              option1: question.option1,
-              option2: question.option2,
-              option3: question.option3,
-              option4: question.option4,
+              option1: shuffledOptions[0],
+              option2: shuffledOptions[1],
+              option3: shuffledOptions[2],
+              option4: shuffledOptions[3],
               answerOption: question.answerOption
             });
           });

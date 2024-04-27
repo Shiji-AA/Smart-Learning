@@ -21,7 +21,7 @@ function Addcourse() {
   const [loading, setLoading] = useState(false);
   const [courseName, setCoursename] = useState<string>("");
   const [courseDuration, setCourseduration] = useState<string>("");
-  const [courseFee, setCoursefee] = useState<number | string>(0);
+  const [courseFee, setCoursefee] = useState< string>("");
   const [courseDescription, setCoursedescription] = useState<string>("");
   const [categoryDetails, setCategoryDetails] = useState<Category[]>([]);
   const [selectcategory, setSelectcategory] = useState("");
@@ -87,20 +87,34 @@ function Addcourse() {
     }
   };
 
-  //while pressing form submit button
+  //while pressing form submit button  
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (
-      !courseName.trim() ||
-      !courseDuration.trim() ||
-      !courseFee ||
-      !courseDescription.trim() ||
-      !selectcategory ||
-      !image
-    ) {
-      return toast.error("All fields are required");
+    
+    // Validation checks
+    if (!courseName.trim()) {
+      return toast.error("Please enter a course name");
     }
+    if (!courseDuration.trim()) {
+      return toast.error("Please enter the course duration");
+    }
+    if (!/^\d+(\.\d{1,2})?$/.test(courseFee)) {
+      return toast.error("Please enter a valid course fee (e.g., 100 or 100.50)");
+    }
+    if (!courseDescription.trim()) {
+      return toast.error("Please enter a course description");
+    }
+    if (!selectcategory) {
+      return toast.error("Please select a category");
+    }
+    if (!image) {
+      return toast.error("Please select an image");
+    }
+    
     setLoading(true);
+    
+    // Proceed with submitting the form
     try {
       const imgUrl = await submitImage();
       if (imgUrl) {
@@ -118,7 +132,6 @@ function Addcourse() {
           navigate("/getallcourse");
         }
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.response && error.response.data.error) {
         toast.error(error.response.data.error);
@@ -129,7 +142,8 @@ function Addcourse() {
       setLoading(false);
     }
   };
-
+  
+  
   return (
     <>
       <Tuturnavbar />

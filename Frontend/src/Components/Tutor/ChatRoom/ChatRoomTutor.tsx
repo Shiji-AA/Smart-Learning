@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { axiosInstance,  axiosInstanceTutor } from "../../../api/axiosinstance";
+import { axiosInstance, axiosInstanceTutor } from "../../../api/axiosinstance";
 import { useSelector } from "react-redux";
 import TutorrootState from "../../../Redux/Rootstate/Tutorstate";
 import { useSocket } from "../../../Providers/SocketProvider";
-
+import videocallsymbol from '../../../assets/videocallsymbol.png'
 interface Message {
   _id: string;
   message: string | any[];
@@ -54,8 +54,8 @@ function ChatRoomTutor() {
   useEffect(() => {
     if (!selectedUser) return;
     getLiveMessages();
-    return () => {      
-      socket?.off("GET_MESSAGE")
+    return () => {
+      socket?.off("GET_MESSAGE");
       socket?.emit("LEAVE_CHAT", { tutorId: selectedUser._id });
     };
   }, [selectedUser, socket]);
@@ -80,16 +80,14 @@ function ChatRoomTutor() {
         menuDropdown?.classList.add("hidden");
       }
     });
-
     document.addEventListener("click", handleClickOutside);
-
     // Cleanup event listener on unmount
     return () => {
       document.removeEventListener("click", handleClickOutside);
     };
-  }, []); // Run this effect only once when the component mounts
+  }, []); 
 
-    //for fetching all messages to a particular user from tutor(Tutor to student)
+  //for fetching all messages to a particular user from tutor(Tutor to student)
   const getMessages = () => {
     if (!selectedUser?._id) return;
     axiosInstanceTutor
@@ -105,7 +103,6 @@ function ChatRoomTutor() {
         console.log(error);
       });
   };
-
   useEffect(() => {
     getMessages();
   }, [selectedUser?._id]);
@@ -124,7 +121,7 @@ function ChatRoomTutor() {
   }, []);
 
   const handleUserClick = (user: User) => {
-      setSelectedUser(user);
+    setSelectedUser(user);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -135,7 +132,6 @@ function ChatRoomTutor() {
         userId: selectedUser?._id,
         message: message,
       })
-
       .then((response) => {
         if (response) {
           socket?.emit("SEND_MESSAGE", {
@@ -192,32 +188,38 @@ function ChatRoomTutor() {
             <header className="p-4 border-b border-blue-300 flex justify-between items-center bg-gradient-to-r from-indigo-300 to-cyan-400 text-black">
               <h1 className="text-2xl font-semibold">Chat Room</h1>
             </header>
-
+            {/* =========================================================================================== */}
             {/* Contact List  */}
             <div className="overflow-y-auto h-screen p-3 mb-9 pb-20 bg-blue-50">
-              {allUsers.map((user) => (
-                <div
-                  key={user?._id}
-                  onClick={() => handleUserClick(user)
-                  
-                  }
-                  className="flex items-center mb-4 cursor-pointer hover:bg-gray-100 p-2 rounded-md  border"
-                >
-                  <div className="w-12 h-12 rounded-full mr-3">
-                    <img
-                      src={user?.photo}
-                      alt="User Avatar"
-                      className="w-12 h-12 rounded-full"
-                    />
+              {allUsers.map((user) => {
+                // Find the last message for the current user
+                const lastMessage = messageData.find((message) => message.senderId === user._id);
+                const lastMessageText = lastMessage ? lastMessage.message :null;
+                const lastMessageTime = lastMessage ? getRelativeTime(lastMessage.createdAt) : "";
+
+                return (
+                  <div
+                    key={user?._id}
+                    onClick={() => handleUserClick(user)}
+                    className="flex items-center mb-4 cursor-pointer hover:bg-gray-100 p-3 rounded-md  border"
+                  >
+                    <div className="w-12 h-12 rounded-full mr-3">
+                      <img
+                        src={user?.photo}
+                        alt="User Avatar"
+                        className="w-12 h-12 rounded-full"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <h2 className="text-lg font-semibold">
+                        {user?.studentName}
+                      </h2>
+                      <p className="text-gray-600">{lastMessageText}</p>
+                      <p className="text-sm text-gray-400">{lastMessageTime}</p>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <h2 className="text-lg font-semibold">
-                      {user?.studentName}
-                    </h2>
-                    <p className="text-gray-600">hello </p>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 

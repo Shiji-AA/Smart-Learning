@@ -37,8 +37,8 @@ function Editlesson() {
   const [courseDetails, setCourseDetails] = useState<Course[]>([]);
   const [selectcourse, setSelectcourse] = useState("");
   const [video, setVideo] = useState<File | null>(null);
-  // const [cloudanaryURL, setCloudanaryURL] = useState("");
-  // const [lessonDetails, setLessonDetails] = useState<Lesson[]>([]);
+  const [cloudanaryURL, setCloudanaryURL] = useState("");
+  const [lessonDetails, setLessonDetails] = useState<Lesson[]>([]);
 
   useEffect(() => {
     axiosInstanceTutor
@@ -75,12 +75,12 @@ function Editlesson() {
       .get(`/editlesson/${id}`)
       .then((response) => {
         if (response) {
-          // setLessonDetails(response.data.lessonDetails);
+          setLessonDetails(response.data.lessonDetails);
           setTitle(response.data.lessonDetails?.title);
           setDescription(response.data.lessonDetails?.description);
           setSelectcategory(response.data.lessonDetails?.categoryId);
           setSelectcourse(response.data.lessonDetails?.courseId);
-          //setVideo(response.data.lessonDetails?.video);
+          setVideo(response.data.lessonDetails?.video);
         }
       })
       .catch((error) => {
@@ -248,13 +248,21 @@ function Editlesson() {
                   accept="video/*"
                   onChange={handleSubmitChange}
                 />
-                {video && (
+               
+                {video ? (
                   <video
                     controls
-                    src={URL.createObjectURL(video)}
-                    style={{ width: "100%" }}
+                    src={
+                      typeof video === "string"
+                      ? video
+                      :URL.createObjectURL(video)}
+                    style={{ width: "100%" }} 
+                    className="mt-2 h-16 w-16 object-cover rounded" alt="Course"
                   />
-                )}
+                ):(
+                  <span>No video selected</span>
+                   )}
+
               </div>
 
               <div className="mb-2">
@@ -263,7 +271,7 @@ function Editlesson() {
                   type="submit"
                   disabled={loading}
                 >
-                  {loading ? "Uploading" : "Create Lesson"}
+                  {loading ? "Uploading" : "Edit Lesson"}
                 </button>
               </div>
             </form>

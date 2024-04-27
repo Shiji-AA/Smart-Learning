@@ -8,6 +8,7 @@ function AddCategory() {
   const navigate = useNavigate();
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
+  
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     axiosInstanceAdmin
@@ -17,9 +18,16 @@ function AddCategory() {
           toast.success(response.data.message);
           navigate("/getallcategory");
         }
+      })
+      .catch((error) => {    
+        if (error.response && error.response.data && error.response.data.error) {
+          toast.error(error.response.data.error);
+        } else {        
+          console.error("An error occurred:", error);
+          toast.error("An error occurred while processing your request");
+        }
       });
   };
-
   return (
     <>
       <Adminnavbar />
