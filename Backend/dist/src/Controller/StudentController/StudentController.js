@@ -626,8 +626,13 @@ const fetchChatss = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     var _a;
     //    console.log("message sent",req.params.id)
     try {
+<<<<<<< HEAD
         const { id } = req.params; //TutorId
         console.log(id, "tutorId");
+=======
+        const { id } = req.params; //studentId
+        console.log(id, "id");
+>>>>>>> 021cb3e7de417808a40dc7335f109caede8ba111
         const senderId = (_a = req.user) === null || _a === void 0 ? void 0 : _a._id; //tutorId   
         //console.log(id, senderId,"jjj")
         const chat = yield chatModel_1.default.findOne({

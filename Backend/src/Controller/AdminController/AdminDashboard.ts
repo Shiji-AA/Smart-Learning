@@ -56,6 +56,14 @@ const TotalSales = async (req: Request, res: Response) => {
             revenueMonthlyCounts[revenueCreatedMonth] += revenue.amount;
         });
 
+<<<<<<< HEAD
+=======
+
+        const totals:number = TotalRevenue[0]?.total || 0;
+
+        const adminRevenue=(totals*0.2).toFixed(2);       
+        const tutorRevenue=(totals*0.8).toFixed(2);       
+>>>>>>> 021cb3e7de417808a40dc7335f109caede8ba111
         res.status(200).json({
             totalOrderCount,
             totalUsersCount,

@@ -33,7 +33,6 @@ const adminLogin = async (req: Request, res: Response) => {
 };
 
 
-
 //get All Catagories
 
 const getAllCategory = async (req: Request, res: Response) => {
