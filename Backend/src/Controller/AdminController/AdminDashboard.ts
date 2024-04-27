@@ -28,7 +28,9 @@ const TotalSales = async (req: Request, res: Response) => {
             },
         ]);
 
+
         const totals:number = TotalRevenue[0]?.total || 0;
+
         const adminRevenue=(totals*0.2).toFixed(2);       
         const tutorRevenue=(totals*0.8).toFixed(2);       
         res.status(200).json({
