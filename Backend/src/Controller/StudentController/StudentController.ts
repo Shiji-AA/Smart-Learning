@@ -14,6 +14,7 @@ import categoryModel from "../../model/categoryModel";
 import errorHandler from "../../Constants/errorHandler";
 import quizModel from "../../model/quizModel";
 import chatModel from "../../model/chatModel";
+import ratingModel from "../../model/ratingModel";
 
 
 interface DecodedData {
@@ -390,7 +391,7 @@ const enrolledcourses = async(req:Request,res:Response)=>{
 const enrolledcourseSingleview = async (req: Request, res: Response) => {
   try {
     const courseId = req.params.courseId;
-    console.log(courseId,"courseId")
+    //console.log(courseId,"courseId")
     const singleViewDetails = await courseModel.findOne({ _id:courseId }) 
     //console.log(singleViewDetails,"singleViewDetails")
     if (!singleViewDetails) {
@@ -623,8 +624,8 @@ const quizList= async(req: Request, res: Response)=>{
 const fetchChatss = async (req: Request, res: Response) => {
   //    console.log("message sent",req.params.id)
   try {
-      const { id } = req.params; //studentId
-      console.log(id, "id")
+      const { id } = req.params; //TutorId
+      console.log(id, "tutorId")
       const senderId = (req as any).user?._id; //tutorId   
       //console.log(id, senderId,"jjj")
       const chat = await chatModel.findOne({
@@ -633,7 +634,7 @@ const fetchChatss = async (req: Request, res: Response) => {
       if (!chat) {return res.status(200).json([])};
       //console.log(chat?.messages, "chat")
       const messageData = chat.messages
-      console.log(messageData,"messageData")
+      //console.log(messageData,"messageData")
       res.status(200).json({messageData,message:"ChatMessages"});
   } catch (error) {
       console.error("Error in fetchChats:", error);
@@ -641,6 +642,84 @@ const fetchChatss = async (req: Request, res: Response) => {
   }
 };
 
+
+const courseRating = async (req: Request, res: Response) => {
+  const { courseId, review, rating } = req.body;  
+  try {
+    const studentId = (req as any).user;
+
+    // Check if a rating already exists for the user and the course
+    let existingRating = await ratingModel.findOne({ courseId: courseId, studentId: studentId });
+
+    if (existingRating) {
+      // If a rating exists, update it
+      existingRating.rating = rating;
+      existingRating.review = review;
+      await existingRating.save();
+      res.status(200).json({ message: 'Rating updated successfully', rating: existingRating });
+    } else {
+      // If no rating exists, create a new rating
+      const newRating = new ratingModel({
+        courseId: courseId,
+        studentId: studentId,
+        rating: rating,
+        review: review
+      });
+      const savedRating = await newRating.save();
+      res.status(200).json({ message: 'Rating saved successfully', rating: savedRating });
+    }
+  } catch (error) {
+    console.error('Error saving rating:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+
+const getAllRatings = async (req: Request, res: Response) => { 
+  try {
+    const courseId = req.params.courseId; 
+    const ratingDetails = await ratingModel.find({ courseId: courseId }).populate('studentId');   
+    if (!ratingDetails) {
+      return res.status(404).json({ message: "Rating details not found" });
+    }
+    res.status(200).json({ message: "Rating details", ratingDetails });
+  } catch (error) {
+    return errorHandler(res,error);  
+  }
+}
+
+
+//fOR clients opinion page
+const getAllRatings1 = async (req: Request, res: Response) => {
+  try {
+    const ratingDetails = await ratingModel.find().populate('studentId')
+    console.log(ratingDetails,"ratingDeta445ils") 
+    if (!ratingDetails) {
+      return res.status(404).json({ message: "Rating details not found" });
+    }
+    res.status(200).json({ message: "Rating details", ratingDetails });
+  } catch (error) {
+    return errorHandler(res,error);  
+  }
+}
+
+
+const getMyRating = async (req: Request, res: Response)=>{
+  try{
+    const courseId = req.params.courseId;  
+    const studentId = (req as any).user._id; 
+    const myRating = await ratingModel.find({ courseId: courseId,studentId:studentId });
+  
+    if (!myRating) {
+      return res.status(404).json({ message: "Rating details not found" });
+    }
+    res.status(200).json({ message: "My Rating details", myRating});  
+  }
+  catch(error){
+    return errorHandler(res,error);  
+    }
+
+}
 
 export {
   loginStudent,
@@ -671,4 +750,8 @@ export {
   getAllCategoryStudent,
   quizList,
   fetchChatss,
+  courseRating,
+  getAllRatings,
+  getMyRating,
+  getAllRatings1,
 };

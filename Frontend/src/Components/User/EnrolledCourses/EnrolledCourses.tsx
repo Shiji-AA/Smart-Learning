@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import Navbar from "../../User/Navbar/Navbar";
 import { axiosInstance } from "../../../api/axiosinstance";
 import { Link } from "react-router-dom";
+import { FaStar, FaRegStar } from 'react-icons/fa';
+import Pagination from "../../Pagination/Pagination";
 
 interface EnrolledCourse {
   _id: string;
@@ -19,6 +21,9 @@ function EnrolledCourses() {
   const [enrolledCourses, setEnrolledCourses] = useState<EnrolledCourse[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [wishlistItemCount, setWishlistItemCount] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(8);
+
 
   useEffect(() => {
     axiosInstance
@@ -54,6 +59,15 @@ function EnrolledCourses() {
         .toLowerCase()
         .includes(searchTerm.toLowerCase())
   );
+    // Calculate current items based on pagination
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filteredCourses.slice(indexOfFirstItem, indexOfLastItem);
+  
+    // Change page
+    const handlePageChange = (pageNumber: number) => {
+      setCurrentPage(pageNumber);
+    };
 
   return (
     <>
@@ -74,7 +88,7 @@ function EnrolledCourses() {
             />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {filteredCourses?.map((course) => (
+            {currentItems?.map((course) => (
               <div
                 key={course._id}
                 className="bg-white border border-gray-200 shadow-md rounded-md overflow-hidden cursor-pointer"
@@ -91,6 +105,11 @@ function EnrolledCourses() {
                   <p className="text-gray-700 mb-4">
                     {course?.courseId?.courseDescription}
                   </p>
+                  <div className="flex mt-1 text-yellow-500">
+                        {[...Array(5)].map((_, index) => (
+                          <span key={index}>{index < 4 ? <FaStar /> : <FaRegStar />}</span>
+                        ))}
+                      </div>
                   <div className="flex justify-between items-center">
                     <p className="text-gray-800">
                       Price: ₹{course?.courseId?.courseFee}
@@ -107,7 +126,13 @@ function EnrolledCourses() {
             ))}
           </div>
         </div>
+        
       </div>
+      <Pagination
+            currentPage={currentPage}
+            totalPages={Math.ceil(filteredCourses.length / itemsPerPage)}
+            onPageChange={handlePageChange}
+          />
     </>
   );
 }

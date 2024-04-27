@@ -29,6 +29,10 @@ import {
   getAllCategoryStudent,
   quizList,
   fetchChatss,
+  courseRating,
+  getAllRatings,
+  getMyRating,
+  getAllRatings1,
 } from "../../Controller/StudentController/StudentController";
 
 import { isLogin } from "../../../middleware/studentAuth";
@@ -65,7 +69,12 @@ router.put("/lessoncompleted/:courseId", isLogin,updateLessonCompletedStatus);
 router.get("/filtercourse",filterCourse);
 router.post("/refreshtoken",createRefreshToken);
 router.get('/getallcategory',getAllCategoryStudent)
-router.get('/quizList/:courseId',quizList)
+router.get('/quizList/:courseId',quizList);
+router.post ('/courserating',isLogin,courseRating);
+router.get('/getallratings/:courseId',isLogin,getAllRatings);
+router.get('/getMyRating/:courseId',isLogin,getMyRating);
+router.get('/getallratings1',isLogin,getAllRatings1);//clientsOpinion page
+
 
 
 //for chatImplementation

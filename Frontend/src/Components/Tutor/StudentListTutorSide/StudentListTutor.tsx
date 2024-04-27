@@ -1,7 +1,7 @@
 import Tutornavbar from '../Tutordashboard/Tutornavbar';
 import { useEffect, useState } from "react";
 import { axiosInstanceTutor } from "../../../api/axiosinstance";
-//import Pagination from '../../Pagination/Pagination';
+import Pagination from '../../Pagination/Pagination';
 
 // Interface for course and student details
 interface Course {
@@ -22,6 +22,22 @@ interface Course {
 function StudentListTutor() {
   const [enrolledStudentDetails, setEnrolledStudentDetails] = useState<Course[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [paginatedDisplayData, setPaginatedDisplayData] = useState<Course[]>([]);
+  const itemsPerPage = 5;
+
+  //responsible for updating the current page
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+    //currentPage display
+    useEffect(() => {
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      setPaginatedDisplayData(enrolledStudentDetails.slice(startIndex, endIndex));
+    }, [currentPage, enrolledStudentDetails]);
+
+
 
   useEffect(() => {
     axiosInstanceTutor.get(`/enrolledstudentdetails`)
@@ -45,7 +61,7 @@ function StudentListTutor() {
   return (
     <>
       <Tutornavbar />
-      <div className="container mx-auto p-4">
+      <div className="container mx-auto p-4 bg-gray-100">
         <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-blue-800 mb-8">Student List</h1>
           <input
@@ -71,8 +87,8 @@ function StudentListTutor() {
 </thead>  
             <tbody>
               {filteredStudents.map((course, index) => (
-                <tr key={course._id} className={index % 2 === 0 ? 'bg-gray-200' : ''}>
-                  <td className="border px-4 py-2">{index + 1}</td>
+                <tr key={course._id} className={index % 2 === 0 ? 'bg-gray-300' : ''}>
+                  <td className="border px-4 py-2"> {(currentPage - 1) * itemsPerPage + index + 1}</td>
                    <td className="border px-4 py-2">{course?.studentId?.studentName}</td> 
                   <td className="border px-4 py-2">{course?.courseId?.courseName}</td>
                   <td className="border px-4 py-2">{course?.courseId?.courseDescription}</td>
@@ -87,6 +103,11 @@ function StudentListTutor() {
           </table>
         </div>
       </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={Math.ceil(filteredStudents.length / itemsPerPage)} 
+        onPageChange={handlePageChange}
+      />
       <br/>
     </>
   );

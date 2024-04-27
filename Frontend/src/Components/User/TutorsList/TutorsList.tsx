@@ -1,37 +1,58 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  Typography,
+} from "@material-tailwind/react";
 import { axiosInstance } from "../../../api/axiosinstance";
 import toast from "react-hot-toast";
-import Pagination from "../../Pagination/Pagination";
 import Navbar from "../../../Components/User/Navbar/Navbar";
+import Pagination from "../../Pagination/Pagination";
 
 interface Tutor {
   _id: string;
   tutorName: string;
   tutorEmail: string;
   phone: string;
+  photo:string;
+  experience: string;
+  education: string;
   isBlocked: boolean;
 }
 
-function TutorsList() {
+const TutorList: React.FC = () => {
   const [tutorDetails, setTutordetails] = useState<Tutor[]>([]);
-  const [filteredData, setFilteredData] = useState<Tutor[]>([]); //search
-  const [queryData, setQueryData] = useState(""); //search
-  const [searchError, setSearchError] = useState<boolean>(false); //search
-  const [currentPage, setCurrentPage] = useState<number>(1); //for pagination
-  const [paginatedDisplayData, setPaginatedDisplayData] = useState<Tutor[]>([]); //for pagination
+  const [queryData, setQueryData] = useState(""); // Search query
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage] = useState<number>(5); // Number of items per page
   const [wishlistItemCount,setWishlistItemCount]=useState<number>(0) //for wishlistCount
 
-  const itemsPerPage = 5;
-  //responsible for updating the current page
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    //for wishlist count
+    useEffect(()=>{
+      axiosInstance.get('/getallwishlistitems')
+      .then((response)=>{
+        if(response && response.data){
+          setWishlistItemCount(response.data.wishlistedCourses.length)
+        }
+    
+      })
+      .catch((error)=>{
+        console.error("Error fetching Wishlist count:", error);
+      })
+      },[])
+  // Function to filter tutorDetails based on search query
+  const filteredData = tutorDetails.filter((tutor) =>
+    tutor.tutorName.toLowerCase().includes(queryData.toLowerCase())
+  );
+
+  // Function to handle search query change
+  const handleSearchChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setQueryData(e.target.value);
+    setCurrentPage(1); // Reset to first page when search query changes
   };
-  //currentPage display-Pagination
-  useEffect(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    setPaginatedDisplayData(tutorDetails.slice(startIndex, endIndex));
-  }, [currentPage, tutorDetails]);
 
   useEffect(() => {
     axiosInstance
@@ -47,112 +68,93 @@ function TutorsList() {
       });
   }, []);
 
-  //for wishlist count
-  useEffect(()=>{
-  axiosInstance.get('/getallwishlistitems')
-  .then((response)=>{
-    if(response && response.data){
-      setWishlistItemCount(response.data.wishlistedCourses.length)
-    }
+  // Calculate total number of pages
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
-  })
-  .catch((error)=>{
-    console.error("Error fetching Wishlist count:", error);
-  })
-  },[])
-
-  const handleSearchClick = () => {
-    axiosInstance
-      .get("/searchTutor", {
-        params: {
-          searchCriteria: queryData,
-        },
-      })
-      .then((response) => {
-        if (response.data) {
-          setFilteredData(response.data);
-          setSearchError(response.data.length === 0);
-        }
-      })
-      .catch((error) => {
-        console.error("Error in fetching search results:", error);
-        toast.error("Error in fetching search results");
-      });
-  };
+  // Slice data for pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const paginatedDisplayData = filteredData.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
 
   return (
     <>
       <Navbar wishlistItemCount={wishlistItemCount} />
-      <div className="bg-gradient-to-b from-blue-200 to-white p-4 rounded-lg">
-        <div className="container mx-auto py-1">
-          <div className="px-3 mt-10">
-            {searchError && (
-              <p className="text-red-600 bg-red-100 py-3 px-4 rounded-md font-bold float-right">
-                No results found
-              </p>
-            )}
-            <div className="max-w-3xl mx-auto bg-white rounded-lg overflow-hidden shadow-md">
-              <div className="bg-white p-4 sm:flex sm:justify-between items-center rounded-t-lg">
-                <h3 className="text-2xl font-bold mb-4 sm:mb-0 sm:mr-4">
-                  Tutor Table
-                </h3>
-                <div className="flex items-center justify-center">
-                  <div className="border-4 border-blue-500 rounded-lg bg-white shadow flex">
-                    <input
-                      type="text"
-                      value={queryData}
-                      onChange={(e) => setQueryData(e.target.value)}
-                      placeholder="Search here"
-                      className="w-full rounded-l-none py-2 px-4 border-r-0"
-                    />
-                    <button
-                      onClick={handleSearchClick}
-                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-r-none border-l-0"
-                    >
-                      Search
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div className="overflow-x-auto w-full">
-                <table className="table text-gray-400 border-separate space-y-6 text-sm w-full">
-                  <thead className="bg-blue-500 text-white">
-                    <tr>
-                      <th className="p-3">Sl No</th>
-                      <th className="p-3 text-left">Name</th>
-                      <th className="p-3 text-left">Email</th>
-                      <th className="p-3 text-left">Phone</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(paginatedDisplayData && filteredData?.length > 0
-                      ? filteredData
-                      : tutorDetails
-                    ).map((tutor, index) => (
-                      <tr key={tutor._id} className="bg-blue-100 lg:text-black">
-                        <td className="p-3 font-medium capitalize">
-                          {index + 1}
-                        </td>
-                        <td className="p-3"> {tutor?.tutorName}</td>
-                        <td className="p-3"> {tutor?.tutorEmail}</td>
-                        <td className="p-3 uppercase"> {tutor?.phone}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+      <div className="mt-2 bg-gray-100">
+        <h1 className="font-bold text-2xl ml-8">Our Expert Tutors</h1>
+        {/* Search input */}
+        <input
+          type="text"
+          placeholder="Search tutor..."
+          value={queryData}
+          onChange={handleSearchChange}
+          className="my-4 px-4 py-2 ml-8 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+        />
+        <div className="p-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          {/* Display paginated tutor cards */}
+          {paginatedDisplayData.map((tutor) => (
+            <div key={tutor._id}>
+              <Card className="w-full border" placeholder={undefined}>
+                <CardHeader
+                  floated={false}
+                  className="h-48"
+                  placeholder={undefined}
+                >
+                  <img
+                    src={tutor?.photo}
+                    alt="profile-picture"
+                    className="object-cover-full"
+                  />
+                </CardHeader>
+                <CardBody className="text-center" placeholder={undefined}>
+                  <Typography
+                    variant="h4"
+                    color="blue-gray"
+                    className="mb-2"
+                    placeholder={undefined}
+                  >
+                    {tutor?.tutorName}
+                  </Typography>
+                  <Typography
+                    color="blue-gray"
+                    className="font-medium"
+                    textGradient
+                    placeholder={undefined}
+                  >
+                    {tutor?.tutorEmail}
+                  </Typography>
+                  <Typography
+                    color="blue-gray"
+                    className="font-medium"
+                    textGradient
+                    placeholder={undefined}
+                  >
+                    {tutor?.experience}
+                  </Typography>
+                  <Typography
+                    color="blue-gray"
+                    className="font-medium"
+                    textGradient
+                    placeholder={undefined}
+                  >
+                    {tutor?.education}
+                  </Typography>
+                </CardBody>
+              </Card>
             </div>
-          </div>
-          <br />
-          <Pagination
-            currentPage={currentPage}
-            totalPages={Math.ceil(tutorDetails.length / itemsPerPage)}
-            onPageChange={handlePageChange}
-          />
+          ))}
         </div>
       </div>
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        setCurrentPage={setCurrentPage}
+      />
     </>
   );
-}
+};
 
-export default TutorsList;
+export default TutorList;

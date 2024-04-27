@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { axiosInstanceAdmin } from "../../../api/axiosinstance";
 import toast from "react-hot-toast";
 import Adminnavbar from "../../../Components/Admin/Adminnavbar/Adminnavbar";
+import Pagination from '../../Pagination/Pagination';
+import Swal from 'sweetalert2';
 
 interface Category {
   _id: string;
@@ -14,6 +16,19 @@ interface Category {
 
 const CategoryList = () => {
   const [categoryDetails, setCategoryDetails] = useState<Category[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [paginatedDisplayData, setPaginatedDisplayData] = useState<Category[]>([]);
+  const itemsPerPage = 5;
+  //responsible for updating the current page
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+//currentPage display
+useEffect(() => {
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  setPaginatedDisplayData(categoryDetails.slice(startIndex, endIndex));
+}, [currentPage, categoryDetails]);
 
   useEffect(() => {
     axiosInstanceAdmin
@@ -31,19 +46,31 @@ const CategoryList = () => {
   }, []);
 
   const handleDelete = (id: string) => {
-    axiosInstanceAdmin
-      .delete(`/deletecategory/${id}`)
-      .then(() => {
-        setCategoryDetails(
-          categoryDetails.filter((category) => category._id !== id)
-        );
-        toast.success("Category deleted successfully");
-      })
-      .catch((error) => {
-        console.error("Error deleting category", error);
-        toast.error("Error in deleting category");
-      });
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this category!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete:any) => {
+      if (willDelete) {
+        axiosInstanceAdmin
+          .delete(`/deletecategory/${id}`)
+          .then(() => {
+            setCategoryDetails(
+              categoryDetails.filter((category) => category._id !== id)
+            );
+            toast.success("Category deleted successfully");
+          })
+          .catch((error) => {
+            console.error("Error deleting category", error);
+            toast.error("Error in deleting category");
+          });
+      }
+    });
   };
+
 
   return (
     <>
@@ -68,14 +95,16 @@ const CategoryList = () => {
               <table className="table text-gray-400 border-separate space-y-6 text-sm w-full">
                 <thead className="bg-blue-500 text-white">
                   <tr>
-                    <th className="p-3">Sl No</th>
+                 
+                    <th className="p-3" >Sl No</th>
                     <th className="p-3 text-left">Category</th>
                     <th className="p-3 text-left">Description</th>
                     <th className="p-3 text-left">Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {categoryDetails.map((category, index) => (
+                  {paginatedDisplayData.map((category, index) => (
+                    
                     <tr
                       key={category._id}
                       className="bg-blue-100 lg:text-black"
@@ -107,7 +136,12 @@ const CategoryList = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div>       
+        <Pagination
+        currentPage={currentPage}
+        totalPages={Math.ceil(categoryDetails.length / itemsPerPage)} 
+        onPageChange={handlePageChange}
+      />
     </>
   );
 };

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../../api/axiosinstance";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
+import { FaStar, FaRegStar } from 'react-icons/fa';
 
 interface Course {
   _id: string;
@@ -99,6 +100,11 @@ function BuyNow1() {
           <h4 className="my-4 pl-4 font-bold text-gray-700">
             Subscribe to Smart Learning's top courses
           </h4>
+          <div className="flex mt-1 text-yellow-500">
+                        {[...Array(5)].map((_, index) => (
+                          <span key={index}>{index < 4 ? <FaStar /> : <FaRegStar />}</span>
+                        ))}
+                      </div>
           <h5 className="mb-4 ml-4 text-xl font-semibold text-gray-800">
             ₹ {courseDetails?.courseFee}
           </h5>

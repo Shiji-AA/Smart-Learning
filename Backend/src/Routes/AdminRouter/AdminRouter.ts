@@ -5,6 +5,7 @@ import {
   adminLogin,
   getAdminCourseList,
   getCategoryById,
+  marknotificationasread,
   toggleCourseStatus,
 } from "../../Controller/AdminController/AdminController";
 import { getAllCategory } from "../../Controller/AdminController/AdminController";
@@ -48,7 +49,8 @@ adminRouter.post("/unliststudent/:id", isLogin, unlistStudent);
 adminRouter.post("/reliststudent/:id", isLogin, relistStudent);
 //Dashboard
 adminRouter.get('/totalcount',TotalSales);
-adminRouter.get('/getnotifications',getNotification)
+adminRouter.get('/getnotifications',getNotification);
+adminRouter.put('/marknotificationasread/:notificationId',marknotificationasread)
 
 
 export default adminRouter;
