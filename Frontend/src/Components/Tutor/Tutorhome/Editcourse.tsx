@@ -14,17 +14,17 @@ interface Category {
   updatedAt: string;
 }
 
-interface Course {
-  _id: string;
-  courseName: string;
-  courseDescription: string;
-  courseDuration: string;
-  courseFee: number;
-  photo: string;
-  createdAt: string;
-  updatedAt: string;
-  category: string; // Add category field to Course interface
-}
+// interface Course {
+//   _id: string;
+//   courseName: string;
+//   courseDescription: string;
+//   courseDuration: string;
+//   courseFee: number | number;
+//   photo: string;
+//   createdAt: string;
+//   updatedAt: string;
+//   category: string; // Add category field to Course interface
+// }
 
 function Editcourse() {
   const { id } = useParams();
@@ -34,10 +34,10 @@ function Editcourse() {
   const [loading, setLoading] = useState(false);
   const [courseName, setCourseName] = useState("");
   const [courseDuration, setCourseDuration] = useState("");
-  const [courseFee, setCourseFee] = useState<number>(0);
+  const [courseFee, setCourseFee] = useState<number | string>("");
   const [courseDescription, setCoursedescription] = useState("");
   const [image, setImage] = useState<File | null>(null);
-  const [courseDetails, setCourseDetails] = useState<Course[]>([]);
+  //const [courseDetails, setCourseDetails] = useState<Course[]>([]);
  
 
   useEffect(() => {
@@ -62,7 +62,7 @@ function Editcourse() {
         if (response.data && response.data.courseDetails) {
          // console.log(response.data.courseDetails, "responseee");
           const courseDetails = response.data.courseDetails;
-          setCourseDetails(courseDetails);
+          //setCourseDetails(courseDetails);
           setCourseName(courseDetails.courseName);
           setCourseDuration(courseDetails.courseDuration);
           setCourseFee(courseDetails.courseFee);
@@ -146,9 +146,7 @@ if (!courseDuration.trim()) {
 // Validation for course fee
 if (!courseFee) {
   return toast.error( "Course fee is required");
-} else if (isNaN(courseFee)) {
-  return toast.error("Course fee must be a number");
-}
+} 
 
 // Validation for course description
 if (!courseDescription.trim()) {

@@ -50,8 +50,8 @@ useEffect(() => {
       title: "Are you sure?",
       text: "Once deleted, you will not be able to recover this category!",
       icon: "warning",
-      buttons: true,
-      dangerMode: true,
+      // buttons: true,
+      // dangerMode: true,
     })
     .then((willDelete:any) => {
       if (willDelete) {

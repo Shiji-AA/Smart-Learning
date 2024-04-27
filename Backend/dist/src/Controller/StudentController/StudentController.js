@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchChatss = exports.quizList = exports.getAllCategoryStudent = exports.createRefreshToken = exports.filterCourse = exports.updateLessonCompletedStatus = exports.getUsersForSidebar = exports.removeWishlistItem = exports.getWishlistItem = exports.addWishlistItem = exports.searchTutorStudent = exports.tutorsList = exports.searchCourse = exports.getAllLessons = exports.enrolledcourseSingleview = exports.enrolledcourses = exports.getCourseDetails = exports.userCourseList = exports.updateProfile = exports.getProfileById = exports.resetPassword = exports.verifyOTP = exports.sendOTP = exports.googleLogin = exports.googleRegister = exports.getStudentProfile = exports.registerStudent = exports.loginStudent = void 0;
+exports.getAllRatings1 = exports.getMyRating = exports.getAllRatings = exports.courseRating = exports.fetchChatss = exports.quizList = exports.getAllCategoryStudent = exports.createRefreshToken = exports.filterCourse = exports.updateLessonCompletedStatus = exports.getUsersForSidebar = exports.removeWishlistItem = exports.getWishlistItem = exports.addWishlistItem = exports.searchTutorStudent = exports.tutorsList = exports.searchCourse = exports.getAllLessons = exports.enrolledcourseSingleview = exports.enrolledcourses = exports.getCourseDetails = exports.userCourseList = exports.updateProfile = exports.getProfileById = exports.resetPassword = exports.verifyOTP = exports.sendOTP = exports.googleLogin = exports.googleRegister = exports.getStudentProfile = exports.registerStudent = exports.loginStudent = void 0;
 const userModel_1 = __importDefault(require("../../model/userModel"));
 const courseModel_1 = __importDefault(require("../../model/courseModel"));
 const generateToken_1 = __importDefault(require("../../../Utils/generateToken"));
@@ -27,6 +27,7 @@ const categoryModel_1 = __importDefault(require("../../model/categoryModel"));
 const errorHandler_1 = __importDefault(require("../../Constants/errorHandler"));
 const quizModel_1 = __importDefault(require("../../model/quizModel"));
 const chatModel_1 = __importDefault(require("../../model/chatModel"));
+const ratingModel_1 = __importDefault(require("../../model/ratingModel"));
 const globalData = {
     user: null,
 };
@@ -384,7 +385,7 @@ exports.enrolledcourses = enrolledcourses;
 const enrolledcourseSingleview = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const courseId = req.params.courseId;
-        console.log(courseId, "courseId");
+        //console.log(courseId,"courseId")
         const singleViewDetails = yield courseModel_1.default.findOne({ _id: courseId });
         //console.log(singleViewDetails,"singleViewDetails")
         if (!singleViewDetails) {
@@ -626,13 +627,8 @@ const fetchChatss = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     var _a;
     //    console.log("message sent",req.params.id)
     try {
-<<<<<<< HEAD
         const { id } = req.params; //TutorId
         console.log(id, "tutorId");
-=======
-        const { id } = req.params; //studentId
-        console.log(id, "id");
->>>>>>> 021cb3e7de417808a40dc7335f109caede8ba111
         const senderId = (_a = req.user) === null || _a === void 0 ? void 0 : _a._id; //tutorId   
         //console.log(id, senderId,"jjj")
         const chat = yield chatModel_1.default.findOne({
@@ -644,7 +640,7 @@ const fetchChatss = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         ;
         //console.log(chat?.messages, "chat")
         const messageData = chat.messages;
-        console.log(messageData, "messageData");
+        //console.log(messageData,"messageData")
         res.status(200).json({ messageData, message: "ChatMessages" });
     }
     catch (error) {
@@ -653,3 +649,78 @@ const fetchChatss = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.fetchChatss = fetchChatss;
+const courseRating = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { courseId, review, rating } = req.body;
+    try {
+        const studentId = req.user;
+        // Check if a rating already exists for the user and the course
+        let existingRating = yield ratingModel_1.default.findOne({ courseId: courseId, studentId: studentId });
+        if (existingRating) {
+            // If a rating exists, update it
+            existingRating.rating = rating;
+            existingRating.review = review;
+            yield existingRating.save();
+            res.status(200).json({ message: 'Rating updated successfully', rating: existingRating });
+        }
+        else {
+            // If no rating exists, create a new rating
+            const newRating = new ratingModel_1.default({
+                courseId: courseId,
+                studentId: studentId,
+                rating: rating,
+                review: review
+            });
+            const savedRating = yield newRating.save();
+            res.status(200).json({ message: 'Rating saved successfully', rating: savedRating });
+        }
+    }
+    catch (error) {
+        console.error('Error saving rating:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+exports.courseRating = courseRating;
+const getAllRatings = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const courseId = req.params.courseId;
+        const ratingDetails = yield ratingModel_1.default.find({ courseId: courseId }).populate('studentId');
+        if (!ratingDetails) {
+            return res.status(404).json({ message: "Rating details not found" });
+        }
+        res.status(200).json({ message: "Rating details", ratingDetails });
+    }
+    catch (error) {
+        return (0, errorHandler_1.default)(res, error);
+    }
+});
+exports.getAllRatings = getAllRatings;
+//fOR clients opinion page
+const getAllRatings1 = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const ratingDetails = yield ratingModel_1.default.find().populate('studentId');
+        console.log(ratingDetails, "ratingDeta445ils");
+        if (!ratingDetails) {
+            return res.status(404).json({ message: "Rating details not found" });
+        }
+        res.status(200).json({ message: "Rating details", ratingDetails });
+    }
+    catch (error) {
+        return (0, errorHandler_1.default)(res, error);
+    }
+});
+exports.getAllRatings1 = getAllRatings1;
+const getMyRating = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const courseId = req.params.courseId;
+        const studentId = req.user._id;
+        const myRating = yield ratingModel_1.default.find({ courseId: courseId, studentId: studentId });
+        if (!myRating) {
+            return res.status(404).json({ message: "Rating details not found" });
+        }
+        res.status(200).json({ message: "My Rating details", myRating });
+    }
+    catch (error) {
+        return (0, errorHandler_1.default)(res, error);
+    }
+});
+exports.getMyRating = getMyRating;

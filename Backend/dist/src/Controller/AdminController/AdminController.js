@@ -12,12 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.toggleCourseStatus = exports.getAdminCourseList = exports.deleteCategory = exports.editCategory = exports.getCategoryById = exports.getAllCategory = exports.adminLogin = void 0;
+exports.marknotificationasread = exports.toggleCourseStatus = exports.getAdminCourseList = exports.deleteCategory = exports.editCategory = exports.getCategoryById = exports.getAllCategory = exports.adminLogin = void 0;
 const errorHandler_1 = __importDefault(require("../../Constants/errorHandler"));
 const generateToken_1 = __importDefault(require("../../../Utils/generateToken"));
 const categoryModel_1 = __importDefault(require("../../model/categoryModel"));
 const courseModel_1 = __importDefault(require("../../model/courseModel"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const notificationModel_1 = __importDefault(require("../../model/notificationModel"));
 const adminLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const adminEmail = "admin@gmail.com";
@@ -163,3 +164,20 @@ const toggleCourseStatus = (req, res) => __awaiter(void 0, void 0, void 0, funct
     }
 });
 exports.toggleCourseStatus = toggleCourseStatus;
+const marknotificationasread = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const notificationId = req.params.notificationId;
+        if (!notificationId) {
+            return res.status(404).send({ message: "NOTificationID Not found" });
+        }
+        const updatedNotification = yield notificationModel_1.default.findByIdAndUpdate(notificationId, { isRead: true }, { new: true });
+        if (!updatedNotification) {
+            return res.status(404).send({ message: "Notification is not found" });
+        }
+        res.status(200).send({ message: "Notification marked as read", notification: updatedNotification });
+    }
+    catch (error) {
+        return (0, errorHandler_1.default)(res, error);
+    }
+});
+exports.marknotificationasread = marknotificationasread;

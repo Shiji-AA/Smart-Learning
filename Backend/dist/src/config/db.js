@@ -16,11 +16,7 @@ exports.connectDB = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-
-
-
- const mongo_uri = 'mongodb+srv://shiji123:shiji123@smartlearning.xrns1og.mongodb.net/?retryWrites=true&w=majority&appName=SmartLearning';
-
+// const mongo_uri = 'mongodb+srv://shiji123:shiji123@smartlearning.xrns1og.mongodb.net/?retryWrites=true&w=majority&appName=SmartLearning';
 function connectDB() {
     return __awaiter(this, void 0, void 0, function* () {
         try {

@@ -13,10 +13,10 @@ function EditProfile() {
   const [studentName, setstudentName] = useState<string>("");
   const [studentEmail, setstudentEmail] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
-  const [studentDetails, setStudentDetails] = useState<any>(null);
+ // const [studentDetails, setStudentDetails] = useState<any>(null);
   const [wishlistItemCount, setWishlistItemCount] = useState<number>(0);
   const [image, setImage] = useState<File | null>(null);
-  const [cloudanaryURL, setCloudanaryURL] = useState("");
+  //const [cloudanaryURL, setCloudanaryURL] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ function EditProfile() {
       .get(`/editProfile`)
       .then((response) => {
         if (response.data) {
-          setStudentDetails(response.data?.studentDetails);
+          //setStudentDetails(response.data?.studentDetails);
           setstudentName(response.data?.studentDetails?.studentName);
           setstudentEmail(response.data?.studentDetails?.studentEmail);
           setPhone(response.data?.studentDetails?.phone);
@@ -107,13 +107,13 @@ function EditProfile() {
           photo: imgUrl,
         });
         if (response.data.message) {
-          setStudentDetails(response.data.studentDetails);
+         // setStudentDetails(response.data.studentDetails);
           toast.success(response.data.studentDetails);
           dispatch(updateProfile(response.data.userData)); //updating store
           navigate("/userprofile");
         }
       }
-    } catch (error) {
+    } catch (error:any) {
       if (error.response && error.response.data.error) {
         toast.error(error.response.data.error);
       } else {

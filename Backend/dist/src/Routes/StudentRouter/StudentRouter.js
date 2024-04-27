@@ -40,6 +40,10 @@ router.get("/filtercourse", StudentController_1.filterCourse);
 router.post("/refreshtoken", StudentController_1.createRefreshToken);
 router.get('/getallcategory', StudentController_1.getAllCategoryStudent);
 router.get('/quizList/:courseId', StudentController_1.quizList);
+router.post('/courserating', studentAuth_1.isLogin, StudentController_1.courseRating);
+router.get('/getallratings/:courseId', studentAuth_1.isLogin, StudentController_1.getAllRatings);
+router.get('/getMyRating/:courseId', studentAuth_1.isLogin, StudentController_1.getMyRating);
+router.get('/getallratings1', studentAuth_1.isLogin, StudentController_1.getAllRatings1); //clientsOpinion page
 //for chatImplementation
 router.get("/getuserforsidebar", StudentController_1.getUsersForSidebar);
 router.post('/accesschat/:userId', studentAuth_1.isLogin, ChatController_1.accessChat);

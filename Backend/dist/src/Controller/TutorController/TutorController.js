@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllQuestions = exports.removeQuiz = exports.activateQuiz = exports.addQuiz = exports.createRefreshToken = exports.enrolledStudentData = exports.tutorAllLessons = exports.updateLesson = exports.editLesson = exports.updateCourse = exports.editCourse = exports.updateProfile = exports.getProfileById = exports.singleView = exports.addLesson = exports.getAllCourse = exports.addCourse = exports.getTutorProfile = exports.registerTutor = exports.tutorLogin = void 0;
+exports.filterCourseTutor = exports.fetchChats = exports.getAllQuestions = exports.removeQuiz = exports.activateQuiz = exports.addQuiz = exports.createRefreshToken = exports.enrolledStudentData = exports.tutorAllLessons = exports.updateLesson = exports.editLesson = exports.updateCourse = exports.editCourse = exports.updateProfile = exports.getProfileById = exports.singleView = exports.addLesson = exports.getAllCourse = exports.addCourse = exports.getTutorProfile = exports.registerTutor = exports.tutorLogin = void 0;
 const tutorModel_1 = __importDefault(require("../../model/tutorModel"));
 const generateToken_1 = __importDefault(require("../../../Utils/generateToken"));
 const courseModel_1 = __importDefault(require("../../model/courseModel"));
@@ -24,6 +24,7 @@ const notificationModel_1 = __importDefault(require("../../model/notificationMod
 const mongoose_1 = __importDefault(require("mongoose"));
 const errorHandler_1 = __importDefault(require("../../Constants/errorHandler"));
 const quizModel_1 = __importDefault(require("../../model/quizModel"));
+const chatModel_1 = __importDefault(require("../../model/chatModel"));
 const registerTutor = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { tutorName, tutorEmail, password, education, experience, onlineavailability, phone } = req.body;
@@ -523,3 +524,53 @@ const getAllQuestions = (req, res) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.getAllQuestions = getAllQuestions;
+//fetch all chats to a particular Tutor
+const fetchChats = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const { id } = req.params; //studentId
+        // console.log(id, "StudentId")
+        const senderId = (_a = req.user) === null || _a === void 0 ? void 0 : _a._id; //tutorId   
+        //console.log(id, senderId,"jjj")
+        const chat = yield chatModel_1.default.findOne({
+            participants: { $all: [senderId, id] },
+        }).populate("messages");
+        if (!chat) {
+            return res.status(200).json([]);
+        }
+        ;
+        //console.log(chat?.messages, "chat")
+        const messageData = chat.messages;
+        //console.log(messageData,"messageData")
+        res.status(200).json({ messageData, message: "ChatMessages" });
+    }
+    catch (error) {
+        console.error("Error in fetchChats:", error);
+        res.status(500).json({ error, message: "Error while fetching messages" });
+    }
+});
+exports.fetchChats = fetchChats;
+//FILTER COURSE
+const filterCourseTutor = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let filteredCourses;
+        if (req.query && req.query.category !== "All") {
+            const category = yield categoryModel_1.default.findOne({ title: req.query.category });
+            if (!category) {
+                filteredCourses = [];
+            }
+            else {
+                filteredCourses = yield courseModel_1.default.find({ category: category._id }).populate("category");
+            }
+        }
+        else {
+            filteredCourses = yield courseModel_1.default.find().populate("category");
+        }
+        //console.log(filteredCourses, "Filtered courses");
+        res.status(200).json({ filteredCourses, message: "Filtered courses" });
+    }
+    catch (error) {
+        return (0, errorHandler_1.default)(res, error);
+    }
+});
+exports.filterCourseTutor = filterCourseTutor;

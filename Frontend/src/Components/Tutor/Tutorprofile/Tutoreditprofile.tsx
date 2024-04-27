@@ -16,9 +16,9 @@ function Tutoreditprofile() {
   const [experience, setExperience] = useState("");
   const [onlineavailability, setOnlineavailability] = useState("");
   const [phone, setPhone] = useState("");
-  const [tutorDetails,setTutorDetails] = useState(null);
+  //const [tutorDetails,setTutorDetails] = useState(null);
   const [image, setImage] = useState<File | null>(null);
-  const [cloudanaryURL, setCloudanaryURL] = useState("");
+  //const [cloudanaryURL, setCloudanaryURL] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -27,7 +27,7 @@ function Tutoreditprofile() {
       .then((response) => {
         if (response.data) {
           const tutorDetails = response.data?.tutorDetails;
-          setTutorDetails(tutorDetails);
+          //setTutorDetails(tutorDetails);
           setTutorName(tutorDetails?.tutorName);
           setTutorEmail(tutorDetails?.tutorEmail);
           setEducation(tutorDetails?.education);
@@ -71,7 +71,7 @@ function Tutoreditprofile() {
         data
       );
       if (response.data && response.data.url) {
-        setCloudanaryURL(response.data.url);
+        //setCloudanaryURL(response.data.url);
         return response.data.url;
       } else {
         throw new Error("Invalid response from Cloudinary");

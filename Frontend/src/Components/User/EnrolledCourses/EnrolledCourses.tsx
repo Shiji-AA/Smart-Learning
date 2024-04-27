@@ -22,9 +22,9 @@ function EnrolledCourses() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [wishlistItemCount, setWishlistItemCount] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemsPerPage, setItemsPerPage] = useState<number>(8);
+  //const [itemsPerPage, setItemsPerPage] = useState<number>(8);
 
-
+const itemsPerPage = 8;
   useEffect(() => {
     axiosInstance
       .get(`/enrolledcourses`)

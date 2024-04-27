@@ -20,7 +20,7 @@ function Admincourselist() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [paginatedDisplayData, setPaginatedDisplayData] = useState<Course[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
-
+  console.log(paginatedDisplayData);
   const itemsPerPage = 5;
 
   //responsible for updating the current page

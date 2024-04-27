@@ -25,6 +25,7 @@ function StudentListTutor() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [paginatedDisplayData, setPaginatedDisplayData] = useState<Course[]>([]);
   const itemsPerPage = 5;
+  console.log(paginatedDisplayData)
 
   //responsible for updating the current page
   const handlePageChange = (page: number) => {

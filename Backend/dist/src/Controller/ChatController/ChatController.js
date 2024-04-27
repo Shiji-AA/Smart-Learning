@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchChats = exports.accessChat = void 0;
+exports.accessChat = void 0;
 const chatModel_1 = __importDefault(require("../../model/chatModel"));
 const messageModel_1 = __importDefault(require("../../model/messageModel"));
 //for creating message
@@ -53,29 +53,3 @@ const accessChat = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.accessChat = accessChat;
-//fetch all chats to a particular Tutor
-const fetchChats = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    try {
-        const { id } = req.params; //studentId
-        // console.log(id, "StudentId")
-        const senderId = (_a = req.user) === null || _a === void 0 ? void 0 : _a._id; //tutorId   
-        //console.log(id, senderId,"jjj")
-        const chat = yield chatModel_1.default.findOne({
-            participants: { $all: [senderId, id] },
-        }).populate("messages");
-        if (!chat) {
-            return res.status(200).json([]);
-        }
-        ;
-        //console.log(chat?.messages, "chat")
-        const messageData = chat.messages;
-        console.log(messageData, "messageData");
-        res.status(200).json({ messageData, message: "ChatMessages" });
-    }
-    catch (error) {
-        console.error("Error in fetchChats:", error);
-        res.status(500).json({ error, message: "Error while fetching messages" });
-    }
-});
-exports.fetchChats = fetchChats;

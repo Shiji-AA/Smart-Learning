@@ -29,14 +29,10 @@ import {
   getAllCategoryStudent,
   quizList,
   fetchChatss,
-<<<<<<< HEAD
   courseRating,
   getAllRatings,
   getMyRating,
   getAllRatings1,
-=======
-
->>>>>>> 021cb3e7de417808a40dc7335f109caede8ba111
 } from "../../Controller/StudentController/StudentController";
 
 import { isLogin } from "../../../middleware/studentAuth";

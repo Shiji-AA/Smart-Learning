@@ -149,10 +149,10 @@ const TutorList: React.FC = () => {
       </div>
 
       <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        setCurrentPage={setCurrentPage}
-      />
+  currentPage={currentPage}
+  totalPages={totalPages}
+  onPageChange={setCurrentPage} 
+/>
     </>
   );
 };

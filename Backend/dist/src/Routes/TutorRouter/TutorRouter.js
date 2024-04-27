@@ -34,4 +34,6 @@ tutorRouter.put("/activatequiz/:id", TutorController_1.activateQuiz);
 tutorRouter.put("/removequiz/:id", TutorController_1.removeQuiz);
 tutorRouter.get("/getallquestions", TutorController_1.getAllQuestions);
 tutorRouter.post('/accesschat/:userId', studentAuth_1.isLogin, ChatController_1.accessChat);
+tutorRouter.get('/fetchchats/:id', studentAuth_1.isLogin, TutorController_1.fetchChats);
+tutorRouter.get("/filtercoursetutor", TutorController_1.filterCourseTutor);
 exports.default = tutorRouter;

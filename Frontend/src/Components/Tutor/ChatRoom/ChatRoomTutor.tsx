@@ -3,7 +3,7 @@ import { axiosInstance, axiosInstanceTutor } from "../../../api/axiosinstance";
 import { useSelector } from "react-redux";
 import TutorrootState from "../../../Redux/Rootstate/Tutorstate";
 import { useSocket } from "../../../Providers/SocketProvider";
-import videocallsymbol from '../../../assets/videocallsymbol.png'
+
 interface Message {
   _id: string;
   message: string | any[];

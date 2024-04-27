@@ -23,10 +23,14 @@ const errorHandler_1 = __importDefault(require("../../Constants/errorHandler"));
 const TotalSales = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear();
+        // Total counts
         const totalOrderCount = yield orderModel_1.default.countDocuments({ status: "success" });
         const totalUsersCount = yield userModel_1.default.countDocuments({});
         const totalTutorCount = yield tutorModel_1.default.countDocuments({});
         const totalCourseCount = yield courseModel_1.default.countDocuments({});
+        // Total Revenue calculation
         const TotalRevenue = yield orderModel_1.default.aggregate([
             {
                 $match: {
@@ -43,6 +47,23 @@ const TotalSales = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         const totals = ((_a = TotalRevenue[0]) === null || _a === void 0 ? void 0 : _a.total) || 0;
         const adminRevenue = (totals * 0.2).toFixed(2);
         const tutorRevenue = (totals * 0.8).toFixed(2);
+        // Monthly counts for orders and revenues
+        const orderMonthlyCounts = new Array(12).fill(0);
+        const revenueMonthlyCounts = new Array(12).fill(0);
+        // Retrieve all orders for the current year
+        const orders = yield orderModel_1.default.find({ createdAt: { $gte: new Date(currentYear, 0, 1) } });
+        orders.forEach((order) => {
+            const orderCreatedDate = new Date(order.createdAt);
+            const orderCreatedMonth = orderCreatedDate.getMonth();
+            orderMonthlyCounts[orderCreatedMonth]++;
+        });
+        // Retrieve all revenues for the current year
+        const revenues = yield orderModel_1.default.find({ status: "success", createdAt: { $gte: new Date(currentYear, 0, 1) } });
+        revenues.forEach((revenue) => {
+            const revenueCreatedDate = new Date(revenue.createdAt);
+            const revenueCreatedMonth = revenueCreatedDate.getMonth();
+            revenueMonthlyCounts[revenueCreatedMonth] += revenue.amount;
+        });
         res.status(200).json({
             totalOrderCount,
             totalUsersCount,
@@ -51,6 +72,8 @@ const TotalSales = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             totals,
             adminRevenue,
             tutorRevenue,
+            orderMonthlyCounts,
+            revenueMonthlyCounts
         });
     }
     catch (error) {

@@ -8,5 +8,4 @@ const studentAuth_1 = require("./../../../middleware/studentAuth");
 const express_1 = __importDefault(require("express"));
 const chatRouter = express_1.default.Router();
 chatRouter.post('/accesschat/:userId', studentAuth_1.isLogin, ChatController_1.accessChat);
-chatRouter.get('/fetchchats/:id', studentAuth_1.isLogin, ChatController_1.fetchChats);
 exports.default = chatRouter;

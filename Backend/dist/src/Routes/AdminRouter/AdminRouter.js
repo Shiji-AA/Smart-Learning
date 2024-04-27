@@ -35,4 +35,5 @@ adminRouter.post("/reliststudent/:id", studentAuth_1.isLogin, Adminstudentcontro
 //Dashboard
 adminRouter.get('/totalcount', AdminDashboard_1.TotalSales);
 adminRouter.get('/getnotifications', AdminDashboard_1.getNotification);
+adminRouter.put('/marknotificationasread/:notificationId', AdminController_1.marknotificationasread);
 exports.default = adminRouter;

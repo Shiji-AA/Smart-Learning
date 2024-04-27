@@ -37,8 +37,8 @@ function Editlesson() {
   const [courseDetails, setCourseDetails] = useState<Course[]>([]);
   const [selectcourse, setSelectcourse] = useState("");
   const [video, setVideo] = useState<File | null>(null);
-  const [cloudanaryURL, setCloudanaryURL] = useState("");
-  const [lessonDetails, setLessonDetails] = useState<Lesson[]>([]);
+  //const [cloudanaryURL, setCloudanaryURL] = useState("");
+  //const [lessonDetails, setLessonDetails] = useState<Lesson[]>([]);
 
   useEffect(() => {
     axiosInstanceTutor
@@ -75,7 +75,7 @@ function Editlesson() {
       .get(`/editlesson/${id}`)
       .then((response) => {
         if (response) {
-          setLessonDetails(response.data.lessonDetails);
+         // setLessonDetails(response.data.lessonDetails);
           setTitle(response.data.lessonDetails?.title);
           setDescription(response.data.lessonDetails?.description);
           setSelectcategory(response.data.lessonDetails?.categoryId);
@@ -257,7 +257,7 @@ function Editlesson() {
                       ? video
                       :URL.createObjectURL(video)}
                     style={{ width: "100%" }} 
-                    className="mt-2 h-16 w-16 object-cover rounded" alt="Course"
+                    className="mt-2 h-16 w-16 object-cover rounded" 
                   />
                 ):(
                   <span>No video selected</span>
