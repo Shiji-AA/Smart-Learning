@@ -25,6 +25,7 @@ import {
 import { getAllCategory } from "../../Controller/AdminController/AdminController";
 import { isLogin } from "../../../middleware/studentAuth";
 import { createRefreshToken } from "../../Controller/TutorController/TutorController";
+import { accessChat, fetchChats } from "../../Controller/ChatController/ChatController";
 
 tutorRouter.post("/tutorLogin", tutorLogin);
 tutorRouter.post("/tutorregister", registerTutor);
@@ -53,6 +54,6 @@ tutorRouter.post("/addquiz",addQuiz);
 tutorRouter.put("/activatequiz/:id", activateQuiz);
 tutorRouter.put("/removequiz/:id", removeQuiz);
 tutorRouter.get("/getallquestions",getAllQuestions);
-
-
+tutorRouter.post('/accesschat/:userId',isLogin, accessChat);
+tutorRouter.get('/fetchchats/:id', isLogin ,fetchChats);
 export default tutorRouter;

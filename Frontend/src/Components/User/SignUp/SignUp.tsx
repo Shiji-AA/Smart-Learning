@@ -13,7 +13,7 @@ export default function Example() {
   const [password, setPassword] = useState<string>("");
   const [confirmpassword, setConfirmpassword] = useState<string>("");
 
-  const client_id = import.meta.env.VITE_CLIENT_ID || "";
+  // const client_id = import.meta.env.VITE_CLIENT_ID || "";
 
   const navigate = useNavigate();
 
@@ -63,7 +63,7 @@ export default function Example() {
 
   return (
     <>
-      <GoogleOAuthProvider clientId={client_id}>
+      <GoogleOAuthProvider clientId='637652104947-bvpng7ti4gvs5io0hbe4k3b1ui077pjc.apps.googleusercontent.com'>
         <div
           className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-blue-100"
           style={{

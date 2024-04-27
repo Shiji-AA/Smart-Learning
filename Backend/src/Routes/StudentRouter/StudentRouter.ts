@@ -29,7 +29,7 @@ import {
   getAllCategoryStudent,
   quizList,
   fetchChatss,
-  
+
 } from "../../Controller/StudentController/StudentController";
 
 import { isLogin } from "../../../middleware/studentAuth";

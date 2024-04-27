@@ -25,8 +25,10 @@ function StudentListTutor() {
 
   useEffect(() => {
     axiosInstanceTutor.get(`/enrolledstudentdetails`)
+   
       .then((response) => {
-        if (response.data && response.data.enrolledStudentDetails) {
+        if (response.status==200) {
+          console.log(response.data,"student")
           setEnrolledStudentDetails(response.data.enrolledStudentDetails);
         }
       })
@@ -71,7 +73,7 @@ function StudentListTutor() {
               {filteredStudents.map((course, index) => (
                 <tr key={course._id} className={index % 2 === 0 ? 'bg-gray-200' : ''}>
                   <td className="border px-4 py-2">{index + 1}</td>
-                  <td className="border px-4 py-2">{course?.studentId?.studentName}</td>
+                   <td className="border px-4 py-2">{course?.studentId?.studentName}</td> 
                   <td className="border px-4 py-2">{course?.courseId?.courseName}</td>
                   <td className="border px-4 py-2">{course?.courseId?.courseDescription}</td>
                   <td className="border px-4 py-2">{course?.courseId?.courseFee}</td>

@@ -5,6 +5,7 @@ dotenv.config();
 
 // const mongo_uri = 'mongodb+srv://shiji123:shiji123@smartlearning.xrns1og.mongodb.net/?retryWrites=true&w=majority&appName=SmartLearning';
 
+
 export async function connectDB() {
     try {
         await mongoose.connect('mongodb+srv://shiji123:shiji123@smartlearning.xrns1og.mongodb.net/?retryWrites=true&w=majority');
@@ -16,3 +17,4 @@ export async function connectDB() {
         console.error(error);
     }
 }
+
