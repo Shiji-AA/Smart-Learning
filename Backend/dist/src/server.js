@@ -67,7 +67,7 @@ app.use('/api/tutor', TutorRouter_1.default);
 app.use('/api/payment', PaymentRouter_1.default);
 app.use('/api/chat', ChatRouter_1.default);
 app.get("*", function (req, res) {
-    res.sendFile((0, path_1.join)(__dirname, "../../Frontend/dist/index.html")); //
+    res.sendFile((0, path_1.join)(__dirname, "../../../Frontend/dist/index.html")); //
 });
 app.get('/', (req, res) => res.send("Hello Server is running"));
 httpServer.listen(port, () => console.log(`Server started at ${port}`));

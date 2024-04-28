@@ -45,7 +45,7 @@ app.use('/api/payment', paymentRouter);
 app.use('/api/chat',chatRouter);
 
 app.get("*", function (req, res) {
-	res.sendFile(join(__dirname, "../../Frontend/dist/index.html"));//
+	res.sendFile(join(__dirname, "../../../Frontend/dist/index.html"));//
 })
 
 app.get('/', (req, res) => res.send("Hello Server is running"));
