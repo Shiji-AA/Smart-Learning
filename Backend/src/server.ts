@@ -36,7 +36,7 @@ import chatRouter from "./Routes/ChatRouter/ChatRouter";
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 
 
-app.use(express.static(join(__dirname, "../../Frontend/dist")))//this is a static file
+app.use(express.static(join(__dirname, "../../../Frontend/dist")))//this is a static file
 
 app.use('/api/student', studentRouter);
 app.use('/api/admin', adminRouter);
@@ -45,7 +45,7 @@ app.use('/api/payment', paymentRouter);
 app.use('/api/chat',chatRouter);
 
 app.get("*", function (req, res) {
-	res.sendFile(join(__dirname, "../../Frontend/dist/index.html"));//
+	res.sendFile(join(__dirname, "../../../Frontend/dist/index.html"));//
 })
 
 app.get('/', (req, res) => res.send("Hello Server is running"));
