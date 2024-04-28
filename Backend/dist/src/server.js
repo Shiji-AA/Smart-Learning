@@ -60,7 +60,7 @@ const PaymentRouter_1 = __importDefault(require("./Routes/PaymentRouter/PaymentR
 const ChatRouter_1 = __importDefault(require("./Routes/ChatRouter/ChatRouter"));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
-app.use(express_1.default.static((0, path_1.join)(__dirname, "../../Frontend/dist"))); //this is a static file
+app.use(express_1.default.static((0, path_1.join)(__dirname, "../../../Frontend/dist"))); //this is a static file
 app.use('/api/student', StudentRouter_1.default);
 app.use('/api/admin', AdminRouter_1.default);
 app.use('/api/tutor', TutorRouter_1.default);
