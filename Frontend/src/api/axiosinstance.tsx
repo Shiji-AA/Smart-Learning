@@ -3,7 +3,7 @@ import toast from 'react-hot-toast'
 
 
 export const axiosInstanceChat = axios.create({
-    baseURL:'http://localhost:3000/api/chat'
+    baseURL:`${import.meta.env.VITE_PUBLIC_API_URL}/api/chat`
 })
 //axiosInterceptor for Chat
 axiosInstanceChat.interceptors.request.use((config) => {
@@ -30,11 +30,11 @@ axiosInstanceChat.interceptors.response.use(
 
 
 export const axiosInstancePayment = axios.create({
-    baseURL:'http://localhost:3000/api/payment'
+    baseURL:`${import.meta.env.VITE_PUBLIC_API_URL}/api/payment`
 })
 ///////////////////////////////////////////////////////
 export const axiosInstance = axios.create({
-    baseURL:'http://localhost:3000/api/student'
+    baseURL:`${import.meta.env.VITE_PUBLIC_API_URL}/api/student`
 })
 
 //axiosInterceptor for student
@@ -78,7 +78,7 @@ axiosInstance.interceptors.response.use(
 ///////////////////////////////////////////////////////
 
 export const axiosInstanceTutor = axios.create({
-    baseURL:'http://localhost:3000/api/tutor'
+    baseURL:`${import.meta.env.VITE_PUBLIC_API_URL}/api/tutor`
 })
 
 //axiosInterceptor for Tutor
@@ -121,7 +121,7 @@ axiosInstanceTutor.interceptors.response.use(
 
 ///////////////////////////////////////////////////////
 export const axiosInstanceAdmin = axios.create({
-    baseURL:'http://localhost:3000/api/admin'
+    baseURL:`${import.meta.env.VITE_PUBLIC_API_URL}/api/admin`
 })
 
 //axiosInterceptor for Admin

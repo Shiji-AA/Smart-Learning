@@ -49,7 +49,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
       return;
     }   
 
-    const newSocket = io("http://localhost:3000", {
+    const newSocket = io(import.meta.env.VITE_PUBLIC_API_URL, {
       query: { role },
       withCredentials: true,
       auth: {
