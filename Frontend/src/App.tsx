@@ -58,6 +58,7 @@ import Pagenotfound from "./Components/Common/Pagenotfound";
 import Certificate from "./Components/User/ProgressBar/Certificate";
 import StudentQuizForm from "./Components/User/QuizUserSide/StudentQuizForm";
 import VideoCallMentorsDetails from "./Components/User/VideoCallMentorsDetails/VideoCallMentorsDetails";
+import Usercourseslist1 from "./Components/User/CourseDetail/Usercourselist1";
 
 
 
@@ -68,7 +69,8 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/coursedetailforhome/:id" element ={<BuyNow11/>} />
-          <Route path="/tutorslist" element={<TutorsList/>}/>
+        <Route path="/usercourselist1" element={<Usercourseslist1 />} />
+        <Route path="/tutorslist" element={<TutorsList/>}/>
         {/* userSide */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<SignUp />} />

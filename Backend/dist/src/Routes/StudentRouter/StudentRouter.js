@@ -22,6 +22,7 @@ router.get("/userprofile", studentAuth_1.isLogin, StudentController_1.getStudent
 router.get("/editprofile", studentAuth_1.isLogin, StudentController_1.getProfileById);
 router.put("/updateprofile", studentAuth_1.isLogin, StudentController_1.updateProfile);
 router.get("/usercourselist", studentAuth_1.isLogin, StudentController_1.userCourseList);
+router.get("/usercourselist1", StudentController_1.userCourseList);
 //StudentCoursePurchase
 router.get("/coursedetail/:id", studentAuth_1.isLogin, StudentController_1.getCourseDetails);
 router.get("/checkout/:id", studentAuth_1.isLogin, StudentController_1.getCourseDetails);

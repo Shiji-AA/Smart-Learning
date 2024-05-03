@@ -52,6 +52,7 @@ router.get("/userprofile", isLogin, getStudentProfile);
 router.get("/editprofile", isLogin, getProfileById);
 router.put("/updateprofile", isLogin, updateProfile);
 router.get("/usercourselist", isLogin, userCourseList);
+router.get("/usercourselist1",userCourseList);
 //StudentCoursePurchase
 router.get("/coursedetail/:id", isLogin, getCourseDetails);
 router.get("/checkout/:id", isLogin, getCourseDetails);
@@ -74,10 +75,7 @@ router.post ('/courserating',isLogin,courseRating);
 router.get('/getallratings/:courseId',isLogin,getAllRatings);
 router.get('/getMyRating/:courseId',isLogin,getMyRating);
 router.get('/getallratings1',isLogin,getAllRatings1);//clientsOpinion page
-
 router.get("/coursedetailforhome/:id", getCourseDetails);
-
-
 
 
 //for chatImplementation
