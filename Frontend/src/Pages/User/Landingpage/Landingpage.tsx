@@ -2,13 +2,14 @@ import {useEffect,useState} from 'react'
 import { axiosInstance } from "../../../api/axiosinstance";
 import {Suspense,lazy} from "react";
 import LoadingSpinner from '../../../Components/Common/LoadingSpinner';
+import Hero1 from '../../../Components/User/Card/Hero1';
 
 const Homemain= lazy(()=>import("../../../Components/User/Homemain/Homemain")) ;
 const TutorBanner = lazy(()=>import("../../../Components/User/Banner/TutorBanner"));
 const Carousal= lazy(()=>import("../../../Components/User/Card/Carousel"));
 const Testimonials= lazy(()=>import("../../../Components/User/Card/Testimonial"));
 const Navbar = lazy(()=>import("../../../Components/User/Navbar/Navbar"));
-const HeroSection= lazy(()=>import("../../../Components/User/Card/HeroSection"));
+//const HeroSection= lazy(()=>import("../../../Components/User/Card/HeroSection"));
 const Hello = lazy(()=>import("../../../Components/User/Card/Hello"));
 const TutorFooter= lazy(()=>import("../../../Components/Tutor/Tutordashboard/Tutorfooter"));
 const Statistics = lazy(()=>import("../../../Components/Tutor/Tutordashboard/Statistics"));
@@ -34,7 +35,7 @@ if(response && response.data){
     <>
     <Suspense fallback ={<LoadingSpinner/>}>
     <Navbar wishlistItemCount={wishlistItemCount}/>
-        <HeroSection />
+        <Hero1 />
         <Statistics />       
         <Homemain />        
         <br />

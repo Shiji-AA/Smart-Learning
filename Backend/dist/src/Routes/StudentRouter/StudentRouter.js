@@ -30,7 +30,7 @@ router.get("/enrolledcourseSingleview/:courseId", StudentController_1.enrolledco
 router.get("/postenrollmentcourseview/:courseId", StudentController_1.enrolledcourseSingleview);
 router.get("/getalllessons/:courseId", studentAuth_1.isLogin, StudentController_1.getAllLessons); //enrolled
 router.get("/searchcourse", StudentController_1.searchCourse);
-router.get("/tutorslist", studentAuth_1.isLogin, StudentController_1.tutorsList);
+router.get("/tutorslist", StudentController_1.tutorsList);
 router.get("/searchTutor", StudentController_1.searchTutorStudent);
 router.post("/addWishlistItem/:id", StudentController_1.addWishlistItem);
 router.get("/getallwishlistitems", StudentController_1.getWishlistItem);
@@ -44,6 +44,7 @@ router.post('/courserating', studentAuth_1.isLogin, StudentController_1.courseRa
 router.get('/getallratings/:courseId', studentAuth_1.isLogin, StudentController_1.getAllRatings);
 router.get('/getMyRating/:courseId', studentAuth_1.isLogin, StudentController_1.getMyRating);
 router.get('/getallratings1', studentAuth_1.isLogin, StudentController_1.getAllRatings1); //clientsOpinion page
+router.get("/coursedetailforhome/:id", StudentController_1.getCourseDetails);
 //for chatImplementation
 router.get("/getuserforsidebar", StudentController_1.getUsersForSidebar);
 router.post('/accesschat/:userId', studentAuth_1.isLogin, ChatController_1.accessChat);

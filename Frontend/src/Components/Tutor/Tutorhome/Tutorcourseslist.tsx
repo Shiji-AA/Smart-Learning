@@ -158,7 +158,7 @@ function Tutorcourseslist() {
                 </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {paginatedDisplayData.map((course) => (
+            {paginatedDisplayData.reverse().map((course) => (
               <div
                 key={course._id}
                 className="bg-white border border-gray-200 shadow-sm rounded-md overflow-hidden"

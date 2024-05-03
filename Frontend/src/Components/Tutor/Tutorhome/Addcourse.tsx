@@ -52,6 +52,16 @@ function Addcourse() {
       const files = inputElement.files;
       if (files && files.length > 0) {
         const file = files[0];
+        const fileExtension = file.name.split(".").pop();
+        if (!fileExtension) {
+          window.alert("Invalid file name. Please ensure the file has an extension.");
+          return;
+        }
+        const allowedFileTypes = ["png", "jpg", "jpeg"];
+        if (!allowedFileTypes.includes(fileExtension.toLowerCase())) {
+          window.alert(`File does not support. Files type must be ${allowedFileTypes.join(", ")}`);
+          return;
+        }
         setImage(file);
       } else {
         setImage(null);

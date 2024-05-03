@@ -103,12 +103,16 @@ function Navbar({ wishlistItemCount }: NavbarProps) {
             >
               Home
             </a>
-            <a
-              href="/userprofile"
-              className="block md:inline-block text-white hover:text-blue-500 px-3 py-3 border-b-2 border-white-900 md:border-none"
-            >
-              Profile
-            </a>
+            {studentUser?(
+               <a
+               href="/userprofile"
+               className="block md:inline-block text-white hover:text-blue-500 px-3 py-3 border-b-2 border-white-900 md:border-none"
+             >
+               Profile
+             </a>
+
+            ):(null)}
+           
             <a
               href="/tutorslist"
               className="block md:inline-block text-white hover:text-blue-500 px-3 py-3 border-b-2 border-white-900 md:border-none"
@@ -122,13 +126,16 @@ function Navbar({ wishlistItemCount }: NavbarProps) {
               {" "}
               My Courses
             </a>
-            <a
-              href="/enrolledcourses"
-              className="block md:inline-block text-white hover:text-blue-500 px-3 py-3 border-b-2 border-white-900 md:border-none"
-            >
-              {" "}
-              Enrolled
-            </a>
+            {
+              studentUser?( <a
+                href="/enrolledcourses"
+                className="block md:inline-block text-white hover:text-blue-500 px-3 py-3 border-b-2 border-white-900 md:border-none"
+              >
+                {" "}
+                Enrolled
+              </a>):null
+            }
+           
           </div>
 
           {/* searchBar */}

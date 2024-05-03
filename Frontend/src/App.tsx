@@ -19,6 +19,7 @@ import EnrolledCourses from "./Components/User/EnrolledCourses/EnrolledCourses";
 import EnrolledSingleView from "./Components/User/EnrolledCourses/EnrolledSingleView";
 import Wishlist from "./Components/User/WishList/Wishlist";
 import Chat from "./Pages/User/ChatRoomStudent/ChatRoomStudent";
+import BuyNow11 from "./Components/User/CourseDetail/BuyNow11";
 
 //tutor side
 import Tutorlogin from "./Components/Tutor/Login/Tutorlogin";
@@ -59,12 +60,15 @@ import StudentQuizForm from "./Components/User/QuizUserSide/StudentQuizForm";
 import VideoCallMentorsDetails from "./Components/User/VideoCallMentorsDetails/VideoCallMentorsDetails";
 
 
+
 function App() {
   return (
     <Router>
       <Toaster position="top-right" />
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/coursedetailforhome/:id" element ={<BuyNow11/>} />
+          <Route path="/tutorslist" element={<TutorsList/>}/>
         {/* userSide */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<SignUp />} />
@@ -88,7 +92,7 @@ function App() {
           <Route path="/enrolledcourseSingleview/:courseId" element={<EnrolledSingleView/>}/>
           <Route path="/getalllessons/:courseId" element={<EnrolledSingleView/>}/>
           <Route path="/postenrollmentcourseview/:orderId" element={<EnrolledSingleView/>}/>
-          <Route path="/tutorslist" element={<TutorsList/>}/>
+        
           <Route path="/wishlist" element={<Wishlist/>}/>
           <Route path="/chat/:id" element={<Chat/>}/>
           <Route path="/downloadcertificate/:courseId" element={<Certificate/>}/>

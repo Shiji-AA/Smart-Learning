@@ -2,15 +2,18 @@ import{Suspense,lazy} from 'react';
 import {useEffect,useState} from 'react'
 import { axiosInstance } from "../../../api/axiosinstance";
 import LoadingSpinner from '../../../Components/Common/LoadingSpinner';
+import Usercourseslist1 from '../../../Components/User/CourseDetail/Usercourselist1';
+import Hero1 from '../../../Components/User/Card/Hero1';
+
 
 const Navbar =lazy(()=>import("../../../Components/User/Navbar/Navbar"));
-const Homemain=lazy(()=>import("../../../Components/User/Homemain/Homemain"));
+//const Homemain=lazy(()=>import("../../../Components/User/Homemain/Homemain"));
 const TutorBanner=lazy(()=>import("../../../Components/User/Banner/TutorBanner"));
 const Hello=lazy(()=>import("../../../Components/User/Card/Hello"));
 const Carousal=lazy(()=>import("../../../Components/User/Card/Carousel"));
 const Testimonials=lazy(()=>import("../../../Components/User/Card/Testimonial"));
 const Tutorfooter=lazy(()=>import("../../../Components/Tutor/Tutordashboard/Tutorfooter"));
-const HeroSection=lazy(()=>import("../../../Components/User/Card/HeroSection"));
+//const HeroSection=lazy(()=>import("../../../Components/User/Card/HeroSection"));
 const Statistics=lazy(()=>import( "../../../Components/Tutor/Tutordashboard/Statistics"));
 const FAQ =lazy(()=>import("../../../Components/Tutor/FAQ/FAQ"));
 
@@ -36,9 +39,12 @@ function Home() {
     <>
     <Suspense fallback={<LoadingSpinner/>}>
     { <Navbar wishlistItemCount={wishlistItemCount} /> }
-      <HeroSection />
+    <Hero1/>
+      {/* <HeroSection /> */}
       <Statistics />
-      <Homemain />
+      {/* <Homemain /> */}
+      <Carousal heading="Recommended Courses For You" />
+      <Usercourseslist1/>
       <br />
       <br />
       <Hello />
@@ -47,16 +53,16 @@ function Home() {
       <hr />
       <br />
 
-      <Carousal heading="Popular Courses" />
+      {/* <Carousal heading="Popular Courses" />
+      <br /> */}
+      <br />
+   
       <br />
       <br />
-      <Carousal heading="Recommended Courses For You" />
-      <br />
-      <br />
-      <Carousal heading="Learners are viewing" />
-      <br />
-      <br />
-      <Carousal heading="Short and Sweet Courses for you" />
+      {/* <Carousal heading="Learners are viewing" />
+      <br /> */}
+      {/* <br />
+      <Carousal heading="Short and Sweet Courses for you" /> */}
       <hr />
       <Testimonials />
       <br />

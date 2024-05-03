@@ -10,8 +10,8 @@ function Room() {
             return;
         }
 
-        const appID = 1090072839;
-        const serverSecret = "dbe3987e0cfdb1a85e7f2080a888dff2";
+        const appID = 1461761191;
+        const serverSecret = "97b3d19bcdafe3d637404a5b96b653a9";
         const kitToken = await ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomId, Date.now().toString(), "Shijiaa");
 
         const zc = ZegoUIKitPrebuilt.create(kitToken);

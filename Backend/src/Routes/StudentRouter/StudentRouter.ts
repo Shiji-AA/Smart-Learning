@@ -60,7 +60,7 @@ router.get("/enrolledcourseSingleview/:courseId", enrolledcourseSingleview);
 router.get("/postenrollmentcourseview/:courseId", enrolledcourseSingleview);
 router.get("/getalllessons/:courseId", isLogin, getAllLessons); //enrolled
 router.get("/searchcourse", searchCourse);
-router.get("/tutorslist", isLogin, tutorsList);
+router.get("/tutorslist",tutorsList);
 router.get("/searchTutor", searchTutorStudent);
 router.post("/addWishlistItem/:id", addWishlistItem);
 router.get("/getallwishlistitems",getWishlistItem);
@@ -74,6 +74,9 @@ router.post ('/courserating',isLogin,courseRating);
 router.get('/getallratings/:courseId',isLogin,getAllRatings);
 router.get('/getMyRating/:courseId',isLogin,getMyRating);
 router.get('/getallratings1',isLogin,getAllRatings1);//clientsOpinion page
+
+router.get("/coursedetailforhome/:id", getCourseDetails);
+
 
 
 
