@@ -193,9 +193,9 @@ function ChatRoomTutor() {
             <div className="overflow-y-auto h-screen p-3 mb-9 pb-20 bg-blue-50">
               {allUsers.map((user) => {
                 // Find the last message for the current user
-                const lastMessage = messageData.find((message) => message.senderId === user._id);
-                const lastMessageText = lastMessage ? lastMessage.message :null;
-                const lastMessageTime = lastMessage ? getRelativeTime(lastMessage.createdAt) : "";
+                // const lastMessage = messageData.find((message) => message.senderId === user._id);
+                // const lastMessageText = lastMessage ? lastMessage.message :null;
+                // const lastMessageTime = lastMessage ? getRelativeTime(lastMessage.createdAt) : "";
 
                 return (
                   <div
@@ -214,8 +214,8 @@ function ChatRoomTutor() {
                       <h2 className="text-lg font-semibold">
                         {user?.studentName}
                       </h2>
-                      <p className="text-gray-600">{lastMessageText}</p>
-                      <p className="text-sm text-gray-400">{lastMessageTime}</p>
+                      {/* <p className="text-gray-600">{lastMessageText}</p>
+                      <p className="text-sm text-gray-400">{lastMessageTime}</p> */}
                     </div>
                   </div>
                 );
