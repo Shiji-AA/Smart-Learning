@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { axiosInstance } from "../../../api/axiosinstance";
 import Navbar from "../../User/Navbar/Navbar";
-import chatIcon from "../../../assets/chatIcon.png";
-import videocall from "../../../assets/videocall.png";
+//import chatIcon from "../../../assets/chatIcon.png";
+//import videocall from "../../../assets/videocall.png";
 //import { FaStar, FaRegStar } from "react-icons/fa";
 //import { StarIcon } from "@heroicons/react/24/solid";
 //import { Rating } from "@material-tailwind/react";
@@ -228,39 +228,46 @@ function EnrolledSingleView() {
       <Navbar wishlistItemCount={wishlistItemCount} />
 
       <div className="flex justify-center bg-gray-100 py-6 ">
-        <div className="max-w-4xl flex justify-between mx-4 rounded-lg overflow-hidden shadow-xl">
-          <div className=" w-1/2 bg-white shadow-md rounded p-8">
-            <h1 className="text-3xl font-bold mb-4 text-blue-800">
-              Course Details
-            </h1>
-            <h2 className="text-2xl font-bold mb-4">
-              {singleViewDetails?.courseName}
-            </h2>
-            <div className="mb-4">
-              <p className="font-bold">Description:</p>
-              <p>{singleViewDetails?.courseDescription}</p>
-            </div>
-            <div className="mb-4">
-              <p className="font-bold">Duration:</p>
-              <p>{singleViewDetails?.courseDuration}</p>
-            </div>
-            <div className="mb-4">
-              <p className="font-bold">Fee:</p>
-              <p>₹{singleViewDetails?.courseFee}</p>
-            </div>
-            <div>
-              {singleViewDetails?.photo &&
-                singleViewDetails?.photo.length > 0 && (
-                  <img
-                    src={singleViewDetails?.photo[0]}
-                    alt="Course"
-                    className="w-full rounded-lg shadow-lg"
-                  />
-                )}
-            </div>
-          </div>
+        <div className="">
 
-          <div className="w-1/2 bg-white shadow-md rounded p-8">
+
+        <div className="bg-white shadow-md rounded p-8 flex flex-wrap items-center">
+  <div className="w-full md:w-auto md:mr-60 mb-4 md:mb-0">
+    <h1 className="text-3xl font-bold mb-4 text-blue-800">
+      Course Details
+    </h1>
+    <h2 className="text-2xl font-bold mb-4">
+      {singleViewDetails?.courseName}
+    </h2>
+    <div className="mb-4">
+      <p className="font-bold">Description:</p>
+      <p>{singleViewDetails?.courseDescription}</p>
+    </div>
+    <div className="mb-4">
+      <p className="font-bold">Duration:</p>
+      <p>{singleViewDetails?.courseDuration}</p>
+    </div>
+    <div className="mb-4">
+      <p className="font-bold">Fee:</p>
+      <p>₹{singleViewDetails?.courseFee}</p>
+    </div>
+  </div>
+  <div className="w-full md:w-auto text-center">
+    {singleViewDetails?.photo &&
+      singleViewDetails?.photo.length > 0 && (
+        <img
+          src={singleViewDetails?.photo[0]}
+          alt="Course"
+          className="w-full md:w-64 rounded-lg shadow-lg"
+        />
+      )}
+  </div>
+</div>
+
+
+
+
+          <div className="bg-white shadow-md rounded p-8">
             <div className="bg-white p-4 sm:flex sm:justify-between items-center rounded-t-lg">
               <h3 className="text-2xl font-bold mb-4 sm:mb-0 sm:mr-4 text-indigo-800">
                 Your Lesson Here!!
@@ -369,7 +376,7 @@ function EnrolledSingleView() {
 
               {/* Progressbar */}
 
-              <div className="absolute bottom-0 right-0 mb-1 mr-6 flex flex-col">
+              {/* <div className="absolute bottom-0 right-0 mb-1 mr-6 flex flex-col">
                 <Link to={`/videocalluser/${courseId}`} className="mb-20 block">
                   <h2 className="text-xl font-bold mb-4 sm:mb-0 sm:mr-4 text-indigo-800">
                     Video Call
@@ -388,15 +395,35 @@ function EnrolledSingleView() {
                     style={{ width: 90, height: 90 }}
                   />
                 </Link>
-              </div>
+              </div> */}
+
+
             </div>
           </div>
         </div>
       </div>
 
+{/* ================================================= */}
+
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <hr/>
+
+        <br/>
+        <hr/>
+
+
       <div>
         <Abc courseId={courseId} />
         <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <hr/>
 
         {/* RATING */}
 
@@ -434,6 +461,10 @@ function EnrolledSingleView() {
         {/* )} */}
 
         {/* RATING END*/}
+        <br/>
+        <br/>
+        <br/>
+        <hr/>
 
         {/* REVIEW  */}
         <div className="border-t sm:m-10 p-4">

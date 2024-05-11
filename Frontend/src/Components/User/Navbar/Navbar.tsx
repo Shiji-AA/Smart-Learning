@@ -9,22 +9,22 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import heart from "../../../assets/heart.png";
 
-// interface Course {
-//   _id: string;
-//   courseName: string;
-//   courseDuration: string;
-//   courseDescription: string;
-//   courseFee: number;
-//   isApproved: boolean;
-//   photo: string[];
-//   category: string;
-//   tutor: string;
-//   students: string[];
-//   lessons: string[];
-//   createdAt: string;
-//   updatedAt: string;
-//   __v: number;
-// }
+interface Course {
+  _id: string;
+  courseName: string;
+  courseDuration: string;
+  courseDescription: string;
+  courseFee: number;
+  isApproved: boolean;
+  photo: string[];
+  category: string;
+  tutor: string;
+  students: string[];
+  lessons: string[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
 interface NavbarProps {
   wishlistItemCount: number;
 }
@@ -32,8 +32,10 @@ interface NavbarProps {
 function Navbar({ wishlistItemCount }: NavbarProps) {
   const navigate = useNavigate();
   const [queryData, setQueryData] = useState("");
-  // const [searchError, setSearchError] = useState<boolean>(false);
-  // const [searchedCourse, setSearchedCourse] = useState<Course | null>(null);
+const [searchError, setSearchError] = useState<boolean>(false);
+  const [searchedCourse] = useState<Course | null>(null);
+  console.log(searchError)
+  console.log(searchedCourse)
 
   const handleSearchClick = () => {
     axiosInstance
@@ -45,16 +47,16 @@ function Navbar({ wishlistItemCount }: NavbarProps) {
       .then((response) => {
         if (response.data && response.data.length > 0) {
           const searchedCourse = response.data[0];
-          // setSearchError(false);
+           setSearchError(false);
           navigate("/usercourselist", { state: { searchedCourse } }); // Redirect to usercourselist and pass searchedCourse as state
         } else {
-          // setSearchError(true);
+          setSearchError(true);
           toast.error("No matching course found");
         }
       })
       .catch((error: any) => {
         console.error("Error in fetching search results:", error);
-        // setSearchError(true);
+        setSearchError(true);
       });
   };
 

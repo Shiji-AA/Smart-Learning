@@ -503,7 +503,7 @@ const addWishlistItem = async (req:Request, res:Response) => {
 const getWishlistItem = async(req:Request, res:Response)=>{
 try{
   const wishlistedCourses = await WishlistModel.find().populate('course')
-  //console.log(wishlistedCourses,"wishlistedCourses")
+  console.log(wishlistedCourses,"wishlistedCourses")
   res.status(200).json({ wishlistedCourses,message:"wishlistedCourses" });
 } catch (error) {
   return errorHandler(res,error); 

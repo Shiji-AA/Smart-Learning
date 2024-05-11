@@ -501,7 +501,7 @@ exports.addWishlistItem = addWishlistItem;
 const getWishlistItem = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const wishlistedCourses = yield wishlistModel_2.default.find().populate('course');
-        //console.log(wishlistedCourses,"wishlistedCourses")
+        console.log(wishlistedCourses, "wishlistedCourses");
         res.status(200).json({ wishlistedCourses, message: "wishlistedCourses" });
     }
     catch (error) {

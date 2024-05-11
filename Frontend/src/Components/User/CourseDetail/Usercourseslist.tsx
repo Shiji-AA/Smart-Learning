@@ -144,16 +144,26 @@ function Usercourseslist() {
       return course.courseFee >= 61000 && course.courseFee <= 90000;
     }
     return false;
-    // Add more conditions for other price ranges if needed
+   
   };
 
-  // Calculate the index of the first and last items to be displayed on the current page
+ 
   const lastIndex = currentPage * itemsPerPage;
   const firstIndex = lastIndex - itemsPerPage;
 
-  // Get the current page items after applying price range filter
-  const currentItems = filteredCourseDetails.filter(filterByPriceRange).slice(firstIndex, lastIndex);
 
+  const currentItems = filteredCourseDetails.filter(filterByPriceRange).slice(firstIndex, lastIndex);
+  
+  const sortedItems = currentItems.slice().sort((a, b) => {
+    if (sortOrder === 'ascending') {
+      return a.courseFee - b.courseFee;
+    } else {
+      return b.courseFee - a.courseFee;
+    }
+  });
+  
+
+  
   return (
     <>
       <Navbar wishlistItemCount={wishlistItemCount} />
@@ -257,7 +267,7 @@ function Usercourseslist() {
         <div className="min-h-screen">
           <h2 className="text-3xl font-bold mb-4">What to learn next</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4" style={{ maxWidth: '1400px', margin: '0 auto' }}>
-            {currentItems.map((course) => (
+            {sortedItems.map((course) => (
               <div key={course._id} className="bg-white border border-gray-200 shadow-sm rounded-md overflow-hidden">
                 <Link to={`/coursedetail/${course?._id}`}>
                   <img className="w-full h-48 object-cover" src={course?.photo} alt="Course Thumbnail" />

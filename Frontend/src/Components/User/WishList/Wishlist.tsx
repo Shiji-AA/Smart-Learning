@@ -41,7 +41,8 @@ function Wishlist() {
   }, []);
 
   const filteredCourses = wishlistedCourses.filter((course: Wishlist) =>
-    course?.course.courseName.toLowerCase().includes(searchTerm.toLowerCase())
+    course?.course?.courseName.toLowerCase().includes(searchTerm.toLowerCase())
+  
   );
   //deletion from wishlist
   const handleDelete = (id: string) => {

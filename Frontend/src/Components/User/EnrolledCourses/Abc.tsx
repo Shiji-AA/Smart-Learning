@@ -22,7 +22,7 @@ function Abc({ courseId }: AbcProps) {
         <div className="flex flex-wrap justify-center gap-8 mt-8">
           {/* CHAT */}
           <div className="bg-slate-800 text-white rounded-m w-full md:w-[calc(40%-2rem)] lg:w-[calc(46%-2rem)] space-y-4 p-10 bg-blue-400">
-            {/* <Link to={`/chat/${courseId}`}> */}
+            <Link to={`/chat/${courseId}`}>
               <div className="flex space-x-4 items-center">
                 <div className="w-12 h-12">
                   <img
@@ -47,7 +47,7 @@ function Abc({ courseId }: AbcProps) {
                   solution.
                 </p>
               </div>
-            {/* </Link> */}
+            </Link>
           </div>
 
           {/* VIDEO CALL */}

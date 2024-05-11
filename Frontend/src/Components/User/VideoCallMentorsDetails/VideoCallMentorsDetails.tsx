@@ -3,8 +3,10 @@ import { ZegoUIKitPrebuilt } from "@zegocloud/zego-uikit-prebuilt";
 import { axiosInstance } from "../../../api/axiosinstance";
 import AuthrootState from "../../../Redux/Rootstate/Authstate";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 function OnlineCall() {
+  const navigate = useNavigate();
   const userData = useSelector((state: AuthrootState) => state.auth.userdata);
   const studentName = userData?.name; 
   const [tutorDetails, setTutorDetails] = useState<any[]>([]);
@@ -60,6 +62,10 @@ function OnlineCall() {
     joinRoom();
   };
 
+  const handleBack = () => {  
+    navigate(-1); 
+  };
+
   return (
     <>
       <section className="relative py-16 bg-blueGray-50">
@@ -71,6 +77,14 @@ function OnlineCall() {
                   <h3 className="font-semibold text-lg text-white">
                     Tutors Available Online
                   </h3>
+                </div>
+                <div className="absolute right-0 mr-4">
+                  <button
+                    onClick={handleBack}
+                    className="bg-blue-600 hover:bg-blue-700 py-1 px-4 text-sm font-medium text-white border border-transparent rounded-lg focus:outline-none"
+                  >
+                    Back
+                  </button>
                 </div>
               </div>
             </div>
@@ -123,6 +137,8 @@ function OnlineCall() {
                           </td>
                         </div>
                       </td>
+
+       
                       <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
                         <button
                           onClick={() => handleRoomJoinStudent("shiji123")} 
