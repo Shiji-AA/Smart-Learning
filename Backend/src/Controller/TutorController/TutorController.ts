@@ -95,7 +95,7 @@ const getTutorProfile = async (req: Request, res: Response) => {
   try {
     const tutor = (req as any).user;
     const tutorData = await TutorModel.findOne({ _id: tutor._id });
-    console.log(tutorData, "tutordata");
+    //console.log(tutorData, "tutordata");
     if (!tutorData) {
       return res.status(404).json({ error: "Tutor not found" });
     }
@@ -191,21 +191,26 @@ const updateCourse = async (req: Request, res: Response) => {
 
 const getAllCourse = async (req: Request, res: Response) => {
   try {
-    const courseDetails = await courseModel.find().exec();
-    if (courseDetails) {
-      res.status(200).json({
-        courseDetails,
-        message: "courseDetails",
+    const tutor = req.params.tutorId;
+    console.log(tutor, "tutorId");
+    const courseDetails = await courseModel.find({ tutor: tutor }).exec();
+    console.log(courseDetails, "courseDetails");
+    
+    if (!courseDetails.length) {
+      return res.status(400).json({
+        error: "No course available "
       });
     } else {
-      return res.status(400).json({
-        error: "no course available ",
+      return res.status(200).json({
+        courseDetails,
+        message: "courseDetails"
       });
     }
   } catch (error) {
-    return errorHandler(res,error); 
+    return errorHandler(res, error);
   }
 };
+
 
 const singleView = async (req: Request, res: Response) => {
   try {

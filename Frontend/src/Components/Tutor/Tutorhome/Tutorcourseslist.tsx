@@ -5,6 +5,8 @@ import toast from "react-hot-toast";
 import Tutornavbar from "../../../Components/Tutor/Tutordashboard/Tutornavbar";
 import { FaStar, FaRegStar } from 'react-icons/fa';
 import Pagination from '../../Pagination/Pagination';
+import { useSelector } from "react-redux";
+import TutorrootState from "../../../Redux/Rootstate/Tutorstate";
 
 interface Category {
   _id: string;
@@ -27,6 +29,11 @@ interface Course {
 }
 
 function Tutorcourseslist() {
+  const tutorData = useSelector(
+    (state: TutorrootState) => state.tutor.tutordata
+  );
+  const tutorId= tutorData?.tutorId;
+  console.log(tutorId, "tutorId ok");
   const [courseDetails, setCourseDetails] = useState<Course[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [paginatedDisplayData, setPaginatedDisplayData] = useState<Course[]>([]);
@@ -65,20 +72,21 @@ function Tutorcourseslist() {
     setPaginatedDisplayData(filteredCourseDetails.slice(startIndex, endIndex));
   }, [currentPage, filteredCourseDetails, itemsPerPage]);
 
-  useEffect(() => {
+  useEffect(() => {   
     axiosInstanceTutor
-      .get("/getallcourse")
+      .get(`/getallcourse/${tutorId}`)
       .then((response) => {
-        if (response.data.courseDetails) {
-          setCourseDetails(response.data.courseDetails);
-          setFilteredCourseDetails(response.data.courseDetails); // Initialize filteredCourseDetails with all courses
-        }
+        if (response?.data && response?.data?.courseDetails) {
+          setCourseDetails(response?.data?.courseDetails);
+          setFilteredCourseDetails(response?.data?.courseDetails); // Initialize filteredCourseDetails with all courses
+          }
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
         toast("Error fetching data. Please try again later.");
       });
-  }, []);
+  }, [tutorId]);
+  
 
   useEffect(() => {
     const filteredCourses = courseDetails.filter(course =>

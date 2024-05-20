@@ -39,7 +39,7 @@ tutorRouter.post("/addcourse", isLogin, addCourse);
 tutorRouter.get("/editcourse/:id", editCourse);
 tutorRouter.put("/updatecourse/:id", updateCourse);
 
-tutorRouter.get("/getallcourse", isLogin, getAllCourse);
+tutorRouter.get("/getallcourse/:tutorId", isLogin, getAllCourse);
 tutorRouter.get("/categories", isLogin, getAllCategory);
 tutorRouter.post("/addlesson", isLogin, addLesson);
 

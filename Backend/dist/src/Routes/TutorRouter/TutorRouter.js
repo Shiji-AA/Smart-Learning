@@ -16,7 +16,7 @@ tutorRouter.get("/tutorprofile", studentAuth_1.isLogin, TutorController_1.getTut
 tutorRouter.post("/addcourse", studentAuth_1.isLogin, TutorController_1.addCourse);
 tutorRouter.get("/editcourse/:id", TutorController_1.editCourse);
 tutorRouter.put("/updatecourse/:id", TutorController_1.updateCourse);
-tutorRouter.get("/getallcourse", studentAuth_1.isLogin, TutorController_1.getAllCourse);
+tutorRouter.get("/getallcourse/:tutorId", studentAuth_1.isLogin, TutorController_1.getAllCourse);
 tutorRouter.get("/categories", studentAuth_1.isLogin, AdminController_1.getAllCategory);
 tutorRouter.post("/addlesson", studentAuth_1.isLogin, TutorController_1.addLesson);
 tutorRouter.get("/editlesson/:id", TutorController_1.editLesson);

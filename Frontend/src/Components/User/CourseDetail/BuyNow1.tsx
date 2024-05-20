@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../../api/axiosinstance";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
-import { FaStar, FaRegStar } from 'react-icons/fa';
+import { FaStar, FaRegStar } from "react-icons/fa";
 
 interface Course {
   _id: string;
@@ -21,6 +21,7 @@ function BuyNow1() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [courseDetails, setCourseDetails] = useState<Course | null>(null);
+  const [enrolledCourses, setEnrolledCourses] = useState<Course | null>(null);
 
   useEffect(() => {
     axiosInstance
@@ -34,6 +35,20 @@ function BuyNow1() {
       .catch((error) => {
         console.error("Error fetching data:", error);
         toast("Error fetching data. Please try again later.");
+      });
+  }, []);
+
+  useEffect(() => {
+    axiosInstance
+      .get(`/enrolledcourses`)
+      .then((response) => {
+        if (response && response.data) {
+          console.log(response.data.enrolledCourses, "enrolledCourses1");
+          setEnrolledCourses(response.data.enrolledCourses);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching enrolled courses:", error);
       });
   }, []);
 
@@ -101,36 +116,39 @@ function BuyNow1() {
             Subscribe to Smart Learning's top courses
           </h4>
           <div className="flex mt-1 text-yellow-500">
-                        {[...Array(5)].map((_, index) => (
-                          <span key={index}>{index < 4 ? <FaStar /> : <FaRegStar />}</span>
-                        ))}
-                      </div>
+            {[...Array(5)].map((_, index) => (
+              <span key={index}>{index < 4 ? <FaStar /> : <FaRegStar />}</span>
+            ))}
+          </div>
           <h5 className="mb-4 ml-4 text-xl font-semibold text-gray-800">
             ₹ {courseDetails?.courseFee}
           </h5>
+          
           <div style={{ display: "flex", gap: "10px" }}>
-            {courseDetails?.isEnrolled === false ? (
-              <Link to={`/checkout/${courseDetails?._id}`}>
-                <button className="text-white bg-blue-500 hover:bg-blue-700 py-2 px-4 rounded-md">
-                  Start Subscription
-                </button>
-              </Link>
-            ) : (
+            {enrolledCourses?.isEnrolled ? (
               <Link to="/enrolledcourses">
                 <button className="text-white bg-blue-500 hover:bg-blue-700 py-2 px-4 rounded-md">
                   Enrolled
                 </button>
               </Link>
+            ) : (
+              <Link to={`/checkout/${courseDetails?._id}`}>
+                <button className="text-white bg-blue-500 hover:bg-blue-700 py-2 px-4 rounded-md">
+                  Start Subscription
+                </button>
+              </Link>
             )}
 
-            {courseDetails?.isEnrolled === false ? (
-              <button
+            {enrolledCourses?.isEnrolled ? (
+              null):(
+                <button
                 onClick={handlewishlistClick}
                 className="text-white bg-orange-500 hover:bg-orange-700 py-2 px-4 rounded-md"
               >
-                Add to WishList
+              Add to WishList
               </button>
-            ) : null}
+              )             
+            }
           </div>
           <br />
         </div>

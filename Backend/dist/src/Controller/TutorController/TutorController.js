@@ -108,7 +108,7 @@ const getTutorProfile = (req, res) => __awaiter(void 0, void 0, void 0, function
     try {
         const tutor = req.user;
         const tutorData = yield tutorModel_1.default.findOne({ _id: tutor._id });
-        console.log(tutorData, "tutordata");
+        //console.log(tutorData, "tutordata");
         if (!tutorData) {
             return res.status(404).json({ error: "Tutor not found" });
         }
@@ -204,16 +204,19 @@ const updateCourse = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 exports.updateCourse = updateCourse;
 const getAllCourse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const courseDetails = yield courseModel_1.default.find().exec();
-        if (courseDetails) {
-            res.status(200).json({
-                courseDetails,
-                message: "courseDetails",
+        const tutor = req.params.tutorId;
+        console.log(tutor, "tutorId");
+        const courseDetails = yield courseModel_1.default.find({ tutor: tutor }).exec();
+        console.log(courseDetails, "courseDetails");
+        if (!courseDetails.length) {
+            return res.status(400).json({
+                error: "No course available "
             });
         }
         else {
-            return res.status(400).json({
-                error: "no course available ",
+            return res.status(200).json({
+                courseDetails,
+                message: "courseDetails"
             });
         }
     }

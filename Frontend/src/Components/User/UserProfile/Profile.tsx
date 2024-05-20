@@ -71,9 +71,9 @@ function Profile() {
                 <div className="mt-4">
                   <label className="flex items-center mt-2">
                     <input type="file" className="hidden" />
-                    <button className="cursor-pointer px-4 py-2 text-sm font-medium text-blue-600 border border-blue-600 rounded-md hover:text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    {/* <button className="cursor-pointer px-4 py-2 text-sm font-medium text-blue-600 border border-blue-600 rounded-md hover:text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
                       Upload
-                    </button>
+                    </button> */}
                   </label>
                 </div>
               </div>
