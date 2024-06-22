@@ -33,8 +33,8 @@ function OnlineCall() {
         return;
       }
 
-      const appID = 1461761191;
-      const serverSecret = "97b3d19bcdafe3d637404a5b96b653a9";
+      const appID = 110512590;
+      const serverSecret = "cea33c1288f174102390d39c66057a6e";
       const kitToken = await ZegoUIKitPrebuilt.generateKitTokenForTest(
         appID,
         serverSecret,
