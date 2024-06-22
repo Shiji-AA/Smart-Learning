@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Navbar from '../../../Components/User/Navbar/Navbar';
 import { Link } from "react-router-dom";
 import { axiosInstance } from "../../../api/axiosinstance";
 import { FaStar, FaRegStar } from "react-icons/fa";
@@ -28,9 +29,24 @@ interface Course {
 }
 
 function Usercourseslist1() {
+  const [wishlistItemCount, setWishlistItemCount] = useState<number>(0);
   const [courseDetails, setCourseDetails] = useState<Course[]>([]);
   const [categoryDetails, setCategoryDetails] = useState<Category[]>([]);
   console.log(categoryDetails);
+
+
+  useEffect(() => {
+    axiosInstance.get('/getallwishlistitems')
+      .then((response) => {
+        if (response && response.data) {
+          setWishlistItemCount(response.data.wishlistedCourses.length);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching Wishlist count", error);
+      });
+  }, []);
+  
 
   useEffect(() => {
     axiosInstance
@@ -59,6 +75,7 @@ function Usercourseslist1() {
 
   return (
     <>
+     <Navbar wishlistItemCount={wishlistItemCount} />
       <div className="bg-gray-100 bg-gradient-to-b from-blue-10 to-white p-4 rounded-lg">
         <div className="min-h-screen">
           <div

@@ -18,22 +18,22 @@ const TutorFooter: React.FC = () => {
                     </div>
 
                     <div>
-                        <p className="font-semibold text-gray-800 dark:text-white">Quick Link</p>
+                        <p className="font-semibold text-gray-800 dark:text-white">Careers</p>
 
                         <div className="flex flex-col items-start mt-5 space-y-2">
-                            <p className="text-gray-600 transition-colors duration-300 dark:text-gray-300 dark:hover:text-blue-400 hover:underline hover:cursor-pointer hover:text-blue-500">Home</p>
-                            <p className="text-gray-600 transition-colors duration-300 dark:text-gray-300 dark:hover:text-blue-400 hover:underline hover:cursor-pointer hover:text-blue-500">Who We Are</p>
-                            <p className="text-gray-600 transition-colors duration-300 dark:text-gray-300 dark:hover:text-blue-400 hover:underline hover:cursor-pointer hover:text-blue-500">Our Philosophy</p>
+                            <p className="text-gray-600 transition-colors duration-300 dark:text-gray-300 dark:hover:text-blue-400 hover:underline hover:cursor-pointer hover:text-blue-500">Blog</p>
+                            <p className="text-gray-600 transition-colors duration-300 dark:text-gray-300 dark:hover:text-blue-400 hover:underline hover:cursor-pointer hover:text-blue-500">Help and Support</p>
+                            <p className="text-gray-600 transition-colors duration-300 dark:text-gray-300 dark:hover:text-blue-400 hover:underline hover:cursor-pointer hover:text-blue-500">Affiliate</p>
                         </div>
                     </div>
 
                     <div>
-                        <p className="font-semibold text-gray-800 dark:text-white">Industries</p>
+                        <p className="font-semibold text-gray-800 dark:text-white">Smart Learning Business </p>
 
                         <div className="flex flex-col items-start mt-5 space-y-2">
-                            <p className="text-gray-600 transition-colors duration-300 dark:text-gray-300 dark:hover:text-blue-400 hover:underline hover:cursor-pointer hover:text-blue-500">Retail & E-Commerce</p>
-                            <p className="text-gray-600 transition-colors duration-300 dark:text-gray-300 dark:hover:text-blue-400 hover:underline hover:cursor-pointer hover:text-blue-500">Information Technology</p>
-                            <p className="text-gray-600 transition-colors duration-300 dark:text-gray-300 dark:hover:text-blue-400 hover:underline hover:cursor-pointer hover:text-blue-500">Finance & Insurance</p>
+                            <p className="text-gray-600 transition-colors duration-300 dark:text-gray-300 dark:hover:text-blue-400 hover:underline hover:cursor-pointer hover:text-blue-500">Teach on Smart Learning</p>
+                            <p className="text-gray-600 transition-colors duration-300 dark:text-gray-300 dark:hover:text-blue-400 hover:underline hover:cursor-pointer hover:text-blue-500">Get the app</p>
+                            <p className="text-gray-600 transition-colors duration-300 dark:text-gray-300 dark:hover:text-blue-400 hover:underline hover:cursor-pointer hover:text-blue-500">Contact us</p>
                         </div>
                     </div>
                 </div>
@@ -56,7 +56,7 @@ const TutorFooter: React.FC = () => {
                         <img src="https://www.svgrepo.com/show/22048/dribbble.svg" className="" width="30" height="30" alt="db" />
                     </div>
                 </div>
-                <p className="font-sans p-8 text-start md:text-center md:text-lg md:p-4">© 2023 Your Company Inc. All rights reserved.</p>
+                <p className="font-sans p-8 text-start md:text-center md:text-lg md:p-4">© 2024 Smart Learning. All rights reserved.</p>
             </div>
         </footer>
     );

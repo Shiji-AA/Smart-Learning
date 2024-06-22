@@ -121,13 +121,28 @@ const [searchError, setSearchError] = useState<boolean>(false);
             >
               Tutors
             </a>
-            <a
+            {studentUser?(
+              <a
               href="/usercourselist"
               className="block md:inline-block text-white hover:text-blue-500 px-3 py-3 border-b-2 border-white-900 md:border-none"
             >
               {" "}
               My Courses
             </a>
+              
+            ):(
+              <a
+              href="/usercourselist1"
+              className="block md:inline-block text-white hover:text-blue-500 px-3 py-3 border-b-2 border-white-900 md:border-none"
+            >
+              {" "}
+              My Courses
+            </a>
+            )
+          
+          }
+          
+
             {
               studentUser?( <a
                 href="/enrolledcourses"
@@ -137,7 +152,8 @@ const [searchError, setSearchError] = useState<boolean>(false);
                 Enrolled
               </a>):null
             }
-           
+
+                     
           </div>
 
           {/* searchBar */}

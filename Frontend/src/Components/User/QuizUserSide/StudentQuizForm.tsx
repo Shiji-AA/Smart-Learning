@@ -26,6 +26,7 @@ function StudentQuizForm() {
     async function fetchQuestions() {
       try {
         const response = await axiosInstance.get(`/quizList/${courseId}`);
+        console.log(response,"quiz list")
         const allQuizSets = response.data.allQuizSets;
 
         if (!Array.isArray(allQuizSets)) {
@@ -34,12 +35,13 @@ function StudentQuizForm() {
 
         const questions: Question[] = [];
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         allQuizSets.forEach((quizSet: any) => {
           if (!Array.isArray(quizSet.questionset)) {
             throw new Error("Question set data is not in the expected format.");
           }
 
-          quizSet.questionset.forEach((question: any) => {
+          quizSet.questionset.forEach((question:any) => {
 
             const shuffledOptions = [
               question.option1,
